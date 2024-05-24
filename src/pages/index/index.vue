@@ -1,27 +1,35 @@
 <template>
   <view class="content">
-    <image class="logo" src="/static/logo.png" />
-    <view class="text-area">
-      <text class="title">{{ title }}</text>
-    </view>
-    <van-button type="primary" @click="handleAsk">提问</van-button>
-    <input type="text" v-model="text" style="border: 1px solid #000">
-    <p>
-      {{ answer }}
-    </p>
+    <div class="dialogue" v-for="item in message">
+      <div class="dialogue-user" v-if="item.role === 'user'">
+        <div class="dialogue-user-content">{{ item.content }}</div>
+        <img src="/static/logo.png" alt="" class="avatar">
+      </div>
+      <div class="dialogue-assistant" v-if="item.role === 'assistant'">
+        <img src="/static/logo.png" alt="" class="avatar">
+        <div class="dialogue-assistant-content">{{ item.content }}</div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="input-wrap">
+        <textarea class="ask-input" type="text" v-model="ask_text" placeholder="有问题尽管问我…" adjust-keyboard-to="bottom" :maxlength="-1" fixed auto-height @confirm="handleAsk"></textarea>
+        <van-icon name="upgrade" class="ask-confirm" @click="handleAsk" />
+      </div>
+    </div>
   </view>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import http from '../../api/http'
-const title = ref('Hello')
+import { client_id, client_secret } from '../../user'
+import { TextEncoder, TextDecoder } from 'text-encoding-shim';
 
 const answer = ref('')
 
 const streamData = ref('')
 
-const text = ref('')
+const ask_text = ref('')
 
 const message: any = ref([])
 
@@ -32,8 +40,8 @@ onMounted(async ()=>{
 const getAccessToken = async () => {
   const res: TokenData = await http('https://aip.baidubce.com/oauth/2.0/token', {
     grant_type: 'client_credentials',
-    client_id: 'nLUaLKNehpGw23fHfyl8ImR8',
-    client_secret: 'PGodayWRBGeVQmjJZ3qacXLTRnUAOMNu'
+    client_id,
+    client_secret
   })
   if(res.access_token) {
     return res.access_token
@@ -42,11 +50,13 @@ const getAccessToken = async () => {
 }
 
 const handleAsk = async () => {
-  if(!text.value) return
+  if(!ask_text.value) return
+  answer.value = ''
   message.value.push({
     role: "user",
-    content: text.value
+    content: ask_text.value
   })
+  ask_text.value = ''
   const access_token = await getAccessToken()
   if(access_token) {
 
@@ -63,6 +73,8 @@ const handleAsk = async () => {
         console.log(res.data, '1111')
       }
     })
+
+    let content = ''
 
     
     requestTask.onChunkReceived((res: any) => {
@@ -81,11 +93,13 @@ const handleAsk = async () => {
           if(v) {
             const data = JSON.parse(v)
             console.log(data, '----3444');
-            answer.value += data.result
+            content += data.result
+            answer.value += content
             if(data.is_end) {
+              answer.value = ''
               message.value.push({
                 role: "assistant",
-                content: answer.value
+                content: content
               })
               break
             }
@@ -101,12 +115,14 @@ const handleAsk = async () => {
           if(v) {
             const data = JSON.parse(v)
             console.log(data, '----333');
-            answer.value += data.result
+            content += data.result
+            answer.value += content
             if(data.is_end) {
               console.log(message.value,'----0000')
+              answer.value = ''
               message.value.push({
                 role: "assistant",
-                content: answer.value
+                content: content
               })
               break
             }
@@ -119,12 +135,11 @@ const handleAsk = async () => {
 }
 </script>
 
-<style>
+<style lang="less">
 .content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  background-color: #fff;
+  width: 100vw;
+  min-height: 100vh;
 }
 
 .logo {
@@ -136,13 +151,72 @@ const handleAsk = async () => {
   margin-bottom: 50rpx;
 }
 
-.text-area {
-  display: flex;
-  justify-content: center;
+
+.dialogue {
+  width: 100vw;
+  padding: 40rpx 20rpx;
+  box-sizing: border-box;
+  .dialogue-user {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: start;
+    .dialogue-user-content {
+      padding: 20rpx 30rpx;
+      background-color: #f4f4f4;
+      border-radius: 20rpx;
+      margin-right: 20rpx;
+    }
+  }
+  .dialogue-assistant {
+    width: 100%;
+    display: flex;
+    align-items: start;
+    justify-content: flex-start;
+    .dialogue-assistant-content {
+      padding: 20rpx 30rpx;
+      background-color: #f4f4f4;
+      border-radius: 20rpx;
+      margin-left: 20rpx;
+    }
+  }
+  .avatar {
+    width: 40rpx;
+    height: 40rpx;
+    flex-shrink: 0;
+    margin-top: 20rpx;
+  }
 }
 
-.title {
-  font-size: 36rpx;
-  color: #8f8f94;
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 40rpx;
+  box-sizing: border-box;
+  
+  .input-wrap {
+    background-color: #f4f4f4;
+    width: 80vw;
+    min-height: 50rpx;
+    border-radius: 50rpx;
+    padding: 30rpx 40rpx;
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+  .ask-confirm {
+    position: absolute;
+    right: 40rpx;
+    bottom: 30rpx;
+    font-size: 50rpx;
+  }
+  .ask-input {
+    width: 550rpx;
+  }
 }
 </style>

@@ -6,3 +6,8 @@ interface TokenData {
     session_key: string;
     session_secret: string;
 }
+
+interface MessageParam {
+    role: string;
+    content: string;
+}

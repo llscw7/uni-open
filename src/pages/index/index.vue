@@ -10,6 +10,12 @@
         <div class="dialogue-assistant-content">{{ item.content }}</div>
       </div>
     </div>
+    <div class="dialogue" v-if="answer">
+      <div class="dialogue-assistant">
+        <img src="/static/logo.png" alt="" class="avatar">
+        <div class="dialogue-assistant-content">{{ answer }}</div>
+      </div>
+    </div>
     <div class="footer">
       <div class="input-wrap">
         <textarea class="ask-input" type="text" v-model="ask_text" placeholder="有问题尽管问我…" adjust-keyboard-to="bottom" :maxlength="-1" fixed auto-height @confirm="handleAsk"></textarea>
@@ -24,6 +30,7 @@ import { ref, onMounted } from 'vue'
 import http from '../../api/http'
 import { client_id, client_secret } from '../../user'
 import { TextEncoder, TextDecoder } from 'text-encoding-shim';
+import { autoRun } from '../../util/tool'
 
 const answer = ref('')
 
@@ -31,11 +38,27 @@ const streamData = ref('')
 
 const ask_text = ref('')
 
-const message: any = ref([])
+const message = ref<Array<MessageParam>>([])
 
-onMounted(async ()=>{
-  
-})
+let content = ''
+
+const formatData = (text: string) => {
+  let arr = text.split('data: ')
+  for(let v of arr) {
+    if(v) { 
+      const data = JSON.parse(v)
+      content += data.result
+      autoRun(data.result.split(''), (val: string)=>(answer.value+=val), 10).then(res=>console.log(res,'====end===='))
+      if(data.is_end) {
+        message.value.push({
+          role: "assistant",
+          content: content
+        })
+        break
+      }
+    }
+  }
+}
 
 const getAccessToken = async () => {
   const res: TokenData = await http('https://aip.baidubce.com/oauth/2.0/token', {
@@ -74,7 +97,7 @@ const handleAsk = async () => {
       }
     })
 
-    let content = ''
+    content = ''
 
     
     requestTask.onChunkReceived((res: any) => {
@@ -82,52 +105,19 @@ const handleAsk = async () => {
 
       let decoder = new TextDecoder('utf-8');
       let text = decoder.decode(uint8Array).trim();
-      console.log('原始数据：',text);
+      // console.log('原始数据：',text);
 
       let arr: string[] = []
 
       if(text.slice(0,5) !== 'data:') {
         streamData.value += text
-        arr = streamData.value.split('data: ')
-        for(let v of arr) {
-          if(v) {
-            const data = JSON.parse(v)
-            console.log(data, '----3444');
-            content += data.result
-            answer.value += content
-            if(data.is_end) {
-              answer.value = ''
-              message.value.push({
-                role: "assistant",
-                content: content
-              })
-              break
-            }
-          }
-        }
+        formatData(streamData.value)
       }
       else if(text.slice(-2) !== '}}') {
         streamData.value = text
       }
       else {
-        arr = text.split('data: ')
-        for(let v of arr) {
-          if(v) {
-            const data = JSON.parse(v)
-            console.log(data, '----333');
-            content += data.result
-            answer.value += content
-            if(data.is_end) {
-              console.log(message.value,'----0000')
-              answer.value = ''
-              message.value.push({
-                role: "assistant",
-                content: content
-              })
-              break
-            }
-          }
-        }
+        formatData(text)
       }
     })
   }
@@ -140,6 +130,7 @@ const handleAsk = async () => {
   background-color: #fff;
   width: 100vw;
   min-height: 100vh;
+  padding-bottom: 150rpx;
 }
 
 .logo {

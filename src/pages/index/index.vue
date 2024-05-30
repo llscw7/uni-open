@@ -10,12 +10,6 @@
         <div class="dialogue-assistant-content">{{ item.content }}</div>
       </div>
     </div>
-    <div class="dialogue" v-if="answer">
-      <div class="dialogue-assistant">
-        <img src="/static/gpt.jpeg" alt="" class="avatar">
-        <div class="dialogue-assistant-content">{{ answer }}</div>
-      </div>
-    </div>
     <div class="footer">
       <div class="input-wrap">
         <textarea class="ask-input" type="text" v-model="ask_text" placeholder="有问题尽管问我…" adjust-keyboard-to="bottom" :maxlength="-1" fixed auto-height @confirm="handleAsk"></textarea>
@@ -26,19 +20,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, reactive } from 'vue'
 import http from '../../api/http'
 import { client_id, client_secret } from '../../user'
 import { TextEncoder, TextDecoder } from 'text-encoding-shim';
 import { autoRun } from '../../util/tool'
 
-const answer = ref('')
-
 const streamData = ref('')
 
 const ask_text = ref('')
 
-const message = ref<Array<MessageParam>>([])
+const message = reactive<Array<MessageParam>>([])
 
 let content = ''
 
@@ -47,13 +39,25 @@ const formatData = (text: string) => {
   for(let v of arr) {
     if(v) { 
       const data = JSON.parse(v)
-      content += data.result
-      autoRun(data.result.split(''), (val: string)=>(answer.value+=val), 10).then(res=>console.log(res,'====end===='))
-      if(data.is_end) {
-        message.value.push({
+
+      let len = message.length
+
+      if(message[len - 1].role === 'user') {
+        message.push({
           role: "assistant",
-          content: content
+          content: ""
         })
+        len = len + 1
+      }
+
+      autoRun(
+        data.result.split(''), 
+        (val: string)=>{
+          message[len - 1].content += val
+        },
+        50)
+      .then(res=>console.log(res,'====end===='))
+      if(data.is_end) {
         break
       }
     }
@@ -74,8 +78,7 @@ const getAccessToken = async () => {
 
 const handleAsk = async () => {
   if(!ask_text.value) return
-  answer.value = ''
-  message.value.push({
+  message.push({
     role: "user",
     content: ask_text.value
   })
@@ -89,7 +92,7 @@ const handleAsk = async () => {
       enableChunked: true,
       method: "POST",
       data: {
-        messages: message.value,
+        messages: message,
         stream: true
       },
       success (res: any) {
@@ -106,8 +109,6 @@ const handleAsk = async () => {
       let decoder = new TextDecoder('utf-8');
       let text = decoder.decode(uint8Array).trim();
       // console.log('原始数据：',text);
-
-      let arr: string[] = []
 
       if(text.slice(0,5) !== 'data:') {
         streamData.value += text

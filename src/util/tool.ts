@@ -42,7 +42,6 @@ let ll: string[] = []
 async function autoRun(arr: string[], func: Function, delay: number) {
   // 需要有个数组来存储后面进来的数组
   ll.push(...arr)
-  console.log(ll,'-----', flag)
   if(!ll.length || !flag) {
     return 
   }

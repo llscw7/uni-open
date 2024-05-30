@@ -1,18 +1,18 @@
 <template>
   <view class="content">
-    <div class="dialogue" v-for="item in message">
+    <div class="dialogue" v-for="(item, index) in message" :key="index">
       <div class="dialogue-user" v-if="item.role === 'user'">
         <div class="dialogue-user-content">{{ item.content }}</div>
         <img src="/static/logo.png" alt="" class="avatar">
       </div>
       <div class="dialogue-assistant" v-if="item.role === 'assistant'">
-        <img src="/static/logo.png" alt="" class="avatar">
+        <img src="/static/gpt.jpeg" alt="" class="avatar">
         <div class="dialogue-assistant-content">{{ item.content }}</div>
       </div>
     </div>
     <div class="dialogue" v-if="answer">
       <div class="dialogue-assistant">
-        <img src="/static/logo.png" alt="" class="avatar">
+        <img src="/static/gpt.jpeg" alt="" class="avatar">
         <div class="dialogue-assistant-content">{{ answer }}</div>
       </div>
     </div>

@@ -32,6 +32,13 @@ function queue(obj: any, pre: string) {
 
 let flag = true
 let ll: string[] = []
+/**
+ * 队列输出函数
+ * @param arr 队列数组
+ * @param func 对数组执行特定操作的函数
+ * @param delay 输出时间间隔
+ * @returns 
+ */
 async function autoRun(arr: string[], func: Function, delay: number) {
   // 需要有个数组来存储后面进来的数组
   ll.push(...arr)

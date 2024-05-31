@@ -10,4 +10,5 @@ interface TokenData {
 interface MessageParam {
     role: string;
     content: string;
+    end?: boolean;
 }

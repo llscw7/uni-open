@@ -7,9 +7,17 @@
       </div>
       <div class="dialogue-assistant" v-if="item.role === 'assistant'">
         <img src="/static/gpt.jpeg" alt="" class="avatar">
-        <div class="dialogue-assistant-content">{{ item.content }}</div>
+        <div class="dialogue-assistant-wrap">
+          <div class="assistant-content">
+            {{ item.content }}
+          </div>
+          <div class="assistant-option" v-if="item.end">
+            <i class="iconfont copy" @click="handleCopy(item.content)">&#xe607;</i>
+            <i class="iconfont other">&#xe756;</i>
+          </div>
+        </div>
       </div>
-    </div>
+    </div> 
     <div class="footer">
       <div class="input-wrap">
         <textarea class="ask-input" type="text" v-model="ask_text" placeholder="有问题尽管问我…" adjust-keyboard-to="bottom" :maxlength="-1" fixed auto-height @confirm="handleAsk"></textarea>
@@ -20,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, reactive } from 'vue'
+import { ref, onMounted, reactive, watch } from 'vue'
 import http from '../../api/http'
 import { client_id, client_secret } from '../../user'
 import { TextEncoder, TextDecoder } from 'text-encoding-shim';
@@ -31,6 +39,40 @@ const streamData = ref('')
 const ask_text = ref('')
 
 const message = reactive<Array<MessageParam>>([])
+/**监听AI回答是否结束 */
+let timeoutId: any = null;
+const waitTime = 500;
+
+watch(message, (newValue, oldValue) => {
+  clearTimeout(timeoutId);
+  timeoutId = setTimeout(() => {
+    /**AI回答结束，展示操作项 */
+    message[message.length-1].end = true
+    console.log('message在500ms内未发生变化')
+    /**AI回答结束，展示操作项 */
+  }, waitTime);
+}, { deep: true });
+/**监听AI回答是否结束 */
+
+const handleCopy = (text: string) => {
+  uni.setClipboardData({
+    data: text, // 您想要复制的文本
+    success: () => {
+      uni.showToast({
+        title: '复制成功',
+        icon: 'success',
+        duration: 1500
+      });
+    },
+    fail: () => {
+      uni.showToast({
+        title: '复制失败',
+        icon: 'none',
+        duration: 1500
+      });
+    }
+  });
+}
 
 let content = ''
 
@@ -165,11 +207,22 @@ const handleAsk = async () => {
     display: flex;
     align-items: start;
     justify-content: flex-start;
-    .dialogue-assistant-content {
+    .dialogue-assistant-wrap {
       padding: 20rpx 30rpx;
       background-color: #f4f4f4;
       border-radius: 20rpx;
       margin-left: 20rpx;
+    }
+    .assistant-option {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      border-top: 1rpx solid rgba(0,0,0,0.2);
+      padding-top: 15rpx;
+      margin-top: 20rpx;
+      .copy {
+        margin-right: 30rpx;
+      }
     }
   }
   .avatar {

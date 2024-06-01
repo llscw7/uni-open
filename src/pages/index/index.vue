@@ -19,11 +19,13 @@
       </div>
     </div> 
     <div class="footer">
+      <div class="clear" v-if="message.length" @click="handleClear"><van-icon size="20" name="delete-o" /></div>
       <div class="input-wrap">
         <textarea class="ask-input" type="text" v-model="ask_text" placeholder="有问题尽管问我…" adjust-keyboard-to="bottom" :maxlength="-1" fixed auto-height @confirm="handleAsk"></textarea>
         <van-icon name="upgrade" class="ask-confirm" @click="handleAsk" />
       </div>
     </div>
+    <van-dialog id="van-dialog" />
   </view>
 </template>
 
@@ -33,6 +35,7 @@ import http from '../../api/http'
 import { client_id, client_secret } from '../../user'
 import { TextEncoder, TextDecoder } from 'text-encoding-shim';
 import { autoRun } from '../../util/tool'
+import Dialog from '../../wxcomponents/vant/dialog/dialog';
 
 const streamData = ref('')
 
@@ -47,6 +50,7 @@ watch(message, (newValue, oldValue) => {
   clearTimeout(timeoutId);
   timeoutId = setTimeout(() => {
     /**AI回答结束，展示操作项 */
+    if(newValue.length === 0) return
     message[message.length-1].end = true
     console.log('message在500ms内未发生变化')
     /**AI回答结束，展示操作项 */
@@ -73,6 +77,21 @@ const handleCopy = (text: string) => {
     }
   });
 }
+
+const handleClear = () => {
+  Dialog.confirm({
+    title: '确认清空聊天记录吗？',
+  })
+    .then(() => {
+      // on confirm
+      console.log('测试数据----')
+      message.length = 0
+    })
+    .catch(() => {
+      // on cancel
+    });
+}
+
 
 let content = ''
 
@@ -172,7 +191,6 @@ const handleAsk = async () => {
 .content {
   background-color: #fff;
   width: 100vw;
-  min-height: 100vh;
   padding-bottom: 150rpx;
 }
 
@@ -243,7 +261,15 @@ const handleAsk = async () => {
   justify-content: center;
   padding-bottom: 40rpx;
   box-sizing: border-box;
-  
+  .clear {
+    position: absolute;
+    top: -20rpx;
+    left: 30rpx;
+    padding: 8rpx;
+    border: 1rpx solid #000;
+    border-radius: 50%;
+    transform: translateY(-100%);
+  }
   .input-wrap {
     background-color: #f4f4f4;
     width: 80vw;

@@ -15,6 +15,9 @@
             <i class="iconfont copy" @click="handleCopy(item.content)">&#xe607;</i>
             <i class="iconfont other">&#xe756;</i>
           </div>
+          <div class="assistant-stop">
+            <van-button plain round type="info" size="small" @click="handleStop" v-if="!item.end">停止生成</van-button>
+          </div>
         </div>
       </div>
     </div> 
@@ -26,6 +29,7 @@
       </div>
     </div>
     <van-dialog id="van-dialog" />
+    <van-toast id="van-toast" />
   </view>
 </template>
 
@@ -36,15 +40,19 @@ import { client_id, client_secret } from '../../user'
 import { TextEncoder, TextDecoder } from 'text-encoding-shim';
 import { autoRun } from '../../util/tool'
 import Dialog from '../../wxcomponents/vant/dialog/dialog';
+import Toast from '../../wxcomponents/vant/toast/toast';
 
 const streamData = ref('')
 
 const ask_text = ref('')
 
 const message = reactive<Array<MessageParam>>([])
+
+let requestTask: any;
+
 /**监听AI回答是否结束 */
 let timeoutId: any = null;
-const waitTime = 500;
+const waitTime = 1000;
 
 watch(message, (newValue, oldValue) => {
   clearTimeout(timeoutId);
@@ -114,14 +122,23 @@ const formatData = (text: string) => {
       autoRun(
         data.result.split(''), 
         (val: string)=>{
+          if(message[len-1].end) return
           message[len - 1].content += val
         },
         50)
-      .then(res=>console.log(res,'====end===='))
+      .then(res=>console.log(message,'====end===='))
       if(data.is_end) {
+        console.log('结束标识---')
         break
       }
     }
+  }
+}
+
+const handleStop = () => {
+  if(requestTask) {
+    requestTask.abort()
+    message[message.length-1].end = true
   }
 }
 
@@ -139,6 +156,10 @@ const getAccessToken = async () => {
 
 const handleAsk = async () => {
   if(!ask_text.value) return
+  if(message.length && !message[message.length - 1]?.end) {
+    Toast('暂时不可提问');
+    return 
+  }
   message.push({
     role: "user",
     content: ask_text.value
@@ -147,7 +168,7 @@ const handleAsk = async () => {
   const access_token = await getAccessToken()
   if(access_token) {
 
-    const requestTask = wx.request({
+    requestTask = wx.request({
       url: `https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/ernie_speed?access_token=${access_token}`,
       responseType: 'arraybuffer', // 确保返回的数据格式是arraybuffer
       enableChunked: true,
@@ -163,13 +184,12 @@ const handleAsk = async () => {
 
     content = ''
 
-    
     requestTask.onChunkReceived((res: any) => {
       let uint8Array = new Uint8Array(res.data);
 
       let decoder = new TextDecoder('utf-8');
       let text = decoder.decode(uint8Array).trim();
-      // console.log('原始数据：',text);
+      console.log('原始数据：',text);
 
       if(text.slice(0,5) !== 'data:') {
         streamData.value += text
@@ -230,6 +250,7 @@ const handleAsk = async () => {
       background-color: #f4f4f4;
       border-radius: 20rpx;
       margin-left: 20rpx;
+      position: relative;
     }
     .assistant-option {
       display: flex;
@@ -241,6 +262,12 @@ const handleAsk = async () => {
       .copy {
         margin-right: 30rpx;
       }
+    }
+    .assistant-stop {
+      position: absolute;
+      bottom: -20rpx;
+      left: 0;
+      transform: translateY(100%);
     }
   }
   .avatar {

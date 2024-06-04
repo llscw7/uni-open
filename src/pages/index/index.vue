@@ -9,7 +9,7 @@
         <img src="/static/gpt.jpeg" alt="" class="avatar">
         <div class="dialogue-assistant-wrap">
           <div class="assistant-content">
-            {{ item.content }}
+            <Marked :value="item.content" />
           </div>
           <div class="assistant-option" v-if="item.end">
             <i class="iconfont copy" @click="handleCopy(item.content)">&#xe607;</i>
@@ -41,6 +41,7 @@ import { TextEncoder, TextDecoder } from 'text-encoding-shim';
 import { autoRun } from '../../util/tool'
 import Dialog from '../../wxcomponents/vant/dialog/dialog';
 import Toast from '../../wxcomponents/vant/toast/toast';
+import Marked from '../../components/marked/index.vue'
 
 const streamData = ref('')
 

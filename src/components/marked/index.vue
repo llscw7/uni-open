@@ -1,7 +1,7 @@
 <template>
     <div class="marked">
         <div class="marked-preview">
-        <rich-text :nodes="html"></rich-text>
+            <rich-text :nodes="html"></rich-text>
         </div>
     </div>
 </template>
@@ -26,7 +26,7 @@ const marked = new Marked(
     langPrefix: 'hljs language-',
     highlight(code, lang, info) {
       const language = hljs.getLanguage(lang) ? lang : 'plaintext';
-      return hljs.highlight(code, { language }).value;
+      return hljs.highlight(code, { language }).value
     }
   })
 )
@@ -38,7 +38,12 @@ marked.use({
 
 const html = computed(() => {
   // const format = md.value.replace(/\n/g, "<br>")
-  return marked.parse(props.value.trim());
+  const dom = marked.parse(props.value.trim())
+  if(typeof dom === 'string') {
+    return dom.replace('<code>', '<code class="code">')
+  }else {
+    return dom
+  }
 });
 
 
@@ -46,38 +51,25 @@ const html = computed(() => {
 
 <style lang="less">
 /* Markdown 样式设置 */
-.marked-preview pre{
+.marked-preview .hljs{
     display: block;
-    background-color:#f3f3f3;
-     padding: .5rpx !important;
-     overflow-y: auto;
-     font-weight: 300;
-     font-family: Menlo, monospace;
-     border-radius: .3rpx;
-}
-.marked-preview pre {
     background-color: #283646;
+    padding: 20rpx;
+    overflow-y: auto;
+    font-weight: 300;
+    font-family: Menlo, monospace;
+    border-radius: 10rpx;
 }
-.marked-preview {
-    pre {
-        code {
-            border:0rpx !important;
-            background-color: #283646;
-            color:#FFF;
-        }
-    }
-    
-}
-.marked-preview code {
+.marked-preview .code {
     display: inline-block ;
-    background-color:#f3f3f3;
-    border:1rpx solid #fdb9cc;
-    border-radius:3rpx;
-    font-size: 14rpx;
-    padding-left: 5rpx;
-    padding-right: 5rpx;
-    color:#4f4f4f;
-    margin: 0rpx 3rpx;
+    background-color: #283646;
+    border-radius:3px;
+    font-size: 14px;
+    padding-left: 5px;
+    padding-right: 5px;
+    color:#fff;
+    margin: 0px 3px;
+    padding: 8rpx;
 }
 .marked-preview ul,.marked-preview li {
     list-style: revert;

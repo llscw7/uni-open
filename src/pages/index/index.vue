@@ -20,7 +20,8 @@
           </div>
         </div>
       </div>
-    </div> 
+      
+    </div>
     <div class="footer">
       <div class="clear" v-if="message.length" @click="handleClear"><van-icon size="20" name="delete-o" /></div>
       <div class="input-wrap">
@@ -42,6 +43,18 @@ import { autoRun } from '../../util/tool'
 import Dialog from '../../wxcomponents/vant/dialog/dialog';
 import Toast from '../../wxcomponents/vant/toast/toast';
 import Marked from '../../components/marked/index.vue'
+
+const test = ref(`
+\`\`\`javascript
+const highlight = "code";
+const highlight = "code sfdgsdfgs";
+const highlight = "codea dafdas fdsg";
+\`\`\`
+`)
+
+const test2 = ref(`
+\`\`\`const highlight = "code";\`\`\`
+`)
 
 const streamData = ref('')
 

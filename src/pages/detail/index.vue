@@ -20,7 +20,7 @@
                 </div>
             </div>
         </div>
-        <div class="detail-list" v-for="(item,index) in 3" :key="index">
+        <div class="detail-list" v-for="(item,index) in 30" :key="index">
             <div class="list-wrap">
                 <div class="wrap-head">
                     <div class="head-date">1月28号 星期二</div>
@@ -52,10 +52,12 @@
                 </div>
             </div>
         </div>
+        <BottomNav></BottomNav>
     </div>
 </template>
 
 <script setup lang="ts">
+import BottomNav from '../../components/nav/bottom.vue';
 
 </script>
 
@@ -64,7 +66,7 @@
     background-color: #fff;
     width: 100vw;
     padding: 10rpx 20rpx;
-    padding-bottom: 150rpx;
+    padding-bottom: 200rpx;
     box-sizing: border-box;
 }
 

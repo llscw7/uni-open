@@ -1,6 +1,6 @@
 <template>
     <div class="detail">
-        <div class="date-select">
+        <div class="date-select" @click="selectDate">
             2025年1月
         </div>
         <div class="data-view">
@@ -20,10 +20,10 @@
                 </div>
             </div>
         </div>
-        <div class="detail-list" v-for="(item,index) in 30" :key="index">
+        <div class="detail-list" v-for="item in tmpData" :key="item.userId">
             <div class="list-wrap">
                 <div class="wrap-head">
-                    <div class="head-date">1月28号 星期二</div>
+                    <div class="head-date">{{item.date}} {{ item.weekdayCN }}</div>
                     <div class="head-money">支出0.00 收入2.59</div>
                 </div>
                 <div class="wrap-container">
@@ -31,11 +31,11 @@
                         <div class="item-list-wrap out">
                             <van-icon name="balance-pay" class="item-wrap-icon" />
                             <div class="item-wrap-message">
-                                <div class="title">其他</div>
-                                <div class="desc">相关描述信息</div>
+                                <div class="title">{{item.title}}</div>
+                                <div class="desc">{{ item.desc }}</div>
                             </div>
                             <div class="item-wrap-money">
-                                -22.22
+                                {{ item.in }}
                             </div>
                         </div>
                         <div class="item-list-wrap in">
@@ -53,12 +53,53 @@
             </div>
         </div>
         <BottomNav></BottomNav>
+        <van-popup
+            :show="showPopup" 
+            round
+            position="bottom" 
+            @close="onClosePopup"
+        >
+            <van-datetime-picker
+                type="year-month"
+                :value="currentDate"
+                @input="onInput"
+            />
+        </van-popup>
+        
     </div>
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted, computed, watch, Events } from 'vue'
+import data from './data.json';
 import BottomNav from '../../components/nav/bottom.vue';
+console.log(data,'-----')
 
+interface DetailData {
+    userId: string;
+    title: string;
+    desc: string;
+    in: string;
+    out: string;
+    date: string;
+    weekdayCN: string;
+}
+
+const tmpData: DetailData[] = ref(data)
+
+const currentDate = ref(new Date().getTime())
+const minDate = ref(new Date().getTime())
+const showPopup = ref(false)
+
+const onInput = (event: any) => {
+    currentDate.value = event.detail;
+}
+const selectDate = () => {
+    showPopup.value = true
+}
+const onClosePopup = () => {
+    showPopup.value = false
+}
 </script>
 
 <style scoped lang="less">

@@ -65,7 +65,6 @@
                 @input="onInput"
             />
         </van-popup>
-        
     </div>
 </template>
 
@@ -91,8 +90,33 @@ const currentDate = ref(new Date().getTime())
 const minDate = ref(new Date().getTime())
 const showPopup = ref(false)
 
+// const formatData = (data: DetailData[]) => {
+//     const arr = []
+//     let l = 0;
+//     let r = 1;
+//     while(l < r) {
+//         if(data[l].date === data[r].date) {
+//             r++
+//         }
+//         else {
+//             arr.push({
+//                 date: data[l].date,
+//                 children: [
+//                     ...data.slice(l, r)
+//                 ]
+//             })
+//             l = r
+//             r++
+//         }
+//     }
+//     return arr;
+// }
+// onMounted(()=> {
+//     console.log(formatData(tmpData))
+// })
+
 const onInput = (event: any) => {
-    currentDate.value = event.detail;
+    // currentDate.value = event.detail;
 }
 const selectDate = () => {
     showPopup.value = true

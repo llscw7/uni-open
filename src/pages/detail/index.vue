@@ -20,7 +20,7 @@
                 </div>
             </div>
         </div>
-        <div class="detail-list" v-for="item in tmpData" :key="item.userId">
+        <div class="detail-list" v-for="item in detail_data" :key="item.time">
             <div class="list-wrap">
                 <div class="wrap-head">
                     <div class="head-date">{{item.date}} {{ item.weekdayCN }}</div>
@@ -28,24 +28,14 @@
                 </div>
                 <div class="wrap-container">
                     <div class="item-list">
-                        <div class="item-list-wrap out">
+                        <div class="item-list-wrap out" v-for="item2 in item.children" :key="item2.userId">
                             <van-icon name="balance-pay" class="item-wrap-icon" />
                             <div class="item-wrap-message">
-                                <div class="title">{{item.title}}</div>
-                                <div class="desc">{{ item.desc }}</div>
+                                <div class="title">{{item2.title}}</div>
+                                <div class="desc">{{ item2.desc }}</div>
                             </div>
                             <div class="item-wrap-money">
-                                {{ item.in }}
-                            </div>
-                        </div>
-                        <div class="item-list-wrap in">
-                            <van-icon name="cash-on-deliver" class="item-wrap-icon" />
-                            <div class="item-wrap-message">
-                                <div class="title">其他</div>
-                                <div class="desc">相关描述信息</div>
-                            </div>
-                            <div class="item-wrap-money">
-                                12.22
+                                {{ item2.in }}
                             </div>
                         </div>
                     </div>
@@ -63,6 +53,7 @@
                 type="year-month"
                 :value="currentDate"
                 @input="onInput"
+                @confirm="onConfirm"
             />
         </van-popup>
     </div>
@@ -71,52 +62,21 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, watch, Events } from 'vue'
 import data from './data.json';
+import { formatData } from './tool';
 import BottomNav from '../../components/nav/bottom.vue';
-console.log(data,'-----')
 
-interface DetailData {
-    userId: string;
-    title: string;
-    desc: string;
-    in: string;
-    out: string;
-    date: string;
-    weekdayCN: string;
-}
-
-const tmpData: DetailData[] = ref(data)
+const res = formatData(data)
+const detail_data = ref<DetailData[]>(res)
 
 const currentDate = ref(new Date().getTime())
 const minDate = ref(new Date().getTime())
 const showPopup = ref(false)
 
-// const formatData = (data: DetailData[]) => {
-//     const arr = []
-//     let l = 0;
-//     let r = 1;
-//     while(l < r) {
-//         if(data[l].date === data[r].date) {
-//             r++
-//         }
-//         else {
-//             arr.push({
-//                 date: data[l].date,
-//                 children: [
-//                     ...data.slice(l, r)
-//                 ]
-//             })
-//             l = r
-//             r++
-//         }
-//     }
-//     return arr;
-// }
-// onMounted(()=> {
-//     console.log(formatData(tmpData))
-// })
-
 const onInput = (event: any) => {
     // currentDate.value = event.detail;
+}
+const onConfirm = (value: any) => {
+    console.log(currentDate.value,'------',value)
 }
 const selectDate = () => {
     showPopup.value = true

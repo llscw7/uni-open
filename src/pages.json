@@ -3,7 +3,9 @@
 		{
 			"path": "pages/detail/index",
 			"style": {
-				"navigationBarTitleText": "首页"
+				"navigationBarTitleText": "记账本",
+				"navigationBarBackgroundColor": "#6366F1",
+        		"navigationBarTextStyle": "white"
 			}
 		},	
 		{

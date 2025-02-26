@@ -1,12 +1,12 @@
 
 <template>
     <div class="page">
-      <div class="header">
+      <!-- <div class="header">
         <div class="header-content">
           <text class="logo">logo</text>
           <uni-icons type="notification" size="24" color="#FFFFFF"></uni-icons>
         </div>
-      </div>
+      </div> -->
   
       <div class="main">
         <div class="search-section">
@@ -184,7 +184,7 @@
   
   .main {
     flex: 1;
-    margin-top: 88rpx;
+    /* margin-top: 88rpx; */
     margin-bottom: 98rpx;
     padding: 0 30rpx;
     padding-bottom: 200rpx;
@@ -192,7 +192,8 @@
   
   .search-section {
     position: sticky;
-    top: 88rpx;
+    /* top: 88rpx; */
+    top: 0;
     background-color: #F9FAFB;
     padding: 20rpx 0;
     z-index: 90;
@@ -412,7 +413,7 @@
     align-items: center;
     margin-bottom: 20rpx;
     position: sticky;
-    top: 204rpx;
+    top: 110rpx;
     background-color: #F9FAFB;
     padding: 16rpx 0;
     z-index: 80;

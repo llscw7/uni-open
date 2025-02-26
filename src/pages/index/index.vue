@@ -2,7 +2,9 @@
   <view class="content">
     <div class="dialogue" v-for="(item, index) in message" :key="index">
       <div class="dialogue-user" v-if="item.role === 'user'">
-        <div class="dialogue-user-content">{{ item.content }}</div>
+        <div class="dialogue-user-content">
+          <text user-select>{{ item.content }}</text>
+        </div>
         <img src="/static/logo.png" alt="" class="avatar">
       </div>
       <div class="dialogue-assistant" v-if="item.role === 'assistant'">
@@ -66,7 +68,7 @@ let requestTask: any;
 
 /**监听AI回答是否结束 */
 let timeoutId: any = null;
-const waitTime = 1000;
+const waitTime = 500;
 
 watch(message, (newValue, oldValue) => {
   clearTimeout(timeoutId);

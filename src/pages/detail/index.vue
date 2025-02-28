@@ -1,10 +1,10 @@
 
 <template>
-    <div class="page">
-      <div class="header">
+    <div class="page" :style="{ paddingTop: navbarHeight + 'px' }">
+      <div class="header" :style="{ height: navbarHeight + 'px' }">
         <div class="header-content">
-          <text class="logo">logo</text>
-          <uni-icons type="notification" size="24" color="#FFFFFF"></uni-icons>
+          <div class="chat-icon icon-size-40" :style="{ top: chatIconTop + 'px' }" @click="goToPage('/pages/index/index')"></div>
+           <div class="title" :style="{ top: titleTop + 'px' }">记账本</div>
         </div>
       </div>
   
@@ -143,25 +143,58 @@
   </template>
   
   <script lang="ts" setup>
-  // 组件逻辑
+import { ref, onMounted, onUnmounted } from 'vue';
+const titleTop = ref(0);
+const navbarHeight = ref(0);
+const chatIconTop = ref(0);
+
+onMounted(() => {
+  calculateTitlePosition();
+});
+
+const goToPage = (url: string) => {
+  uni.navigateTo({
+    url: url,
+  });
+}
+
+const calculateTitlePosition = () => {
+  // 获取胶囊按钮信息
+  const menuButtonInfo = uni.getMenuButtonBoundingClientRect();
+
+      // 胶囊按钮的垂直中心位置
+      const capsuleCenter = menuButtonInfo.top + menuButtonInfo.height / 2;
+
+      // 假设标题高度为 26px
+      const titleHeight = 26;
+      const _titleTop = capsuleCenter - titleHeight / 2;
+
+      const chatIconHeight = 22;
+      const _chatIconTop = capsuleCenter - chatIconHeight / 2;
+
+      // 导航栏高度 = 胶囊按钮底部 + 15px
+      const _navbarHeight = menuButtonInfo.bottom + 15;
+
+      // 更新数据
+      titleTop.value = _titleTop;
+      navbarHeight.value = _navbarHeight;
+      chatIconTop.value = _chatIconTop;
+}
   </script>
   
-  <style>
-  page {
-    height: 100%;
-    background-color: #F9FAFB;
-  }
+  <style lang="less" scoped>
   
   .page {
     display: flex;
     flex-direction: column;
     height: 100%;
+    box-sizing: border-box;
+    background-color: #F9FAFB;
   }
   
   .header {
     background-color: #6366F1;
     padding: 0 30rpx;
-    height: 88rpx;
     position: fixed;
     top: 0;
     left: 0;
@@ -171,9 +204,18 @@
   
   .header-content {
     height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    .chat-icon {
+      position: absolute;
+      bottom: 50rpx;
+    }
+    .title {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 46rpx;
+      color: #FFFFFF;
+      line-height: 1;
+    }
   }
   
   .logo {
@@ -184,8 +226,6 @@
   
   .main {
     flex: 1;
-    margin-top: 88rpx;
-    margin-bottom: 98rpx;
     padding: 0 30rpx;
     padding-bottom: 200rpx;
   }
@@ -533,6 +573,11 @@
   .icon-size-24 {
     width: 24rpx;
     height: 24rpx;
+  }
+
+  .icon-size-36 {
+    width: 36rpx;
+    height: 36rpx;
   }
 
   .icon-size-40 {

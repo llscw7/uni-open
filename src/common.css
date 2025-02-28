@@ -196,6 +196,18 @@
     background-size: 100% 100%;
 }
 
+/* 通知 */
+.notice-icon {
+    background: url(http://qno.ttscw.top/record/a-lujing2.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+/* 聊天 */
+.chat-icon {
+    background: url(http://qno.ttscw.top/record/twitch-copy.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
 /* 下降 */
 .decline-icon {
     background: url(http://qno.ttscw.top/record/I1.png) no-repeat center;

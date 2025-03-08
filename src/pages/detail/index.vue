@@ -2,30 +2,41 @@
 <template>
     <div class="page" :style="{ paddingTop: navbarHeight + 'px' }">
       <div class="header" :style="{ height: navbarHeight + 'px' }">
+
         <div class="header-content">
-          <div class="chat-icon icon-size-40" :style="{ top: chatIconTop + 'px' }" @click="goToPage('/pages/index/index')"></div>
            <div class="title" :style="{ top: titleTop + 'px' }">记账本</div>
         </div>
-      </div>
-  
-      <div class="main">
-        <div class="search-section">
-          <div class="search-wrapper">
-            
-            <div class="search-icon icon-size-24"></div>
-            <input type="text" placeholder="搜索交易记录" class="search-input"/>
+
+        <div class="tools-section" :style="{ top: toolsWrapTop + 'px' }">
+          <div class="tools-left-wrap">
+            <div class="book-btn tools-btn">
+              <div class="book-icon icon-size-40"></div>
+              <div class="text">总账本</div>
+            </div>
           </div>
-          <div class="filter-btn">
-            <div class="filter-icon icon-size-24"></div>
+          <div class="tools-right-wrap">
+            <div class="search-btn tools-btn" @click="goToPage('/pages/search/index')">
+              <div class="search-icon-2 icon-size-40"></div>
+              <div class="text">搜索</div>
+            </div>
+            <div class="filter-btn tools-btn">
+              <div class="filter-icon icon-size-40"></div>
+              <div class="text">筛选</div>
+            </div>
           </div>
         </div>
+
+      </div>
+
+      
   
+      <div class="main">
         <div class="bill-section">
           <div class="bill-header">
             <text class="bill-title">2023 年 12 月账单</text>
             <div class="switch-month">
-                <div class="calendar-icon icon-size-24"></div>
-                <text class="switch-text">切换月份</text>
+                <div class="calendar-icon icon-size-36"></div>
+                <text class="switch-text">切换日期</text>
             </div>
           </div>
   
@@ -34,7 +45,7 @@
               <div class="card-header">
                 <div class="icon-wrapper">
                     <div class="upgrade-icon
-                    icon-size-60"></div>
+                    icon-size-70"></div>
                 </div>
                 <text class="card-label">本月收入</text>
               </div>
@@ -45,7 +56,7 @@
               <div class="card-header">
                 <div class="icon-wrapper">
                     <div class="decline-icon
-                    icon-size-60"></div>
+                    icon-size-70"></div>
                 </div>
                 <text class="card-label">本月支出</text>
               </div>
@@ -56,7 +67,7 @@
               <div class="card-header">
                 <div class="icon-wrapper">
                   <div class="surplus-icon
-                  icon-size-60"></div>
+                  icon-size-70"></div>
                 </div>
                 <text class="card-label">本月结余</text>
               </div>
@@ -84,58 +95,27 @@
         <div class="transactions-section">
           <div class="transactions-header">
             <text class="section-title">近期交易</text>
-            <text class="div-all">查看全部</text>
           </div>
-  
-          <scroll-div scroll-y class="transaction-list">
-            <div class="day-group" v-for="(day, index) in ['2023-12-15', '2023-12-14', '2023-12-13', '2023-12-12', '2023-12-11', '2023-12-10', '2023-12-09']" :key="index">
-              <div class="day-header">
-                <text class="day-date">{{day}}</text>
-                <div class="day-summary">
-                  <text class="income-text" v-if="day === '2023-12-15'">收入 ¥12,580</text>
-                  <text class="expense-text">支出 ¥428</text>
-                </div>
-              </div>
-  
-              <div class="transaction-items">
-                <div class="transaction-item">
-                    <div class="food-icon icon-size-80"></div>
-                  <div class="transaction-info">
-                    <div class="transaction-title">海底捞火锅</div>
-                    <div class="transaction-subtitle">晚餐 · 与朋友聚餐</div>
-                  </div>
-                  <text class="transaction-amount expense">-¥ 428</text>
-                </div>
-  
-                <div class="transaction-item" v-if="day === '2023-12-15'">
-                    <div class="salary-icon icon-size-80"></div>
-                  <div class="transaction-info">
-                    <div class="transaction-title">工资收入</div>
-                    <div class="transaction-subtitle">12 月工资</div>
-                  </div>
-                  <text class="transaction-amount income">+¥ 12,580</text>
-                </div>
-              </div>
-            </div>
-          </scroll-div>
+
+          <TransactionList :dayWrapTop="navbarHeight" />
         </div>
       </div>
   
       <div class="add-button">
-        <uni-icons type="plusempty" size="24" color="#FFFFFF"></uni-icons>
+        <div class="add-icon icon-size-60"></div>
       </div>
   
       <div class="tab-bar">
         <div class="tab-item active">
-          <div class="home-icon icon-size-40"></div>
+          <div class="icon-size-40" :class="[true ? 'home-icon-actived' : 'home-icon']"></div>
           <text class="tab-text">首页</text>
         </div>
         <div class="tab-item">
-          <div class="statistics-icon icon-size-40"></div>
+          <div class="icon-size-40" :class="[false ? 'statistics-icon-actived' : 'statistics-icon']"></div>
           <text class="tab-text">统计</text>
         </div>
         <div class="tab-item">
-          <div class="mine-icon icon-size-40"></div>
+          <div class="icon-size-40" :class="[false ? 'mine-icon-actived' : 'mine-icon']"></div>
           <text class="tab-text">我的</text>
         </div>
       </div>
@@ -144,18 +124,29 @@
   
   <script lang="ts" setup>
 import { ref, onMounted, onUnmounted } from 'vue';
+import TransactionList from '@/components/transaction-list/index.vue';
+import { getCapsulePosition } from '@/util/tool';
 const titleTop = ref(0);
 const navbarHeight = ref(0);
-const chatIconTop = ref(0);
+// const chatIconTop = ref(0);
+const toolsWrapTop = ref(0);
 
 onMounted(() => {
-  calculateTitlePosition();
+  // calculateTitlePosition();
+  initHeader()
 });
 
 const goToPage = (url: string) => {
   uni.navigateTo({
     url: url,
   });
+}
+
+const initHeader = () => {
+  const { capsuleCenter, capsuleBottom } = getCapsulePosition();
+  titleTop.value = capsuleCenter - 26 / 2;
+  navbarHeight.value = capsuleBottom + 62;
+  toolsWrapTop.value = capsuleBottom;
 }
 
 const calculateTitlePosition = () => {
@@ -173,18 +164,22 @@ const calculateTitlePosition = () => {
       const _chatIconTop = capsuleCenter - chatIconHeight / 2;
 
       // 导航栏高度 = 胶囊按钮底部 + 15px
-      const _navbarHeight = menuButtonInfo.bottom + 15;
+      const _navbarHeight = menuButtonInfo.bottom + 62;
 
       // 更新数据
       titleTop.value = _titleTop;
       navbarHeight.value = _navbarHeight;
       chatIconTop.value = _chatIconTop;
+      toolsWrapTop.value = _navbarHeight - 62;
 }
   </script>
   
   <style lang="less" scoped>
-  
+//   :root {
+//   --primary-color: #348F50;
+// }
   .page {
+    position: relative;
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -193,7 +188,7 @@ const calculateTitlePosition = () => {
   }
   
   .header {
-    background-color: #6366F1;
+    background-color: var(--primary-color);
     padding: 0 30rpx;
     position: fixed;
     top: 0;
@@ -230,12 +225,23 @@ const calculateTitlePosition = () => {
     padding-bottom: 200rpx;
   }
   
-  .search-section {
-    position: sticky;
-    top: 88rpx;
-    background-color: #F9FAFB;
-    padding: 20rpx 0;
+  .tools-section {
+    position: absolute;
+    left: 0;
+    right: 0;
+    padding: 20rpx 20rpx 16rpx 20rpx;
+    box-sizing: border-box;
     z-index: 90;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .tools-left-wrap {
+    display: flex;
+    gap: 20rpx;
+  }
+
+  .tools-right-wrap {
     display: flex;
     gap: 20rpx;
   }
@@ -262,15 +268,20 @@ const calculateTitlePosition = () => {
     position: absolute;
     left: 30rpx;
   }
-  
-  .filter-btn {
-    width: 80rpx;
-    height: 80rpx;
-    background: #FFFFFF;
+
+  .tools-btn {
+    padding: 16rpx 20rpx;
+    background: rgba(255, 255, 255, 0.1);
     border-radius: 16rpx;
     display: flex;
     align-items: center;
     justify-content: center;
+    .text {
+      margin-left: 10rpx;
+      font-size: 30rpx;
+      color: #FFFFFF;
+      font-weight: bold;
+    }
   }
   
   .bill-section {
@@ -281,22 +292,23 @@ const calculateTitlePosition = () => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20rpx;
+    margin: 28rpx 0 20rpx;
+    height: 56rpx;
   }
   
   .bill-title {
-    font-size: 32rpx;
+    font-size: 36rpx;
     font-weight: 500;
   }
   
   .switch-month {
     display: flex;
     align-items: center;
-    color: #6366F1;
+    color: var(--primary-color);
   }
   
   .switch-text {
-    font-size: 24rpx;
+    font-size: 30rpx;
     margin-left: 8rpx;
   }
   
@@ -367,7 +379,7 @@ const calculateTitlePosition = () => {
   }
   
   .budget-card {
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(99, 102, 241, 0.1) 100%);
+    background: var(--budget-background-color);
     border-radius: 32rpx;
     padding: 24rpx;
   }
@@ -400,7 +412,7 @@ const calculateTitlePosition = () => {
   
   .progress {
     height: 100%;
-    background-color: #6366F1;
+    background-color: var(--primary-color);
     border-radius: 10rpx;
     transition: width 0.5s ease;
   }
@@ -417,7 +429,7 @@ const calculateTitlePosition = () => {
   
   .remaining {
     font-size: 24rpx;
-    color: #6366F1;
+    color: var(--primary-color);
     font-weight: 500;
   }
   
@@ -439,7 +451,7 @@ const calculateTitlePosition = () => {
   
   .div-all {
     font-size: 28rpx;
-    color: #6366F1;
+    color: var(--primary-color);
   }
   
   .day-group {
@@ -460,6 +472,7 @@ const calculateTitlePosition = () => {
   
   .day-date {
     font-size: 28rpx;
+    font-weight: bold;
     color: #666666;
   }
   
@@ -529,7 +542,7 @@ const calculateTitlePosition = () => {
     bottom: 160rpx;
     width: 112rpx;
     height: 112rpx;
-    background-color: #6366F1;
+    background-color: var(--primary-color);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -567,38 +580,20 @@ const calculateTitlePosition = () => {
   }
   
   .tab-item.active .tab-text {
-    color: #6366F1;
+    color: var(--primary-color);
   }
 
-  .icon-size-24 {
-    width: 24rpx;
-    height: 24rpx;
-  }
-
-  .icon-size-36 {
-    width: 36rpx;
-    height: 36rpx;
-  }
-
-  .icon-size-40 {
-    width: 40rpx;
-    height: 40rpx;
-  }
-  
-  .icon-size-60 {
-    width: 60rpx;
-    height: 60rpx;
-  }
-
-  .icon-size-80 {
+  .class-icon {
     width: 80rpx;
     height: 80rpx;
+    background: var(--class-icon-background-color);
+    border-radius: 24rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  .search-icon {
-    position: absolute;
-    left: 28rpx;
-  }
+  
 
   </style>
   

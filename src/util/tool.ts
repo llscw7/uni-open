@@ -57,7 +57,33 @@ async function autoRun(arr: string[], func: Function, delay: number) {
   }
 }
 
+/**
+ * 获取胶囊按钮位置信息
+ * @returns 
+ */
+function getCapsulePosition() {
+     // 获取胶囊按钮信息
+  const menuButtonInfo = uni.getMenuButtonBoundingClientRect();
+
+  // 胶囊按钮的垂直中心位置
+  const capsuleCenter = menuButtonInfo.top + menuButtonInfo.height / 2;
+
+  const systemInfo = uni.getSystemInfoSync();  
+    const screenWidth = systemInfo.screenWidth;
+
+    const capsuleToRight = screenWidth - menuButtonInfo.right;
+
+    return {
+        capsuleCenter,
+        capsuleTop: menuButtonInfo.top,
+        capsuleRight: menuButtonInfo.left,
+        capsuleBottom: menuButtonInfo.bottom,
+        capsuleWidth: screenWidth - menuButtonInfo.left + capsuleToRight,
+    };
+}
+
 export {
     autoRun,
+    getCapsulePosition
 }
 

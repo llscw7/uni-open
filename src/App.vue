@@ -10,7 +10,7 @@ onHide(() => {
   console.log("App Hide");
 });
 </script>
-<style>
+<style lang="less">
 @import "./wxcomponents/vant/common/index.wxss";
 @import './common.css';
 @font-face {
@@ -40,4 +40,7 @@ onHide(() => {
     -webkit-text-stroke-width: 0.2px;
     -moz-osx-font-smoothing: grayscale;
 }
+// page {
+//   --primary-color: #348F50;
+// }
 </style>

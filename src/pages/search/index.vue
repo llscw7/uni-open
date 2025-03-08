@@ -22,11 +22,11 @@
           <text class="date-text">2023-12-15</text>
         </div>
   
-        <div class="search-history">
+        <div class="search-history" v-if="false">
           <div class="search-history-header">
             <text class="search-history-title">搜索记录</text>
             <div class="clear-btn">
-                <div class="delete-icon icon-size-30"></div>
+                <div class="delete-icon icon-size-36"></div>
               <text class="clear-text">清除</text>
             </div>
           </div>
@@ -34,10 +34,16 @@
             <text class="tag-item">餐饮</text>
             <text class="tag-item">交通</text>
             <text class="tag-item">购物</text>
+            <text class="tag-item">餐饮</text>
+            <text class="tag-item">交通是什么</text>
+            <text class="tag-item">购物</text>
+            <text class="tag-item">餐饮</text>
+            <text class="tag-item">交通</text>
+            <text class="tag-item">购物</text>
           </div>
         </div>
   
-        <TransactionList :dayWrapTop="100" />
+        <TransactionList :dayWrapTop="0" />
       </div>
     </div>
   </template>
@@ -143,14 +149,15 @@ const clearIcon = () => {
   
   .date-text {
     margin-left: 12rpx;
-    font-size: 14px;
+    font-size: 28rpx;
     color: #666666;
   }
   
   .search-history {
     background-color: #FFFFFF;
     border-radius: 16rpx;
-    padding: 24rpx;
+    padding: 32rpx;
+    padding-top: 24rpx;
     margin-bottom: 24rpx;
     box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
   }
@@ -159,11 +166,11 @@ const clearIcon = () => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 16rpx;
+    margin-bottom: 20rpx;
   }
   
   .search-history-title {
-    font-size: 14px;
+    font-size: 36rpx;
     font-weight: 500;
   }
   
@@ -173,7 +180,7 @@ const clearIcon = () => {
   }
   
   .clear-text {
-    font-size: 14px;
+    font-size: 30rpx;
     color: #999999;
     margin-left: 8rpx;
   }
@@ -181,14 +188,14 @@ const clearIcon = () => {
   .tag-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 16rpx;
+    gap: 20rpx;
   }
   
   .tag-item {
-    padding: 8rpx 16rpx;
+    padding: 10rpx 26rpx;
     background-color: #f3f4f6;
     border-radius: 999rpx;
-    font-size: 12px;
+    font-size: 30rpx;
     color: #666666;
   }
   

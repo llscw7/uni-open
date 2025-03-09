@@ -121,7 +121,14 @@ const handleClearSearchHistory = () => {
  */
 const handleSearch = () => {
   showSearchHistory.value = false;
-  historyTags.value.push(inputSearchValue.value);
+  const index = historyTags.value.indexOf(inputSearchValue.value);
+  if(index === -1) {
+    historyTags.value.push(inputSearchValue.value);
+  }
+  else {
+    let tmp = historyTags.value.splice(index, 1);
+    historyTags.value.unshift(tmp[0]);
+  }
   uni.setStorage({
     key: 'searchHistory',
     data: JSON.stringify(historyTags.value),

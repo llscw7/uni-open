@@ -593,8 +593,6 @@ const calculateTitlePosition = () => {
     justify-content: center;
   }
 
-  
-
   </style>
   
   

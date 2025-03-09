@@ -17,8 +17,6 @@
       </div>
     </div>
 
-
-
     <div class="content">
 
       <div class="date-selector" v-if="!showSearchHistory">
@@ -42,6 +40,7 @@
       <TransactionList v-if="!showSearchHistory" :dayWrapTop="navbarHeight" />
     </div>
     <van-dialog id="van-dialog" />
+    
   </div>
 </template>
 
@@ -106,13 +105,12 @@ const handleClearSearchHistory = () => {
   })
     .then(() => {
       historyTags.value = [];
-      console.log(historyTags.value);
-      // uni.removeStorage({
-      //   key: 'searchHistory',
-      //   success: function () {
-      //     console.log('success');
-      //   }
-      // });
+      uni.removeStorage({
+        key: 'searchHistory',
+        success: function () {
+          console.log('success');
+        }
+      });
     })
     .catch(() => {
     });

@@ -109,6 +109,9 @@ VantComponent({
         },
         handleAction(action) {
             this.$emit(action, { dialog: this });
+            /** Fixed：修复函数调用Promise回调函数不生效问题 */
+            this.data.callback(action, { dialog: this });
+            /** Fixed：修复函数调用Promise回调函数不生效问题 */
             const { asyncClose, beforeClose } = this.data;
             if (!asyncClose && !beforeClose) {
                 this.close(action);

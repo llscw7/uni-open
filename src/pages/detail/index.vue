@@ -128,7 +128,6 @@ import TransactionList from '@/components/transaction-list/index.vue';
 import { getCapsulePosition } from '@/util/tool';
 const titleTop = ref(0);
 const navbarHeight = ref(0);
-// const chatIconTop = ref(0);
 const toolsWrapTop = ref(0);
 
 onMounted(() => {
@@ -143,10 +142,18 @@ const goToPage = (url: string) => {
 }
 
 const initHeader = () => {
+  // #ifdef MP-WEIXIN
   const { capsuleCenter, capsuleBottom } = getCapsulePosition();
   titleTop.value = capsuleCenter - 26 / 2;
   navbarHeight.value = capsuleBottom + 62;
   toolsWrapTop.value = capsuleBottom;
+  // #endif
+  // #ifndef MP-WEIXIN
+  titleTop.value = 61;
+  navbarHeight.value = 152;
+  toolsWrapTop.value = 90;
+  // #endif
+  console.log(titleTop.value, navbarHeight.value, toolsWrapTop.value);
 }
 
 const calculateTitlePosition = () => {
@@ -160,16 +167,12 @@ const calculateTitlePosition = () => {
       const titleHeight = 26;
       const _titleTop = capsuleCenter - titleHeight / 2;
 
-      const chatIconHeight = 22;
-      const _chatIconTop = capsuleCenter - chatIconHeight / 2;
-
       // 导航栏高度 = 胶囊按钮底部 + 15px
       const _navbarHeight = menuButtonInfo.bottom + 62;
 
       // 更新数据
       titleTop.value = _titleTop;
       navbarHeight.value = _navbarHeight;
-      chatIconTop.value = _chatIconTop;
       toolsWrapTop.value = _navbarHeight - 62;
 }
   </script>

@@ -52,7 +52,6 @@ import { getCapsulePosition } from '@/util/tool';
 const searchPaddingTop = ref(0);
 const searchPaddingRight = ref(0);
 const navbarHeight = ref(0);
-const toolsWrapTop = ref(0);
 
 const inputSearchValue = ref('');
 const showClearIcon = ref(false);
@@ -75,11 +74,18 @@ onMounted(() => {
  * 初始化头部导航栏
  */
 const initHeader = () => {
+  // #ifdef MP-WEIXIN
   const { capsuleCenter, capsuleBottom, capsuleTop, capsuleRight, capsuleWidth } = getCapsulePosition();
   searchPaddingTop.value = capsuleTop - 2;
   navbarHeight.value = capsuleBottom + 15;
-  toolsWrapTop.value = capsuleBottom;
   searchPaddingRight.value = capsuleWidth + 10;
+  // #endif
+  // #ifndef MP-WEIXIN
+  searchPaddingTop.value = 56;
+  navbarHeight.value = 105;
+  searchPaddingRight.value = 111;
+  // #endif
+  console.log(searchPaddingTop.value, navbarHeight.value, searchPaddingRight.value);
 }
 
 /**

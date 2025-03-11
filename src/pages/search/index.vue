@@ -2,7 +2,7 @@
   <div class="search" :style="{ paddingTop: navbarHeight + 'px' }">
     <div class="header"
       :style="{ paddingTop: searchPaddingTop + 'px', paddingRight: searchPaddingRight + 'px', height: navbarHeight + 'px' }">
-      <div class="left-arrow-icon-wrap">
+      <div class="left-arrow-icon-wrap" @click="goToBack">
         <div class="left-arrow-icon-2"></div>
       </div>
       <div class="search-box">
@@ -39,15 +39,19 @@
 
       <TransactionList v-if="!showSearchHistory" :dayWrapTop="navbarHeight" />
     </div>
-    <van-dialog id="van-dialog" />
-    
+    <Dialog 
+      v-model:visible="showDialog" 
+      message="确认清空搜索记录吗？"
+      @confirm="onConfirm" 
+    >
+    </Dialog>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
 import TransactionList from '@/components/transaction-list/index.vue';
-import Dialog from '../../wxcomponents/vant/dialog/dialog';
+import Dialog from '@/ui-modules/dialog/index.vue';
 import { getCapsulePosition } from '@/util/tool';
 const searchPaddingTop = ref(0);
 const searchPaddingRight = ref(0);
@@ -59,6 +63,18 @@ const showClearIcon = ref(false);
 const showSearchHistory = ref(true);
 
 const historyTags = ref<string[]>([])
+
+const showDialog = ref(false);
+
+const onConfirm = () => {
+  historyTags.value = [];
+  uni.removeStorage({
+    key: 'searchHistory',
+    success: function () {
+      console.log('success');
+    }
+  });
+};
 
 onMounted(() => {
   initHeader()
@@ -106,20 +122,7 @@ const onChangeSearchInput = (event: any) => {
  * 清空搜索历史
  */
 const handleClearSearchHistory = () => {
-  Dialog.confirm({
-    title: '确认清空搜索记录吗？',
-  })
-    .then(() => {
-      historyTags.value = [];
-      uni.removeStorage({
-        key: 'searchHistory',
-        success: function () {
-          console.log('success');
-        }
-      });
-    })
-    .catch(() => {
-    });
+  showDialog.value = true;
 }
 
 /**
@@ -161,6 +164,18 @@ const handleTagItem = (item: string) => {
   inputSearchValue.value = item;
   showClearIcon.value = true;
   showSearchHistory.value = false;
+}
+
+const goToBack = () => {
+  const pages = getCurrentPages(); // 获取当前页面栈  
+  if (pages.length > 1) {  
+    uni.navigateBack(); // 存在上一页，返回上一页  
+  } else {  
+    // 如果没有上一页可以返回，可以选择跳转到首页或其他页面  
+    uni.redirectTo({  
+      url: '/pages/detail/index'
+    });  
+  } 
 }
 </script>
 

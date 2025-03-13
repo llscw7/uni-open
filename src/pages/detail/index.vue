@@ -33,8 +33,10 @@
       <div class="main">
         <div class="bill-section">
           <div class="bill-header">
-            <text class="bill-title">2023 年 12 月账单</text>
-            <div class="switch-month">
+            <text class="bill-title">2023年12月11日-2025年11月10日</text>
+            <!-- <text class="bill-title">2023年12月11日</text> -->
+            <div class="down-arrow-icon icon-size-40"></div>
+            <div class="switch-month" v-if="false">
                 <div class="calendar-icon icon-size-36"></div>
                 <text class="switch-text">切换日期</text>
             </div>
@@ -293,7 +295,7 @@ const calculateTitlePosition = () => {
   
   .bill-header {
     display: flex;
-    justify-content: space-between;
+    // justify-content: space-between;
     align-items: center;
     margin: 28rpx 0 20rpx;
     height: 56rpx;

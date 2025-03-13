@@ -19,7 +19,7 @@
 
     <div class="content">
 
-      <div class="date-selector" v-if="!showSearchHistory">
+      <div class="date-selector" v-if="!showSearchHistory" @click="openPopupDate">
         <div class="calendar-icon icon-size-36"></div>
         <text class="date-text">2023-12-15</text>
       </div>
@@ -45,6 +45,8 @@
       @confirm="onConfirm" 
     >
     </Dialog>
+    <PopupDate ref="popupDateRef" />
+    <UIPopupCalendar />
   </div>
 </template>
 
@@ -52,7 +54,13 @@
 import { ref, onMounted } from 'vue';
 import TransactionList from '@/components/transaction-list/index.vue';
 import Dialog from '@/ui-modules/dialog/index.vue';
+import UICalendar from '@/ui-modules/calendar/index.vue'
+import UIPopupCalendar from '@/ui-modules/calendar/popup-calendar.vue'
 import { getCapsulePosition } from '@/util/tool';
+import PopupDate from '@/components/popup-date/index.vue';
+const popupDateRef = ref();
+
+
 const searchPaddingTop = ref(0);
 const searchPaddingRight = ref(0);
 const navbarHeight = ref(0);
@@ -176,6 +184,13 @@ const goToBack = () => {
       url: '/pages/detail/index'
     });  
   } 
+}
+
+/**
+ * 打开日期选择弹窗
+ */
+const openPopupDate = () => {
+  popupDateRef.value.open();
 }
 </script>
 
@@ -408,4 +423,5 @@ const goToBack = () => {
   transform: translate(-50%, -50%);
   z-index: 1;
 }
+
 </style>

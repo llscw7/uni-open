@@ -441,6 +441,26 @@ TODO:
     transform: rotate(45deg);
 }
 
+/* 右箭头 */
+.right-arrow-icon {
+    background: url(http://qno.ttscw.top/record-other/Arrow-Right-S-Line--Streamline-Remix.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+.right-arrow-icon-2 {
+    width: 26rpx;
+    height: 26rpx;
+    border-right: 2px solid rgba(0, 0, 0, 0.6);
+    border-bottom: 2px solid rgba(0, 0, 0, 0.6);
+    transform: rotate(-45deg);
+}
+
+/* 下箭头 */
+.down-arrow-icon {
+    background: url(http://qno.ttscw.top/record-other/Arrow-Down-S-Line--Streamline-Remix.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
 /* 删除 */
 .delete-icon {
     background: url(http://qno.ttscw.top/record-other/Delete-Bin-5-Fill--Streamline-Remix-Fill.png) no-repeat center;

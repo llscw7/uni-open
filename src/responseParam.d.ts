@@ -36,3 +36,10 @@ interface DetailData {
     weekdayCN: string;
     children: DetailDataItem[];
 }
+
+interface DayParam {
+    empty?: boolean;
+    day: number;
+    date: Date;
+    lunar: string;
+}

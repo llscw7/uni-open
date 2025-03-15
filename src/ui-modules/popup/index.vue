@@ -1,6 +1,6 @@
 <template>
     <!-- 弹窗组件 -->
-    <div class="popup-mask" :style="{opacity: isVisible ? 1 : 0, zIndex: isVisible ? 999 : -1}" @click="closePopup" @touchmove.stop.prevent="moveHandle">
+    <div class="popup-mask" :style="{opacity: isVisible ? 1 : 0, zIndex: isVisible ? props.zIndex : -1}" @click="closePopup" @touchmove.stop.prevent="moveHandle">
         <div class="popup-content" :style="{transform: isVisible ? 'translateY(0)' : 'translateY(100%)'}"  @click.stop>
             <slot></slot>
         </div>
@@ -8,7 +8,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineExpose, defineEmits } from 'vue';
+import { ref, defineExpose, defineProps } from 'vue';
+
+const props = defineProps({
+    zIndex: {
+        type: Number,
+        default: 999
+    }
+});
 
 // 控制弹窗显示与隐藏的状态
 const isVisible = ref(false);
@@ -42,7 +49,11 @@ const open = () => {
     isVisible.value = true;
 }
 
-defineExpose({ open });
+const close = () => {
+    closePopup()
+}
+
+defineExpose({ open, close });
 
 </script>
 

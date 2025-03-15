@@ -56,7 +56,7 @@ TODO:
     background-size: 100% 100%;
 }
 
-/* 交通 */ 
+/* 交通 */
 .subway-icon {
     background: url(http://qno.ttscw.top/record-class/normal/Bus-Fill--Streamline-Remix-Fill.png) no-repeat center;
     background-size: 100% 100%;
@@ -107,9 +107,10 @@ TODO:
 }
 
 .medical-icon-yellow {
-    background: url(http://qno.ttscw.top/record-class/yellow/Capsule-Fill--Streamline-Remix-Fill.png) no-repeat center;   
+    background: url(http://qno.ttscw.top/record-class/yellow/Capsule-Fill--Streamline-Remix-Fill.png) no-repeat center;
     background-size: 100% 100%;
 }
+
 /* 旅游 */
 .travel-icon {
     background: url(http://qno.ttscw.top/record-class/normal/Plane-Line--Streamline-Remix.png) no-repeat center;
@@ -390,6 +391,7 @@ TODO:
     background: url(http://qno.ttscw.top/record-other/home.png) no-repeat center;
     background-size: 100% 100%;
 }
+
 .home-icon-actived {
     background: url(http://qno.ttscw.top/record-other/home-light.png) no-repeat center;
     background-size: 100% 100%;
@@ -400,6 +402,7 @@ TODO:
     background: url(http://qno.ttscw.top/record-other/chart.png) no-repeat center;
     background-size: 100% 100%;
 }
+
 .statistics-icon-actived {
     background: url(http://qno.ttscw.top/record-other/chart-light.png) no-repeat center;
     background-size: 100% 100%;
@@ -410,6 +413,7 @@ TODO:
     background: url(http://qno.ttscw.top/record-other/user.png) no-repeat center;
     background-size: 100% 100%;
 }
+
 .mine-icon-actived {
     background: url(http://qno.ttscw.top/record-other/user-light.png) no-repeat center;
     background-size: 100% 100%;
@@ -473,45 +477,37 @@ TODO:
     background-size: 100% 100%;
 }
 
-
-/* 主题色 */
-page {
-    --primary-color: #f5af19;
-    --class-icon-background-color: #fef7e8;
-    --budget-background-color: linear-gradient(0deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), linear-gradient(135deg, rgba(245, 175, 25, 0.05) 0%, rgba(245, 175, 25, 0.1) 99%);
-}
-
 .icon-size-30 {
     width: 30rpx;
     height: 30rpx;
-  }
+}
 
-  .icon-size-36 {
+.icon-size-36 {
     width: 36rpx;
     height: 36rpx;
-  }
+}
 
-  .icon-size-40 {
+.icon-size-40 {
     width: 40rpx;
     height: 40rpx;
-  }
+}
 
-  .icon-size-50 {
+.icon-size-50 {
     width: 50rpx;
     height: 50rpx;
-  }
+}
 
-  .icon-size-60 {
+.icon-size-60 {
     width: 60rpx;
     height: 60rpx;
-  }
-  
-  .icon-size-70 {
+}
+
+.icon-size-70 {
     width: 70rpx;
     height: 70rpx;
-  }
+}
 
-  .icon-size-80 {
+.icon-size-80 {
     width: 80rpx;
     height: 80rpx;
-  }
+}

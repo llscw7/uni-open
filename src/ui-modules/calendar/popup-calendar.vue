@@ -1,5 +1,5 @@
 <template>
-    <UIPopup ref="popup">
+    <UIPopup ref="popup" :z-index="props.zIndex">
         <view class="calendar-container">
             <!-- 头部：显示当前年月和切换按钮 -->
             <view class="header">
@@ -41,9 +41,11 @@
   </template>
   
   <script setup lang="ts">
-  import { ref, computed, ComputedRef, onMounted } from 'vue';
+  import { ref, computed, ComputedRef, onMounted, defineProps, defineExpose } from 'vue';
   import { DateTime } from 'luxon'; // 引入 Luxon
   import UIPopup from '@/ui-modules/popup/index.vue';
+  import 'intl';
+  import 'intl/locale-data/jsonp/zh-Hans-CN'
 
   // 定义 DayParam 类型
   interface DayParam {
@@ -52,16 +54,19 @@
     empty?: boolean;
   }
 
+  const props = defineProps({
+      zIndex: {
+          type: Number,
+          default: 999
+      }
+  });
+
   // 当前日期
   const currentDate = ref(DateTime.local());
 
   const selectDay = ref();
 
   const popup = ref();
-
-  onMounted(() => {
-    popup.value.open();
-  });
   
   // 生成日历数据
   const days: ComputedRef<DayParam[]> = computed(() => {
@@ -109,12 +114,19 @@
     const isToday = (day: DayParam) => {
         return day.date?.hasSame(DateTime.local(), 'day');
     };
+
+    const open = () => {
+      popup.value.open();
+    }
+
+    defineExpose({ open })
   
   </script>
   
   <style lang="less" scoped>
   .calendar-container {
     width: 100%;
+    height: 760rpx;
     padding: 20rpx;
     background-color: #fff;
     border-radius: 10rpx;

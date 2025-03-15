@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onLaunch, onShow, onHide } from "@dcloudio/uni-app";
+
 onLaunch(() => {
   console.log("App Launch");
 });
@@ -13,6 +14,7 @@ onHide(() => {
 <style lang="less">
 @import "./wxcomponents/vant/common/index.wxss";
 @import './common.css';
+@import './theme.css';
 @font-face {
   font-family: 'iconfont';  /* Project id 4569308 */
   src: url('//at.alicdn.com/t/c/font_4569308_ymsvqclxgsr.woff2?t=1717139133007') format('woff2'),

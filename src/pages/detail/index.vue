@@ -33,7 +33,7 @@
       <div class="main">
         <div class="bill-section">
           <div class="bill-header">
-            <text class="bill-title">2023年12月11日-2025年11月10日</text>
+            <text class="bill-title" @click="openPopupDate">2023年12月11日-2025年11月10日</text>
             <!-- <text class="bill-title">2023年12月11日</text> -->
             <div class="down-arrow-icon icon-size-40"></div>
             <div class="switch-month" v-if="false">
@@ -121,6 +121,7 @@
           <text class="tab-text">我的</text>
         </div>
       </div>
+      <PopupDate ref="popupDateRef" />
     </div>
   </template>
   
@@ -128,13 +129,16 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 import TransactionList from '@/components/transaction-list/index.vue';
 import { getCapsulePosition } from '@/util/tool';
+import PopupDate from '@/components/popup-date/index.vue'
 const titleTop = ref(0);
 const navbarHeight = ref(0);
 const toolsWrapTop = ref(0);
+const popupDateRef = ref();
 
 onMounted(() => {
   // calculateTitlePosition();
   initHeader()
+  openPopupDate()
 });
 
 const goToPage = (url: string) => {
@@ -177,6 +181,13 @@ const calculateTitlePosition = () => {
       navbarHeight.value = _navbarHeight;
       toolsWrapTop.value = _navbarHeight - 62;
 }
+
+/**
+ * 打开日期选择弹窗
+ */
+const openPopupDate = () => {
+  popupDateRef.value.open();
+}
   </script>
   
   <style lang="less" scoped>
@@ -189,7 +200,6 @@ const calculateTitlePosition = () => {
     flex-direction: column;
     height: 100%;
     box-sizing: border-box;
-    background-color: #F9FAFB;
   }
   
   .header {

@@ -1,0 +1,7 @@
+/* 主题色 */
+page {
+    --primary-color: #f5af19;
+    --class-icon-background-color: #fef7e8;
+    --budget-background-color: linear-gradient(0deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), linear-gradient(135deg, rgba(245, 175, 25, 0.05) 0%, rgba(245, 175, 25, 0.1) 99%);
+    background-color: #F9FAFB;
+}

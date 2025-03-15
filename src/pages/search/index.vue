@@ -7,8 +7,7 @@
       </div>
       <div class="search-box">
         <div class="search-icon icon-size-36"></div>
-        <input type="text" placeholder="搜索交易记录" class="search-input" :value="inputSearchValue"
-          @input="onChangeSearchInput" @confirm="handleSearch" confirm-type="search" />
+        <input type="text" placeholder="搜索交易记录" class="search-input" :value="inputSearchValue" @input="onChangeSearchInput" @confirm="handleSearch" confirm-type="search" />
         <div class="clear-icon-btn" v-if="showClearIcon" @click="clearSearchInput">
           <div class="clear-icon-wrap">
             <div class="clear-icon"></div>
@@ -47,6 +46,7 @@
     </Dialog>
     <PopupDate ref="popupDateRef" />
     <UIPopupCalendar />
+    <!-- <UICalendar /> -->
   </div>
 </template>
 

@@ -33,7 +33,7 @@
       <div class="main">
         <div class="bill-section">
           <div class="bill-header">
-            <text class="bill-title" @click="openPopupDate">2023年12月11日-2025年11月10日</text>
+            <text class="bill-title" @click="openPopupDate">{{ billDate }}</text>
             <!-- <text class="bill-title">2023年12月11日</text> -->
             <div class="down-arrow-icon icon-size-40"></div>
             <div class="switch-month" v-if="false">
@@ -130,12 +130,12 @@ import { ref, onMounted } from 'vue';
 import TransactionList from '@/components/transaction-list/index.vue';
 import { getCapsulePosition } from '@/util/tool';
 import PopupDate from '@/components/popup-date/index.vue'
-import { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 
 interface PopupDateSubmitParam {
   type: number;  
-  startDate?: Dayjs;
-  endDate?: Dayjs;
+  startDate?: dayjs.Dayjs;
+  endDate?: dayjs.Dayjs;
   year?: number;
   month?: number;
   day?: number;
@@ -144,6 +144,7 @@ interface PopupDateSubmitParam {
 const titleTop = ref(0);
 const navbarHeight = ref(0);
 const toolsWrapTop = ref(0);
+const billDate = ref(dayjs().format('YYYY年MM月'));
 
 /** popup弹窗 */
 const popupDateShow = ref(false)
@@ -179,12 +180,20 @@ const initHeader = () => {
 }
 
 const handlePopupDateSubmit = (dates: PopupDateSubmitParam) => {
+  console.log(dates, '-----dates')
   if(dates.type === 4) {
-    console.log(dates.endDate?.format('YYYY-MM-DD'), '------zzzz1111');
-    console.log(dates.startDate?.format('YYYY-MM-DD'), '------zzzz222');
-  }else {
-    console.log(dates.year, dates.month, dates.day, '------zzzz333');
+    billDate.value = `${dates.startDate?.format('YYYY年MM月DD日')}-${dates.endDate?.format('YYYY年MM月DD日')}`;
   }
+  else if (dates.type === 3) {
+    billDate.value = `${dates.year}年`;
+  }
+  else if (dates.type === 2) {
+    billDate.value = `${dates.year}年${dates.month}月`;
+  }
+  else if (dates.type === 1) {
+    billDate.value = `${dates.year}年${dates.month}月${dates.day}日`;
+  }
+
   setPopupDateShow(false)
 }
 

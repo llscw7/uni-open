@@ -31,13 +31,12 @@ export function usePickerViewDate() {
     }
 
     const indicatorStyle = `height: 50px;`;
-    const pickerVisible = true;
 
     const w_data = ref({ year: date.year(), month: date.month()+ 1, day: date.date() });
     const m_data = ref({ year: date.year(), month: date.month() + 1 });
     const y_data = ref({ year: date.year() });
-    console.log(w_data,'当前月')
 
+    // todo：bugfix：根据年份和月份计算当月的天数 当切换月份时，对应月份的天数改变有时会有延迟，大概1s左右才会改变，当在日期没有改正之前，会出现日期选择器的日期不对应的问题
     const days = computed<number[]>(() => {
         const totalDays = dayjs(`${w_data.value.year}-${w_data.value.month}`).daysInMonth(); // 当前月的总天数
         const daysArray = [];
@@ -73,7 +72,6 @@ export function usePickerViewDate() {
         days,
         defaultDate,
         indicatorStyle,
-        pickerVisible,
         bindChange,
     };
 }

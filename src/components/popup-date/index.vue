@@ -23,16 +23,32 @@
             <!-- 自定义选择日期 -->
             <!-- 周、月、年日期选择 -->
             <div class="popup-content" v-else>
-                <picker-view v-if="pickerVisible" :indicator-style="indicatorStyle" :value="defaultDate"
+                <!-- 注意：v-if判断不能放在picker-view-column上，这在安卓和ios上存在bug -->
+                <picker-view v-if="selectTab === 1" :indicator-style="indicatorStyle" :value="defaultDate"
                     @change="bindChange($event, selectTab)" class="picker-view">
                     <picker-view-column>
                         <view class="item" v-for="(item, index) in years" :key="index">{{ item }}年</view>
                     </picker-view-column>
-                    <picker-view-column v-if="selectTab === 2 || selectTab === 1">
+                    <picker-view-column>
                         <view class="item" v-for="(item, index) in months" :key="index">{{ item }}月</view>
                     </picker-view-column>
-                    <picker-view-column v-if="selectTab === 1">
+                    <picker-view-column>
                         <view class="item" v-for="(item, index) in days" :key="index">{{ item }}日</view>
+                    </picker-view-column>
+                </picker-view>
+                <picker-view v-if="selectTab === 2" :indicator-style="indicatorStyle" :value="defaultDate"
+                    @change="bindChange($event, selectTab)" class="picker-view">
+                    <picker-view-column>
+                        <view class="item" v-for="(item, index) in years" :key="index">{{ item }}年</view>
+                    </picker-view-column>
+                    <picker-view-column>
+                        <view class="item" v-for="(item, index) in months" :key="index">{{ item }}月</view>
+                    </picker-view-column>
+                </picker-view>
+                <picker-view v-if="selectTab === 3" :indicator-style="indicatorStyle" :value="defaultDate"
+                    @change="bindChange($event, selectTab)" class="picker-view">
+                    <picker-view-column>
+                        <view class="item" v-for="(item, index) in years" :key="index">{{ item }}年</view>
                     </picker-view-column>
                 </picker-view>
             </div>
@@ -74,7 +90,7 @@ const props = defineProps({
 })
 
 /** picker-view初始化 */
-const { w_data, m_data, y_data, years, months, days, pickerVisible, defaultDate, indicatorStyle, bindChange } = usePickerViewDate();
+const { w_data, m_data, y_data, years, months, days, defaultDate, indicatorStyle, bindChange } = usePickerViewDate();
 /** picker-view初始化 */
 
 /** 日历组件逻辑 */

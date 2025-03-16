@@ -47,7 +47,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, defineExpose, onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import UIPopup from '@/ui-modules/popup/index.vue';
 import UIPopupCalendar from '@/ui-modules/calendar/popup-calendar.vue'
 /** picker-view初始化 */

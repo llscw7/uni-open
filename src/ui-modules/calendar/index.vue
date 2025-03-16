@@ -33,7 +33,7 @@
   </template>
   
   <script setup lang="ts">
-  import { ref, computed, ComputedRef } from 'vue';
+  import { ref, computed } from 'vue';
   import { Solar, Lunar } from 'lunar-typescript'; // 引入 lunar-typescript
   
   // 当前日期
@@ -52,7 +52,7 @@
   }
 
   // 生成日历数据
-  const days: ComputedRef<DayParam[]> = computed(() => {
+  const days = computed<DayParam[]>(() => {
     const year = currentYear.value;
     const month = currentMonth.value;
     const firstDayOfMonth = new Date(year, month, 1);

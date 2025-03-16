@@ -121,24 +121,40 @@
           <text class="tab-text">我的</text>
         </div>
       </div>
-      <PopupDate ref="popupDateRef" />
+      <PopupDate :visible="popupDateShow" :setVisible="setPopupDateShow" @submit="handlePopupDateSubmit" />
     </div>
   </template>
   
   <script lang="ts" setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import TransactionList from '@/components/transaction-list/index.vue';
 import { getCapsulePosition } from '@/util/tool';
 import PopupDate from '@/components/popup-date/index.vue'
+import { Dayjs } from 'dayjs';
+
+interface PopupDateSubmitParam {
+  type: number;  
+  startDate?: Dayjs;
+  endDate?: Dayjs;
+  year?: number;
+  month?: number;
+  day?: number;
+}
+
 const titleTop = ref(0);
 const navbarHeight = ref(0);
 const toolsWrapTop = ref(0);
-const popupDateRef = ref();
+
+/** popup弹窗 */
+const popupDateShow = ref(false)
+const setPopupDateShow = (flag: boolean) => {
+  popupDateShow.value = flag
+}
+/** popup弹窗 */
 
 onMounted(() => {
   // calculateTitlePosition();
   initHeader()
-  openPopupDate()
 });
 
 const goToPage = (url: string) => {
@@ -162,38 +178,26 @@ const initHeader = () => {
   console.log(titleTop.value, navbarHeight.value, toolsWrapTop.value);
 }
 
-const calculateTitlePosition = () => {
-  // 获取胶囊按钮信息
-  const menuButtonInfo = uni.getMenuButtonBoundingClientRect();
-
-      // 胶囊按钮的垂直中心位置
-      const capsuleCenter = menuButtonInfo.top + menuButtonInfo.height / 2;
-
-      // 假设标题高度为 26px
-      const titleHeight = 26;
-      const _titleTop = capsuleCenter - titleHeight / 2;
-
-      // 导航栏高度 = 胶囊按钮底部 + 15px
-      const _navbarHeight = menuButtonInfo.bottom + 62;
-
-      // 更新数据
-      titleTop.value = _titleTop;
-      navbarHeight.value = _navbarHeight;
-      toolsWrapTop.value = _navbarHeight - 62;
+const handlePopupDateSubmit = (dates: PopupDateSubmitParam) => {
+  if(dates.type === 4) {
+    console.log(dates.endDate?.format('YYYY-MM-DD'), '------zzzz1111');
+    console.log(dates.startDate?.format('YYYY-MM-DD'), '------zzzz222');
+  }else {
+    console.log(dates.year, dates.month, dates.day, '------zzzz333');
+  }
+  setPopupDateShow(false)
 }
 
 /**
  * 打开日期选择弹窗
  */
 const openPopupDate = () => {
-  popupDateRef.value.open();
+  setPopupDateShow(true)
 }
   </script>
   
   <style lang="less" scoped>
-//   :root {
-//   --primary-color: #348F50;
-// }
+
   .page {
     position: relative;
     display: flex;

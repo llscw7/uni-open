@@ -41,12 +41,6 @@ import { ref, computed, watch } from 'vue';
 import dayjs from 'dayjs';
 import UIPopup from '@/ui-modules/popup/index.vue';
 
-interface DayParam {
-    day?: number;
-    date?: dayjs.Dayjs;
-    empty?: boolean;
-}
-
 const props = defineProps({
   defaultValue: {
     type: Date,
@@ -95,7 +89,7 @@ const days = computed<DayParam[]>(() => {
       date,
     });
   }
-  // if (startDay === 0) return daysArray; // 无需填充空白
+  if (startDay === 0) return daysArray; // 无需填充空白
 
   // 填充空白
   return [

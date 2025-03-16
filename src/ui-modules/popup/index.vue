@@ -1,7 +1,7 @@
 <template>
     <!-- 弹窗组件 -->
-    <div class="popup-mask" :style="{opacity: isVisible ? 1 : 0, zIndex: isVisible ? props.zIndex : -1}" @click="closePopup" @touchmove.stop.prevent="moveHandle">
-        <div class="popup-content" :style="{transform: isVisible ? 'translateY(0)' : 'translateY(100%)'}"  @click.stop>
+    <div class="popup-mask" :style="{opacity: visible ? 1 : 0, zIndex: visible ? props.zIndex : -1}" @click="closePopup" @touchmove.stop.prevent="moveHandle">
+        <div class="popup-content" :style="{transform: visible ? 'translateY(0)' : 'translateY(100%)'}"  @click.stop>
             <slot></slot>
         </div>
     </div>
@@ -14,47 +14,24 @@ const props = defineProps({
     zIndex: {
         type: Number,
         default: 999
+    },
+    visible: {
+        type: Boolean,
+        required: true
+    },
+    setVisible: {
+        type: Function,
+        required: true
     }
 });
 
-// 控制弹窗显示与隐藏的状态
-const isVisible = ref(false);
-
-// 显示弹窗
-const showPopup = () => {
-    isVisible.value = true;
-};
-
 // 关闭弹窗
 const closePopup = () => {
-    isVisible.value = false;
-};
-
-// 确认按钮点击事件
-const handleConfirm = () => {
-    console.log('确认');
-    closePopup();
-};
-
-// 取消按钮点击事件
-const handleCancel = () => {
-    console.log('取消');
-    closePopup();
+    props.setVisible(false);
 };
 
 // 阻止滚动穿透
 const moveHandle = () => { }
-
-const open = () => {
-    isVisible.value = true;
-}
-
-const close = () => {
-    closePopup()
-}
-
-defineExpose({ open, close });
-
 </script>
 
 <style scoped>

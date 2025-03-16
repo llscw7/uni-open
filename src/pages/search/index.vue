@@ -44,9 +44,7 @@
       @confirm="onConfirm" 
     >
     </Dialog>
-    <PopupDate ref="popupDateRef" />
-    <UIPopupCalendar />
-    <!-- <UICalendar /> -->
+    <PopupDate :visible="popupDateShow" :setVisible="setPopupDateShow" @submit="handlePopupDateSubmit" />
   </div>
 </template>
 
@@ -54,12 +52,13 @@
 import { ref, onMounted } from 'vue';
 import TransactionList from '@/components/transaction-list/index.vue';
 import Dialog from '@/ui-modules/dialog/index.vue';
-import UICalendar from '@/ui-modules/calendar/index.vue'
-import UIPopupCalendar from '@/ui-modules/calendar/popup-calendar.vue'
 import { getCapsulePosition } from '@/util/tool';
 import PopupDate from '@/components/popup-date/index.vue';
-const popupDateRef = ref();
+import { usePopupDate } from '@/pages/search/hooks/usePopupDate';
 
+/** popup弹窗 */
+const { popupDateShow, setPopupDateShow, handlePopupDateSubmit } = usePopupDate();
+/** popup弹窗 */
 
 const searchPaddingTop = ref(0);
 const searchPaddingRight = ref(0);
@@ -92,6 +91,7 @@ onMounted(() => {
       historyTags.value = JSON.parse(res.data);
     }
   });
+
 });
 
 /**
@@ -190,7 +190,7 @@ const goToBack = () => {
  * 打开日期选择弹窗
  */
 const openPopupDate = () => {
-  popupDateRef.value.open();
+  setPopupDateShow(true)
 }
 </script>
 

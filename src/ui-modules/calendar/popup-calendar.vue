@@ -1,6 +1,6 @@
 <template>
   <UIPopup :visible="show" :setVisible="setShow" :z-index="props.zIndex">
-    <view class="calendar-container" v-if="show">
+    <view class="calendar-container">
       <!-- 头部：显示当前年月和切换按钮 -->
       <view class="header">
         <div class="header-date">

@@ -1,14 +1,17 @@
 <template>
     <!-- 弹窗组件 -->
-    <div class="popup-mask" :style="{opacity: visible ? 1 : 0, zIndex: visible ? props.zIndex : -1}" @click="closePopup" @touchmove.stop.prevent="moveHandle">
-        <div class="popup-content" :style="{transform: visible ? 'translateY(0)' : 'translateY(100%)'}"  @click.stop>
+    <div class="popup-main">
+        <div class="popup-mask" :style="popupMaskStyle" @click.stop="closePopup"
+            @touchmove.stop.prevent="moveHandle">
+        </div>
+        <div class="popup-content" :style="popupContentStyle" @click.stop @transitionend="onAnimationEnd">
             <slot></slot>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed, watch } from 'vue';
 
 const props = defineProps({
     zIndex: {
@@ -22,6 +25,35 @@ const props = defineProps({
     setVisible: {
         type: Function,
         required: true
+    }
+});
+
+/** 用来控制蒙层的透明的动画效果，确保关闭蒙层时动画正常展示 */
+const maskVisible = ref(false);
+// 监听transition动画，执行完毕回调函数
+const onAnimationEnd = () => {
+    if(!props.visible) {
+        maskVisible.value = false;
+    }
+};
+watch(() => props.visible, (val) => {
+    if(val) {
+        maskVisible.value = true;
+    }
+});
+/** 用来控制蒙层的透明的动画效果，确保关闭蒙层时动画正常展示 */
+
+const popupMaskStyle = computed(() => {
+    return {
+        zIndex: maskVisible.value ? props.zIndex : -1,
+        opacity: props.visible ? 1 : 0
+    }
+});
+
+const popupContentStyle = computed(() => {
+    return {
+        zIndex: props.zIndex + 100,
+        transform: props.visible ? 'translateY(0)' : 'translateY(100%)'
     }
 });
 
@@ -40,30 +72,27 @@ const moveHandle = () => { }
     position: fixed;
     top: 0;
     left: 0;
+    z-index: -1;
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
-    /* display: flex;
-    justify-content: center;
-    align-items: flex-end; */
-    z-index: 999;
     opacity: 0;
-    transition: all 0.2s ease;
+    transition: opacity 0.2s ease;
 }
 
 /* 弹窗内容样式 */
 .popup-content {
-    position: absolute;
+    position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
     z-index: 999;
-    transform: translateY(-100%);
+    transform: translateY(100%);
     background-color: #fff;
     border-radius: 16px 16px 0 0px;
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
     padding: 16px;
-    transition: all 0.2s ease;
+    transition: transform 0.2s;
 }
 
 /* 弹窗头部样式 */

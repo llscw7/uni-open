@@ -213,6 +213,7 @@ const openPopupDate = () => {
     flex-direction: column;
     height: 100%;
     box-sizing: border-box;
+    background-color: var(--background-color);
   }
   
   .header {

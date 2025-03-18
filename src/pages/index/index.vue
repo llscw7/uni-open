@@ -41,7 +41,7 @@ import { ref, onMounted, reactive, watch } from 'vue'
 import http from '../../api/http'
 import { client_id, client_secret } from '../../user'
 import { TextEncoder, TextDecoder } from 'text-encoding-shim';
-import { autoRun } from '../../util/tool'
+import { autoRun } from '../../utils/tool'
 import Dialog from '../../wxcomponents/vant/dialog/dialog';
 import Toast from '../../wxcomponents/vant/toast/toast';
 import Marked from '../../components/marked/index.vue'

@@ -15,7 +15,9 @@ import dayjs from 'dayjs';
  * @property {boolean} pickerVisible - 日期选择器是否显示
  * @property {Function} bindChange - 日期选择器选中日期改变时触发
  */
-export function usePickerViewDate() {
+export function usePickerViewDate(pick_end_wait_time: number) {
+    const pickerEndFlag = ref(true); 
+
     const date = dayjs();
     const years = ref<number[]>([]);
     const months = ref<number[]>([]);
@@ -36,7 +38,6 @@ export function usePickerViewDate() {
     const m_data = ref({ year: date.year(), month: date.month() + 1 });
     const y_data = ref({ year: date.year() });
 
-    // todo：bugfix：根据年份和月份计算当月的天数 当切换月份时，对应月份的天数改变有时会有延迟，大概1s左右才会改变，当在日期没有改正之前，会出现日期选择器的日期不对应的问题
     const days = computed<number[]>(() => {
         const totalDays = dayjs(`${w_data.value.year}-${w_data.value.month}`).daysInMonth(); // 当前月的总天数
         const daysArray = [];
@@ -54,14 +55,56 @@ export function usePickerViewDate() {
         if (selectTab === 1) {
             w_data.value.year = years.value[val[0]];
             w_data.value.month = months.value[val[1]];
-            w_data.value.day = days.value[val[2]];
+            /** 存在场景：2025年3月31日，切换到2月，只变化了代表月的val[1]的值，代表日的val[2]依旧为31，需要手动修改为2月的最后一天 */ 
+            if(days.value.length > val[2]) {
+                w_data.value.day = days.value[val[2]];
+                defaultDate.value = val;
+            }
+            else {
+                w_data.value.day = days.value.at(-1) ?? 1;
+                defaultDate.value = [val[0], val[1], days.value.at(-1) ?? 1];
+            }
+            /** 存在场景：2025年3月31日，切换到2月，只变化了代表月的val[1]的值，代表日的val[2]依旧为31，需要手动修改为2月的最后一天 */ 
         } else if (selectTab === 2) {
             m_data.value.year = years.value[val[0]];
             m_data.value.month = months.value[val[1]];
+            defaultDate.value = val;
         } else if (selectTab === 3) {
             y_data.value.year = years.value[val[0]];
+            defaultDate.value = val;
         }
     };
+
+    /**
+     * 校验日期是否有效
+     * 校验逻辑：传入2025年2月29日，由于2025年2月没有29日，格式化后的日期自动加一，为2025-03-01，所以需要判断格式化后的日期是否和传入的日期一致
+     * @param year 
+     * @param month 
+     * @param day 
+     * @returns 
+     */
+    function isValidDate(year: number, month: number, day: number) {
+        const date = dayjs(`${year}-${month}-${day}`)
+        const dateString = date.format('YYYY-MM-DD');
+        // 使用正则表达式验证日期格式是否符合YYYY-MM-DD
+        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+        if (!dateRegex.test(dateString)) {
+            return false; // 不符合格式要求
+        }
+    
+        return date.year() === year && (date.month() + 1) === month && date.date() === day;
+    }  
+
+    const handlePickend = () => {
+        console.log('handlePickend====');
+        setTimeout(() => {
+            pickerEndFlag.value = true;
+        }, pick_end_wait_time);
+    }
+
+    const handlePickStart = () => {
+        pickerEndFlag.value = false;
+    }
 
     return {
         w_data,
@@ -72,6 +115,10 @@ export function usePickerViewDate() {
         days,
         defaultDate,
         indicatorStyle,
+        pickerEndFlag,
         bindChange,
+        isValidDate,
+        handlePickend,
+        handlePickStart
     };
 }

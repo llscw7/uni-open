@@ -24,7 +24,7 @@
             <!-- 周、月、年日期选择 -->
             <div class="popup-content" v-else>
                 <!-- 注意：v-if判断不能放在picker-view-column上，这在安卓和ios上存在bug -->
-                <picker-view v-if="selectTab === 1" :indicator-style="indicatorStyle" :value="defaultDate"
+                <picker-view v-if="selectTab === 1" :indicator-style="indicatorStyle" :immediate-change="true" :value="defaultDate" @touchstart="handlePickStart" @touchend="handlePickend"
                     @change="bindChange($event, selectTab)" class="picker-view">
                     <picker-view-column>
                         <view class="item" v-for="(item, index) in years" :key="index">{{ item }}年</view>
@@ -36,7 +36,7 @@
                         <view class="item" v-for="(item, index) in days" :key="index">{{ item }}日</view>
                     </picker-view-column>
                 </picker-view>
-                <picker-view v-if="selectTab === 2" :indicator-style="indicatorStyle" :value="defaultDate"
+                <picker-view v-if="selectTab === 2" :indicator-style="indicatorStyle" :immediate-change="true" :value="defaultDate" @touchstart="handlePickStart" @touchend="handlePickend"
                     @change="bindChange($event, selectTab)" class="picker-view">
                     <picker-view-column>
                         <view class="item" v-for="(item, index) in years" :key="index">{{ item }}年</view>
@@ -45,7 +45,7 @@
                         <view class="item" v-for="(item, index) in months" :key="index">{{ item }}月</view>
                     </picker-view-column>
                 </picker-view>
-                <picker-view v-if="selectTab === 3" :indicator-style="indicatorStyle" :value="defaultDate"
+                <picker-view v-if="selectTab === 3" :indicator-style="indicatorStyle" :immediate-change="true" :value="defaultDate" @touchstart="handlePickStart" @touchend="handlePickend"
                     @change="bindChange($event, selectTab)" class="picker-view">
                     <picker-view-column>
                         <view class="item" v-for="(item, index) in years" :key="index">{{ item }}年</view>
@@ -67,6 +67,7 @@
         <UIPopupCalendar :show="endCalendarShow" :setShow="setEndCalendarShow" :default-value="customEndDate.toDate()"
             :z-index="2000" @confirm="handleConfirmCalendar" :minDate="minDate" :max-date="maxDate" />
         <!-- 自定义选择日期 结束时间 -->
+        <UIToast ref="toastRef" />
     </div>
 </template>
 
@@ -77,6 +78,10 @@ import UIPopupCalendar from '@/ui-modules/calendar/popup-calendar.vue'
 import dayjs from 'dayjs';
 import { usePickerViewDate } from '@/components/popup-date/hooks/usePickerViewDate';
 import { useCalendar } from '@/components/popup-date/hooks/useCalendar';
+import UIToast from '@/ui-modules/toast/index.vue';
+import { sleep, throttle } from '../../utils/tool';
+
+const PICK_END_WAIT_TIME = 600
 
 const props = defineProps({
     visible: {
@@ -90,15 +95,20 @@ const props = defineProps({
 })
 
 /** picker-view初始化 */
-const { w_data, m_data, y_data, years, months, days, defaultDate, indicatorStyle, bindChange } = usePickerViewDate();
+const { w_data, m_data, y_data, years, months, days, defaultDate, indicatorStyle, pickerEndFlag, bindChange, isValidDate, handlePickend, handlePickStart } = usePickerViewDate(PICK_END_WAIT_TIME);
 /** picker-view初始化 */
 
 /** 日历组件逻辑 */
 const { startCalendarShow, setStartCalendarShow, endCalendarShow, setEndCalendarShow, customStartDate, customEndDate, handleCustomDate, handleConfirmCalendar, maxDate, minDate } = useCalendar();
 /** 日历组件逻辑 */
 
+const toastRef = ref();
+const showToastMessage = (message: string, duration = 1000) => {
+  toastRef.value.showToast(message, duration);
+};
+
 /** tab切换 */
-const selectTab = ref(2)
+const selectTab = ref(1)
 const tabs = ref([
     {
         id: 1,
@@ -132,9 +142,19 @@ const changeOptionTab = (id: number) => {
 }
 /** tab切换 */
 
+
 /** 对外方法 */
-const submit = () => {
+const submit = throttle(async () => {
+    // 只在滚动后才触发，等待PICK_END_WAIT_TIME，如果在PICK_END_WAIT_TIME时间内点击了确定按钮，则执行该判断，延迟关闭时间选择器弹窗。
+    if(!pickerEndFlag.value) {
+        // 防止滑动过快，picker-view动画未结束, 无法获取到最终值
+        await sleep(PICK_END_WAIT_TIME)
+    }
     if (selectTab.value === 1) {
+        if(!isValidDate(w_data.value.year, w_data.value.month, w_data.value.day)) {
+            showToastMessage('请选择正确的日期')
+            return
+        }
         emit('submit', {
             year: w_data.value.year,
             month: w_data.value.month,
@@ -143,6 +163,10 @@ const submit = () => {
         })
     }
     else if (selectTab.value === 2) {
+        if(!m_data.value.year || !m_data.value.month) {
+            showToastMessage('网络异常，请稍后再试')
+            return
+        }
         emit('submit', {
             year: m_data.value.year,
             month: m_data.value.month,
@@ -150,12 +174,20 @@ const submit = () => {
         })
     }
     else if (selectTab.value === 3) {
+        if(!y_data.value.year) {
+            showToastMessage('网络异常，请稍后再试')
+            return
+        }
         emit('submit', {
             year: y_data.value.year,
             type: selectTab.value
         })
     }
     else if (selectTab.value === 4) {
+        if(!customStartDate.value || !customEndDate.value) {
+            showToastMessage('网络异常，请稍后再试')
+            return
+        }
         emit('submit', {
             startDate: customStartDate.value,
             endDate: customEndDate.value,
@@ -163,7 +195,7 @@ const submit = () => {
         })
     }
     props.setVisible(false)
-}
+}, 1000)
 
 const cancel = () => {
     emit('cancel')

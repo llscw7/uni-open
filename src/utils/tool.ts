@@ -1,4 +1,4 @@
-function sleep(func: Function, delay: number) {
+function wait(func: Function, delay: number) {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
             resolve(func())
@@ -8,7 +8,7 @@ function sleep(func: Function, delay: number) {
 
 function* step(waitArr: string[], func: Function, delay: number) {
     for (let v of waitArr) {
-        yield sleep(() => func(v), delay)
+        yield wait(() => func(v), delay)
     }
 }
 
@@ -82,8 +82,55 @@ function getCapsulePosition() {
     };
 }
 
+/**
+ * 休眠函数
+ * @param ms 休眠时间
+ * @returns 
+ */
+function sleep(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+/**
+ * 节流函数
+ * @param func 要执行的函数
+ * @param delay 延迟时间
+ * @returns 
+ */
+function throttle(func: Function, delay: number) {
+    let lastCall = 0;
+    return function(...args: any[]) {
+        const now = new Date().getTime();
+        if (now - lastCall >= delay) {
+            lastCall = now;
+            return func(...args);
+        }
+    };
+}
+
+/**
+ * 防抖函数
+ * @param func 要执行的函数
+ * @param delay 延迟时间
+ * @returns 
+ */
+function debounce(func: Function, delay: number) {
+    let timer: any = null;
+    return function(...args: any[]) {
+        if (timer) {
+            clearTimeout(timer);
+        }
+        timer = setTimeout(() => {
+            func(...args);
+        }, delay);
+    };
+}
+
 export {
     autoRun,
-    getCapsulePosition
+    getCapsulePosition,
+    sleep,
+    throttle,
+    debounce
 }
 

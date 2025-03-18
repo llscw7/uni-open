@@ -52,7 +52,7 @@
 import { ref, onMounted } from 'vue';
 import TransactionList from '@/components/transaction-list/index.vue';
 import Dialog from '@/ui-modules/dialog/index.vue';
-import { getCapsulePosition } from '@/util/tool';
+import { getCapsulePosition } from '@/utils/tool';
 import PopupDate from '@/components/popup-date/index.vue';
 import { usePopupDate } from '@/pages/search/hooks/usePopupDate';
 

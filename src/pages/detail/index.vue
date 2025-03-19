@@ -1,627 +1,423 @@
-
 <template>
-    <div class="page" :style="{ paddingTop: navbarHeight + 'px' }">
-      <div class="header" :style="{ height: navbarHeight + 'px' }">
-
-        <div class="header-content">
-           <div class="title" :style="{ top: titleTop + 'px' }">记账本</div>
+    <div class="page-container" :style="{ paddingTop: navbarHeight + 'px' }">
+        <div class="nav-header"
+            :style="{ paddingTop: navbarPaddingTop + 'px', paddingRight: navbarPaddingRight + 'px', height: navbarHeight + 'px' }">
+            <div class="left-arrow-icon-wrap" @click="goToBack">
+                <div class="left-arrow-icon-2"></div>
+            </div>
+            <div class="nav-box">
+                账单详情
+            </div>
         </div>
 
-        <div class="tools-section" :style="{ top: toolsWrapTop + 'px' }">
-          <div class="tools-left-wrap">
-            <div class="book-btn tools-btn">
-              <div class="book-icon icon-size-40"></div>
-              <div class="text">总账本</div>
-            </div>
-          </div>
-          <div class="tools-right-wrap">
-            <div class="search-btn tools-btn" @click="goToPage('/pages/search/index')">
-              <div class="search-icon-2 icon-size-40"></div>
-              <div class="text">搜索</div>
-            </div>
-            <div class="filter-btn tools-btn">
-              <div class="filter-icon icon-size-40"></div>
-              <div class="text">筛选</div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      
-  
-      <div class="main">
-        <div class="bill-section">
-          <div class="bill-header">
-            <text class="bill-title" @click="openPopupDate">{{ billDate }}</text>
-            <!-- <text class="bill-title">2023年12月11日</text> -->
-            <div class="down-arrow-icon icon-size-40"></div>
-            <div class="switch-month" v-if="false">
-                <div class="calendar-icon icon-size-36"></div>
-                <text class="switch-text">切换日期</text>
-            </div>
-          </div>
-  
-          <div class="stats-cards">
-            <div class="stats-card income">
-              <div class="card-header">
-                <div class="icon-wrapper">
-                    <div class="upgrade-icon
-                    icon-size-70"></div>
+        <div class="main-content">
+            <div class="bill-card">
+                <div class="bill-header">
+                    <div class="bill-left">
+                        <div class="icon-wrapper">
+                            <div class="food-icon-yellow icon-size-50"></div>
+                        </div>
+                        <div class="bill-info">
+                            <div class="bill-title">海底捞火锅</div>
+                            <div class="bill-subtitle">餐饮 · 朋友聚餐</div>
+                        </div>
+                    </div>
+                    <text class="bill-amount">-¥428</text>
                 </div>
-                <text class="card-label">本月收入</text>
-              </div>
-              <text class="amount income-amount">¥ 12,580</text>
             </div>
-  
-            <div class="stats-card expense">
-              <div class="card-header">
-                <div class="icon-wrapper">
-                    <div class="decline-icon
-                    icon-size-70"></div>
-                </div>
-                <text class="card-label">本月支出</text>
-              </div>
-              <text class="amount expense-amount">¥ 8,320</text>
-            </div>
-  
-            <div class="stats-card balance">
-              <div class="card-header">
-                <div class="icon-wrapper">
-                  <div class="surplus-icon
-                  icon-size-70"></div>
-                </div>
-                <text class="card-label">本月结余</text>
-              </div>
-              <text class="amount balance-amount">¥ 4,260</text>
-            </div>
-          </div>
-        </div>
-  
-        <div class="budget-section">
-          <div class="budget-card">
-            <div class="budget-header">
-              <text class="budget-title">本月支出预算</text>
-              <text class="budget-percent">已使用 36.4%</text>
-            </div>
-            <div class="progress-bar">
-              <div class="progress" style="width: 36.4%"></div>
-            </div>
-            <div class="budget-footer">
-              <text class="used">已用 ¥ 1,820</text>
-              <text class="remaining">剩余 ¥ 3,180</text>
-            </div>
-          </div>
-        </div>
-  
-        <div class="transactions-section">
-          <div class="transactions-header">
-            <text class="section-title">近期交易</text>
-          </div>
 
-          <TransactionList :dayWrapTop="navbarHeight" />
+            <div class="detail-card">
+                <div class="detail-item">
+                    <div class="detail-label">时间</div>
+                    <div class="detail-value-wrapper">
+                        <div class="detail-value">2023年12月15日 19:30</div>
+                        <div class="right-arrow-icon-wrap" @click="goToBack">
+                            <div class="right-arrow-icon-2"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-label">备注</div>
+                    <div class="detail-note-wrapper">
+                        <div class="note-item">和朋友聚餐，4人分摊和朋友聚餐，4人分摊和朋友聚餐</div>
+                        <div class="right-arrow-icon-wrap" @click="goToBack">
+                            <div class="right-arrow-icon-2"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="detail-item">
+                    <div class="detail-label">标签</div>
+                    <div class="tags-wrapper">
+                        <div class="tag-item">聚餐</div>
+                        <div class="tag-item">火锅</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-card">
+
+                <!-- <div class="detail-item">
+                    <div class="detail-label">关联账单</div>
+                    <div class="detail-value-wrapper">
+                        <uni-icons type="link" size="16" color="#999999" />
+                        <div class="detail-value">共同付款 - 王小明（已付）</div>
+                    </div>
+                </div> -->
+
+                <div class="detail-item">
+                    <div class="detail-label">所属账本</div>
+                    <div class="detail-value-wrapper">
+                        <div class="detail-value">日常开销</div>
+                        <div class="right-arrow-icon-wrap" @click="goToBack">
+                            <div class="right-arrow-icon-2"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-label">账户</div>
+                    <div class="detail-value-wrapper">
+                        <div class="detail-value">招商银行储蓄卡</div>
+                        <div class="right-arrow-icon-wrap" @click="goToBack">
+                            <div class="right-arrow-icon-2"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- <div class="detail-item">
+                    <div class="detail-label">地点</div>
+                    <div class="detail-value-wrapper">
+                        <uni-icons type="location" size="16" color="#999999" />
+                        <div class="detail-value">海底捞火锅（万达广场店）</div>
+                    </div>
+                </div> -->
+
+                <div class="detail-item">
+                    <div class="detail-label">记录方式</div>
+                    <div class="detail-value">手动记账</div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-label">不计入收支</div>
+                    <switch :checked="excludeIncome" @change="onExcludeIncomeChange" color="#F5AF19" class="switch-btn" />
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-label">不计入预算</div>
+                    <switch :checked="excludeBudget" @change="onExcludeBudgetChange" color="#F5AF19" class="switch-btn" />
+                </div>
+
+                <!-- <div class="detail-item">
+                    <div class="detail-label">不计入总资产</div>
+                    <switch :checked="excludeAssets" @change="onExcludeAssetsChange" color="#F5AF19" />
+                </div> -->
+            </div>
         </div>
-      </div>
-  
-      <div class="add-button">
-        <div class="add-icon icon-size-60"></div>
-      </div>
-  
-      <div class="tab-bar">
-        <div class="tab-item active">
-          <div class="icon-size-40" :class="[true ? 'home-icon-actived' : 'home-icon']"></div>
-          <text class="tab-text">首页</text>
+
+        <div class="bottom-actions">
+            <div class="action-btn delete" @click="onDelete">删除</div>
+            <div class="action-btn edit" @click="onEdit">编辑</div>
         </div>
-        <div class="tab-item">
-          <div class="icon-size-40" :class="[false ? 'statistics-icon-actived' : 'statistics-icon']"></div>
-          <text class="tab-text">统计</text>
-        </div>
-        <div class="tab-item">
-          <div class="icon-size-40" :class="[false ? 'mine-icon-actived' : 'mine-icon']"></div>
-          <text class="tab-text">我的</text>
-        </div>
-      </div>
-      <PopupDate :visible="popupDateShow" :setVisible="setPopupDateShow" @submit="handlePopupDateSubmit" />
     </div>
-  </template>
-  
-  <script lang="ts" setup>
-import { ref, onMounted } from 'vue';
-import TransactionList from '@/components/transaction-list/index.vue';
+</template>
+
+<script lang="ts" setup>
+import { onMounted, ref } from 'vue';
 import { getCapsulePosition } from '@/utils/tool';
-import PopupDate from '@/components/popup-date/index.vue'
-import dayjs from 'dayjs';
 
-interface PopupDateSubmitParam {
-  type: number;  
-  startDate?: dayjs.Dayjs;
-  endDate?: dayjs.Dayjs;
-  year?: number;
-  month?: number;
-  day?: number;
-}
-
-const titleTop = ref(0);
+const navbarPaddingTop = ref(0);
+const navbarPaddingRight = ref(0);
 const navbarHeight = ref(0);
-const toolsWrapTop = ref(0);
-const billDate = ref(dayjs().format('YYYY年MM月'));
 
-/** popup弹窗 */
-const popupDateShow = ref(false)
-const setPopupDateShow = (flag: boolean) => {
-  popupDateShow.value = flag
-}
-/** popup弹窗 */
+const excludeIncome = ref(false);
+const excludeBudget = ref(false);
+const excludeAssets = ref(false);
 
 onMounted(() => {
-  // calculateTitlePosition();
-  initHeader()
+    initHeader();
 });
 
-const goToPage = (url: string) => {
-  uni.navigateTo({
-    url: url,
-  });
-}
-
-const initHeader = () => {
+/**
+ * 初始化头部导航栏
+ */
+ const initHeader = () => {
   // #ifdef MP-WEIXIN
-  const { capsuleCenter, capsuleBottom } = getCapsulePosition();
-  titleTop.value = capsuleCenter - 26 / 2;
-  navbarHeight.value = capsuleBottom + 62;
-  toolsWrapTop.value = capsuleBottom;
+  const { capsuleCenter, capsuleBottom, capsuleTop, capsuleRight, capsuleWidth } = getCapsulePosition();
+  navbarPaddingTop.value = capsuleTop - 2;
+  navbarHeight.value = capsuleBottom + 15;
+  navbarPaddingRight.value = capsuleWidth + 10;
   // #endif
   // #ifndef MP-WEIXIN
-  titleTop.value = 61;
-  navbarHeight.value = 152;
-  toolsWrapTop.value = 90;
+  navbarPaddingTop.value = 56;
+  navbarHeight.value = 105;
+  navbarPaddingRight.value = 111;
   // #endif
-  console.log(titleTop.value, navbarHeight.value, toolsWrapTop.value);
+  console.log(navbarPaddingTop.value, navbarHeight.value, navbarPaddingRight.value);
 }
 
-const handlePopupDateSubmit = (dates: PopupDateSubmitParam) => {
-  console.log(dates, '-----dates')
-  if(dates.type === 4) {
-    billDate.value = `${dates.startDate?.format('YYYY年MM月DD日')}-${dates.endDate?.format('YYYY年MM月DD日')}`;
-  }
-  else if (dates.type === 3) {
-    billDate.value = `${dates.year}年`;
-  }
-  else if (dates.type === 2) {
-    billDate.value = `${dates.year}年${dates.month}月`;
-  }
-  else if (dates.type === 1) {
-    billDate.value = `${dates.year}年${dates.month}月${dates.day}日`;
-  }
-
-  setPopupDateShow(false)
+const goToBack = () => {
+  const pages = getCurrentPages(); // 获取当前页面栈  
+  if (pages.length > 1) {  
+    uni.navigateBack(); // 存在上一页，返回上一页  
+  } else {  
+    // 如果没有上一页可以返回，可以选择跳转到首页或其他页面  
+    uni.redirectTo({  
+      url: '/pages/detail/index'
+    });  
+  } 
 }
 
-/**
- * 打开日期选择弹窗
- */
-const openPopupDate = () => {
-  setPopupDateShow(true)
-}
-  </script>
-  
-  <style lang="less" scoped>
+const onExcludeIncomeChange = (event: any) => {
+    excludeIncome.value = event.detail.value;
+};
 
-  .page {
+const onExcludeBudgetChange = (event: any) => {
+    excludeBudget.value = event.detail.value;
+};
+
+const onExcludeAssetsChange = (event: any) => {
+    excludeAssets.value = event.detail.value;
+};
+
+const onDelete = () => {
+    uni.showToast({
+        title: '退款功能开发中',
+        icon: 'none'
+    });
+};
+
+const onEdit = () => {
+    uni.showToast({
+        title: '编辑功能开发中',
+        icon: 'none'
+    });
+};
+</script>
+
+<style lang="less" scoped>
+
+.page-container {
     position: relative;
     display: flex;
     flex-direction: column;
+    min-height: 100vh;
     height: 100%;
     box-sizing: border-box;
-    background-color: var(--background-color);
-  }
-  
-  .header {
-    background-color: var(--primary-color);
-    padding: 0 30rpx;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 100;
-  }
-  
-  .header-content {
-    height: 100%;
-    .chat-icon {
-      position: absolute;
-      bottom: 50rpx;
-    }
-    .title {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 46rpx;
-      color: #FFFFFF;
-      line-height: 1;
-    }
-  }
-  
-  .logo {
-    font-size: 36rpx;
-    color: #FFFFFF;
-    font-family: 'Pacifico';
-  }
-  
-  .main {
-    flex: 1;
-    padding: 0 30rpx;
-    padding-bottom: 200rpx;
-  }
-  
-  .tools-section {
-    position: absolute;
-    left: 0;
-    right: 0;
-    padding: 20rpx 20rpx 16rpx 20rpx;
-    box-sizing: border-box;
-    z-index: 90;
-    display: flex;
-    justify-content: space-between;
-  }
+    background-color: #F9FAFB;
+}
 
-  .tools-left-wrap {
-    display: flex;
-    gap: 20rpx;
-  }
+.nav-header {
+  background-color: var(--primary-color);
+  padding: 0 20rpx;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  height: 200rpx;
+  display: flex;
+  align-items: flex-start;
+  box-sizing: border-box;
+}
 
-  .tools-right-wrap {
-    display: flex;
-    gap: 20rpx;
-  }
-  
-  .search-wrapper {
-    flex: 1;
-    position: relative;
+.nav-box {
     display: flex;
     align-items: center;
+    flex-grow: 1;
+    height: 74rpx;
+    color: #FFFFFF;
+    font-weight: bold;
+    font-size: 40rpx;
+}
+
+.left-arrow-icon-wrap {
+  width: 60rpx;
+  height: 70rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  .left-arrow-icon-2 {
+    border-color: #FFFFFF;
+  }
+}
+
+.main-content {
+    flex: 1;
+    padding: 20rpx;
+    overflow: auto;
+    box-sizing: border-box;
+    margin-bottom: 160rpx;
+}
+
+.bill-card {
     background-color: #FFFFFF;
     border-radius: 16rpx;
-    overflow: hidden;
-  }
-  
-  .search-input {
-    width: 100%;
-    height: 80rpx;
-    background: #FFFFFF;
-    padding: 0 80rpx;
-    font-size: 28rpx;
-  }
-  
-  .search-wrapper .uni-icons {
-    position: absolute;
-    left: 30rpx;
-  }
-
-  .tools-btn {
-    padding: 16rpx 20rpx;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 16rpx;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    .text {
-      margin-left: 10rpx;
-      font-size: 30rpx;
-      color: #FFFFFF;
-      font-weight: bold;
-    }
-  }
-  
-  .bill-section {
-    margin-bottom: 40rpx;
-  }
-  
-  .bill-header {
-    display: flex;
-    // justify-content: space-between;
-    align-items: center;
-    margin: 28rpx 0 20rpx;
-    height: 56rpx;
-  }
-  
-  .bill-title {
-    font-size: 36rpx;
-    font-weight: 500;
-  }
-  
-  .switch-month {
-    display: flex;
-    align-items: center;
-    color: var(--primary-color);
-  }
-  
-  .switch-text {
-    font-size: 30rpx;
-    margin-left: 8rpx;
-  }
-  
-  .stats-cards {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20rpx;
-  }
-  
-  .stats-card {
     padding: 30rpx;
-    border-radius: 32rpx;
-  }
-  
-  .stats-card.income {
-    background: linear-gradient(135deg, rgba(34, 197, 94, 0.05) 0%, rgba(34, 197, 94, 0.1) 100%);
-  }
-  
-  .stats-card.expense {
-    background: linear-gradient(135deg, rgba(239, 68, 68, 0.05) 0%, rgba(239, 68, 68, 0.1) 100%);
-  }
-  
-  .stats-card.balance {
-    background: linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(139, 92, 246, 0.1) 100%);
-  }
-  
-  .card-header {
+    margin-bottom: 30rpx;
+    box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.08);
+}
+
+.bill-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.bill-left {
     display: flex;
     align-items: center;
-    margin-bottom: 16rpx;
-  }
-  
-  .icon-wrapper {
-    width: 64rpx;
-    height: 64rpx;
-    background: rgba(255, 255, 255, 0.8);
-    border-radius: 50%;
+}
+
+.icon-wrapper {
+    width: 80rpx;
+    height: 80rpx;
+    background-color: rgba(245, 175, 25, 0.1);
+    border-radius: 20rpx;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-right: 16rpx;
-  }
-  
-  .card-label {
-    font-size: 24rpx;
-    color: #666666;
-  }
-  
-  .amount {
+}
+
+.bill-info {
+    margin-left: 20rpx;
+}
+
+.bill-title {
+    font-size: 32rpx;
+    font-weight: bold;
+    color: #333333;
+}
+
+.bill-subtitle {
+    font-size:28rpx;
+    color: #999999;
+    margin-top: 4rpx;
+}
+
+.bill-amount {
     font-size: 40rpx;
     font-weight: 500;
-  }
-  
-  .income-amount {
-    color: #22C55E;
-  }
-  
-  .expense-amount {
-    color: #EF4444;
-  }
-  
-  .balance-amount {
-    color: #8B5CF6;
-  }
-  
-  .budget-section {
-    margin-bottom: 40rpx;
-  }
-  
-  .budget-card {
-    background: var(--budget-background-color);
-    border-radius: 32rpx;
-    padding: 24rpx;
-  }
-  
-  .budget-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12rpx;
-  }
-  
-  .budget-title {
-    font-size: 28rpx;
-    font-weight: 500;
-  }
-  
-  .budget-percent {
-    font-size: 24rpx;
-    color: #666666;
-  }
-  
-  .progress-bar {
-    width: 100%;
-    height: 10rpx;
-    background: rgba(255, 255, 255, 0.8);
-    border-radius: 10rpx;
-    overflow: hidden;
-    margin-bottom: 12rpx;
-  }
-  
-  .progress {
-    height: 100%;
-    background-color: var(--primary-color);
-    border-radius: 10rpx;
-    transition: width 0.5s ease;
-  }
-  
-  .budget-footer {
-    display: flex;
-    justify-content: space-between;
-  }
-  
-  .used {
-    font-size: 24rpx;
-    color: #666666;
-  }
-  
-  .remaining {
-    font-size: 24rpx;
-    color: var(--primary-color);
-    font-weight: 500;
-  }
-  
-  .transactions-section {
-    margin-bottom: 40rpx;
-  }
-  
-  .transactions-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30rpx;
-  }
-  
-  .section-title {
-    font-size: 36rpx;
-    font-weight: 500;
-  }
-  
-  .div-all {
-    font-size: 28rpx;
-    color: var(--primary-color);
-  }
-  
-  .day-group {
-    margin-bottom: 40rpx;
-  }
-  
-  .day-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20rpx;
-    position: sticky;
-    top: 204rpx;
-    background-color: #F9FAFB;
-    padding: 16rpx 0;
-    z-index: 80;
-  }
-  
-  .day-date {
-    font-size: 28rpx;
-    font-weight: bold;
-    color: #666666;
-  }
-  
-  .day-summary {
-    display: flex;
-    gap: 24rpx;
-    font-size: 28rpx;
-  }
-  
-  .income-text {
-    color: #22C55E;
-  }
-  
-  .expense-text {
-    color: #EF4444;
-  }
-  
-  .transaction-items {
-    display: flex;
-    flex-direction: column;
-    gap: 24rpx;
-  }
-  
-  .transaction-item {
-    display: flex;
-    align-items: center;
-    background: #FFFFFF;
-    padding: 24rpx;
-    border-radius: 16rpx;
-  }
+    color: #ff4d4f;
+}
 
-  .transaction-info {
-    flex: 1;
-    margin-left: 24rpx;
-  }
-  
-  .transaction-title {
-    font-size: 32rpx;
-    font-weight: 500;
-    height: 42rpx;
-    line-height: 42rpx;
-  }
-  
-  .transaction-subtitle {
-    font-size: 28rpx;
+.detail-card {
+    background-color: #FFFFFF;
+    border-radius: 16rpx;
+    padding: 0 26rpx;
+    box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.08);
+    margin-bottom: 30rpx;
+}
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 40rpx 0;
+    border-bottom: 1px solid #f0f0f0;
+    gap: 20rpx;
+}
+
+.detail-item:last-child {
+    border-bottom: none;
+}
+
+.detail-label {
+    font-size: 30rpx;
     color: #666666;
-    height: 40rpx;
-    line-height: 40rpx;
-  }
-  
-  .transaction-amount {
-    font-size: 32rpx;
-    font-weight: 500;
-  }
-  
-  .transaction-amount.expense {
-    color: #EF4444;
-  }
-  
-  .transaction-amount.income {
-    color: #22C55E;
-  }
-  
-  .add-button {
-    position: fixed;
-    right: 30rpx;
-    bottom: 160rpx;
-    width: 112rpx;
-    height: 112rpx;
-    background-color: var(--primary-color);
-    border-radius: 50%;
+}
+
+.detail-value-wrapper {
     display: flex;
     align-items: center;
-    justify-content: center;
-    box-shadow: 0 8rpx 16rpx rgba(99, 102, 241, 0.2);
-    z-index: 100;
-  }
-  
-  .tab-bar {
+}
+
+.detail-value {
+    font-size: 30rpx;
+    color: #333333;
+    max-width: 440rpx;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tags-wrapper {
+    display: flex;
+    gap: 16rpx;
+}
+
+.tag-item {
+    background-color: #f5f5f5;
+    padding: 8rpx 16rpx;
+    border-radius: 8rpx;
+    font-size: 28rpx;
+    color: #666666;
+}
+
+.detail-note-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8rpx;
+}
+
+.note-item {
+    font-size: 30rpx;
+    color: #333333;
+    max-width: 500rpx;
+}
+
+.bottom-actions {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    height: 130rpx;
-    background: #FFFFFF;
-    border-top: 2rpx solid #E5E7EB;
-    display: flex;
-    padding: 0 48rpx;
-    padding-bottom: 10rpx;
     z-index: 100;
-  }
-  
-  .tab-item {
+    height: 160rpx;
+    padding: 20rpx;
+    box-sizing: border-box;
+    background-color: #FFFFFF;
+    border-top: 1px solid #f0f0f0;
+    display: flex;
+    gap: 20rpx;
+}
+
+.action-btn {
     flex: 1;
+    height: 88rpx;
+    line-height: 88rpx;
+    text-align: center;
+    font-size: 30rpx;
+    font-weight: 500;
+    border-radius: 8rpx;
+}
+
+.delete {
+    background-color: #F3F4F6;
+    color: #4B5563;
+}
+
+.edit {
+    background-color: #F5AF19;
+    color: #FFFFFF;
+}
+
+.switch-btn {
+    transform: scale(0.8);
+}
+
+.right-arrow-icon-wrap {
+    width: 60rpx;
+    height: 40rpx;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-  }
-  
-  .tab-text {
-    font-size: 24rpx;
-    color: #999999;
-    margin-top: 8rpx;
-  }
-  
-  .tab-item.active .tab-text {
-    color: var(--primary-color);
-  }
+    overflow: hidden;
+    .right-arrow-icon-2 {
+        width: 16rpx;
+        height: 16rpx;
+    }
+}
 
-  .class-icon {
-    width: 80rpx;
-    height: 80rpx;
-    background: var(--class-icon-background-color);
-    border-radius: 24rpx;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  </style>
-  
-  
+</style>

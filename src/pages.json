@@ -7,7 +7,7 @@
 		}
 	},"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
-			"path": "pages/detail/index",
+			"path": "pages/index/index",
 			"style": {
 				"navigationBarTitleText": "记账本",
 				"navigationBarBackgroundColor": "#6366F1",
@@ -16,9 +16,12 @@
 			}
 		},	
 		{
-			"path": "pages/index/index",
+			"path": "pages/detail/index",
 			"style": {
-				"navigationBarTitleText": "uni-open"
+				"navigationBarTitleText": "账单详情",
+				"navigationBarBackgroundColor": "#6366F1",
+        		"navigationBarTextStyle": "black",
+				"navigationStyle": "custom"
 			}
 		},
 		{
@@ -29,6 +32,12 @@
         		"navigationBarTextStyle": "black",
 				"navigationStyle": "custom"
 
+			}
+		},
+		{
+			"path": "pages/chat/index",
+			"style": {
+				"navigationBarTitleText": "uni-open"
 			}
 		}
 	],
@@ -46,6 +55,9 @@
 			"van-toast": "/wxcomponents/vant/toast/index",
 			"van-datetime-picker": "/wxcomponents/vant/datetime-picker/index",
 			"van-popup": "/wxcomponents/vant/popup/index"
+		},
+		"app-plus": {
+			"bounce": "none"
 		}
 	}
 }

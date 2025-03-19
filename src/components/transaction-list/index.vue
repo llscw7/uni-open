@@ -11,7 +11,7 @@
         </div>
       </div>
 
-      <div class="transaction-items">
+      <div class="transaction-items" @click="goToDetail()">
         <div class="transaction-item">
           <div class="class-icon">
             <div class="food-icon-yellow icon-size-40"></div>
@@ -70,6 +70,12 @@ const props = defineProps({
 
 // 解构 props 并保持响应性
 const { dayWrapTop } = toRefs(props);
+
+const goToDetail = () => {
+  uni.navigateTo({
+    url: '/pages/detail/index',
+  });
+};
 </script>
 
 <style lang="less" scoped>

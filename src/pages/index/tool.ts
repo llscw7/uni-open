@@ -23,7 +23,6 @@ const formatData = (data: DetailDataItem[]): DetailData[] => {
     const arr = []
     let l = 0;
     let r = 1;
-    console.log( typeof data[l].time, '----222',  new Date(data[l].time))
 
     while(l < r) {
         if(!data[r]) break;

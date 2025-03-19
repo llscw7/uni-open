@@ -1,7 +1,7 @@
 <template>
   <div class="search" :style="{ paddingTop: navbarHeight + 'px' }">
-    <div class="header"
-      :style="{ paddingTop: searchPaddingTop + 'px', paddingRight: searchPaddingRight + 'px', height: navbarHeight + 'px' }">
+    <div class="nav-header"
+      :style="{ paddingTop: navbarPaddingTop + 'px', paddingRight: navbarPaddingRight + 'px', height: navbarHeight + 'px' }">
       <div class="left-arrow-icon-wrap" @click="goToBack">
         <div class="left-arrow-icon-2"></div>
       </div>
@@ -60,8 +60,8 @@ import { usePopupDate } from '@/pages/search/hooks/usePopupDate';
 const { popupDateShow, setPopupDateShow, handlePopupDateSubmit } = usePopupDate();
 /** popup弹窗 */
 
-const searchPaddingTop = ref(0);
-const searchPaddingRight = ref(0);
+const navbarPaddingTop = ref(0);
+const navbarPaddingRight = ref(0);
 const navbarHeight = ref(0);
 
 const inputSearchValue = ref('');
@@ -100,16 +100,16 @@ onMounted(() => {
 const initHeader = () => {
   // #ifdef MP-WEIXIN
   const { capsuleCenter, capsuleBottom, capsuleTop, capsuleRight, capsuleWidth } = getCapsulePosition();
-  searchPaddingTop.value = capsuleTop - 2;
+  navbarPaddingTop.value = capsuleTop - 2;
   navbarHeight.value = capsuleBottom + 15;
-  searchPaddingRight.value = capsuleWidth + 10;
+  navbarPaddingRight.value = capsuleWidth + 10;
   // #endif
   // #ifndef MP-WEIXIN
-  searchPaddingTop.value = 56;
+  navbarPaddingTop.value = 56;
   navbarHeight.value = 105;
-  searchPaddingRight.value = 111;
+  navbarPaddingRight.value = 111;
   // #endif
-  console.log(searchPaddingTop.value, navbarHeight.value, searchPaddingRight.value);
+  console.log(navbarPaddingTop.value, navbarHeight.value, navbarPaddingRight.value);
 }
 
 /**
@@ -205,10 +205,8 @@ const openPopupDate = () => {
   background-color: #F9FAFB;
 }
 
-.header {
+.nav-header {
   background-color: var(--primary-color);
-  // background-color: #F9FAFB;
-  // background-color: #fff;
   padding: 0 20rpx;
   position: fixed;
   top: 0;

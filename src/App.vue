@@ -12,9 +12,11 @@ onHide(() => {
 });
 </script>
 <style lang="less">
-@import "./wxcomponents/vant/common/index.wxss";
-@import './common.css';
-@import './theme.css';
+@import './common/style/common.css';
+@import './common/style/icon/in-icon.css';
+@import './common/style/icon/out-icon.css';
+@import './common/style/icon/other-icon.css';
+@import './common/style/theme.css';
 @font-face {
   font-family: 'iconfont';  /* Project id 4569308 */
   src: url('//at.alicdn.com/t/c/font_4569308_ymsvqclxgsr.woff2?t=1717139133007') format('woff2'),

@@ -1,4 +1,6 @@
 <template>
+  <!-- 用于弹窗展示时，阻止页面滚动 -->
+  <page-meta :page-style="popupDateShow ? 'overflow: hidden;' : 'overflow: auto;'" />
   <div class="search" :style="{ paddingTop: navbarHeight + 'px' }">
     <div class="nav-header"
       :style="{ paddingTop: navbarPaddingTop + 'px', paddingRight: navbarPaddingRight + 'px', height: navbarHeight + 'px' }">

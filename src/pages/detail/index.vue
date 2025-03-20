@@ -1,14 +1,5 @@
 <template>
-    <div class="page-container" :style="{ paddingTop: navbarHeight + 'px' }">
-        <div class="nav-header"
-            :style="{ paddingTop: navbarPaddingTop + 'px', paddingRight: navbarPaddingRight + 'px', height: navbarHeight + 'px' }">
-            <div class="left-arrow-icon-wrap" @click="goToBack">
-                <div class="left-arrow-icon-2"></div>
-            </div>
-            <div class="nav-box">
-                账单详情
-            </div>
-        </div>
+    <Layout title="账单详情">
 
         <div class="main-content">
             <div class="bill-card">
@@ -120,42 +111,16 @@
             <div class="action-btn delete" @click="onDelete">删除</div>
             <div class="action-btn edit" @click="onEdit">编辑</div>
         </div>
-    </div>
+    </Layout>
 </template>
 
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue';
-import { getCapsulePosition } from '@/utils/tool';
-
-const navbarPaddingTop = ref(0);
-const navbarPaddingRight = ref(0);
-const navbarHeight = ref(0);
+import Layout from '@/components/layout/normal.vue';
 
 const excludeIncome = ref(false);
 const excludeBudget = ref(false);
 const excludeAssets = ref(false);
-
-onMounted(() => {
-    initHeader();
-});
-
-/**
- * 初始化头部导航栏
- */
- const initHeader = () => {
-  // #ifdef MP-WEIXIN
-  const { capsuleCenter, capsuleBottom, capsuleTop, capsuleRight, capsuleWidth } = getCapsulePosition();
-  navbarPaddingTop.value = capsuleTop - 2;
-  navbarHeight.value = capsuleBottom + 15;
-  navbarPaddingRight.value = capsuleWidth + 10;
-  // #endif
-  // #ifndef MP-WEIXIN
-  navbarPaddingTop.value = 56;
-  navbarHeight.value = 105;
-  navbarPaddingRight.value = 111;
-  // #endif
-  console.log(navbarPaddingTop.value, navbarHeight.value, navbarPaddingRight.value);
-}
 
 const goToBack = () => {
   const pages = getCurrentPages(); // 获取当前页面栈  
@@ -189,9 +154,8 @@ const onDelete = () => {
 };
 
 const onEdit = () => {
-    uni.showToast({
-        title: '编辑功能开发中',
-        icon: 'none'
+    uni.navigateTo({
+        url: '/pages/add/index'
     });
 };
 </script>

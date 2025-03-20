@@ -1,17 +1,12 @@
 /* 
-参考图片中样式来设计新增账单页面，包括收入和支出两个大分类，支出分类下包括餐饮、饮品、汽车、交通、礼物、居住、通讯、医疗、旅游、网购、超市、休闲玩乐、学习、理财、运动、生活日用、宠物、养娃、护肤美容、穿搭、买菜、烟酒、家具家电、转账、公益、人情社交、娱乐游戏、其他、设置、水果、借出、办公、彩票、快递、数码、书籍、家庭，收入分类下包括工资、租金、礼金、分红、理财、年终奖、其他、借入、收款、设置，这些分类下的类别展示为图标与类别名称，页面的顶部应有选择类别的导航栏，选择不同分类会显示对应的子类别图标和名称。页面底部为自定义键盘，包含基础的数字键、小数点、删除键、完成键，键盘上方展示添加备注区域、日期区域（文案展示为今天）、标签区域、拍照区域（展示为相机图标）、选择账户区域（默认文案为不选择账户）输入金额区域单独一行展示。
-*/
-/* 
 DONE: 
-支出：餐饮、饮品、汽车、交通、礼物、居住、通讯、医疗、旅游、网购、超市、休闲玩乐、学习、理财、运动、生活日用、宠物、养娃、护肤美容、穿搭、买菜、烟酒、家具家电、转账、公益、人情社交、娱乐游戏、其他
-收入：
+支出：餐饮、饮品、汽车、交通、礼物、居住、通讯、医疗、旅游、网购、超市、休闲玩乐、学习、理财、运动、生活日用、宠物、养娃、护肤美容、穿搭、买菜、烟酒、家具家电、转账、公益、人情社交、娱乐游戏、水果、借出、还钱、办公、彩票、快递、数码、书籍、家庭、租金、其他
 */
 /* 
 TODO: 
-支出：设置、水果、借出、办公、彩票、快递、数码、书籍、家庭
-收入：工资、租金、礼金、分红、理财、年终奖、其他、借入、收款、设置
+支出：设置
 */
-
+/* !支出 */
 /* 餐饮 */
 .food-icon {
     background: url(http://qno.ttscw.top/record-class/normal/Restaurant-Fill--Streamline-Remix-Fill.png) no-repeat center;
@@ -31,17 +26,6 @@ TODO:
 
 .drink-icon-yellow {
     background: url(http://qno.ttscw.top/record-class/yellow/Drinks-2-Fill--Streamline-Remix-Fill.png) no-repeat center;
-    background-size: 100% 100%;
-}
-
-/* 工资 */
-.salary-icon {
-    background: url(http://qno.ttscw.top/record-class/normal/Cash-Briefcase--Streamline-Ultimate.png) no-repeat center;
-    background-size: 100% 100%;
-}
-
-.salary-icon-yellow {
-    background: url(http://qno.ttscw.top/record-class/yellow/Cash-Briefcase--Streamline-Ultimate.png) no-repeat center;
     background-size: 100% 100%;
 }
 
@@ -157,23 +141,23 @@ TODO:
 
 /* 学习 */
 .study-icon {
-    background: url(http://qno.ttscw.top/record-class/normal/Book-2-Fill--Streamline-Remix-Fill.png) no-repeat center;
+    background: url(http://qno.ttscw.top/record-class/normal/Book-Read-Fill--Streamline-Remix-Fill.png) no-repeat center;
     background-size: 100% 100%;
 }
 
 .study-icon-yellow {
-    background: url(http://qno.ttscw.top/record-class/yellow/Book-2-Fill--Streamline-Remix-Fill.png) no-repeat center;
+    background: url(http://qno.ttscw.top/record-class/yellow/Book-Read-Fill--Streamline-Remix-Fill.png) no-repeat center;
     background-size: 100% 100%;
 }
 
 /* 理财 */
 .financial-icon {
-    background: url(http://qno.ttscw.top/record-class/normal/Hand-Coin-Fill--Streamline-Remix-Fill.png) no-repeat center;
+    background: url(http://qno.ttscw.top/record-class/normal/Funds-Box-Fill--Streamline-Remix-Fill.png) no-repeat center;
     background-size: 100% 100%;
 }
 
 .financial-icon-yellow {
-    background: url(http://qno.ttscw.top/record-class/yellow/Hand-Coin-Fill--Streamline-Remix-Fill.png) no-repeat center;
+    background: url(http://qno.ttscw.top/record-class/yellow/Funds-Box-Fill--Streamline-Remix-Fill.png) no-repeat center;
     background-size: 100% 100%;
 }
 
@@ -331,199 +315,112 @@ TODO:
     background-size: 100% 100%;
 }
 
-/* TODO：下面全部待替换 */
-
-/* 搜索 */
-.search-icon {
-    background: url(http://qno.ttscw.top/record-other/Search-Line--Streamline-Remix.png) no-repeat center;
+/* 借出 */
+.lend-icon {
+    background: url(http://qno.ttscw.top/record-class/normal/Money-Bag-Yen-Fill--Streamline-Outlined-Fill-Mater.png) no-repeat center;
     background-size: 100% 100%;
 }
 
-.search-icon-2 {
-    background: url(http://qno.ttscw.top/record-other/Search-2-Line--Streamline-Remix.png) no-repeat center;
+.lend-icon-yellow {
+    background: url(http://qno.ttscw.top/record-class/yellow/Money-Bag-Yen-Fill--Streamline-Outlined-Fill-Mater.png) no-repeat center;
     background-size: 100% 100%;
 }
 
-/* 过滤 */
-.filter-icon {
-    background: url(http://qno.ttscw.top/record-other/Filter-Fill--Streamline-Remix-Fill.png?time=123) no-repeat center;
+/* 还钱 */
+.repay-icon {
+    background: url(http://qno.ttscw.top/record-class/normal/Share-Coin-Fill--Streamline-Outlined-Fill-Material.png) no-repeat center;
     background-size: 100% 100%;
 }
 
-/* 日历 */
-.calendar-icon {
-    background: url(http://qno.ttscw.top/record-other/Calendar-2-Line--Streamline-Remix.png) no-repeat center;
+.repay-icon-yellow {
+    background: url(http://qno.ttscw.top/record-class/yellow/Share-Coin-Fill--Streamline-Outlined-Fill-Material.png) no-repeat center;
     background-size: 100% 100%;
 }
 
-/* 提升 */
-.upgrade-icon {
-    background: url(http://qno.ttscw.top/record-other/line-up.png) no-repeat center;
+/* 办公 */
+.office-icon {
+    background: url(http://qno.ttscw.top/record-class/normal/Briefcase-3-Fill--Streamline-Remix-Fill.png) no-repeat center;
     background-size: 100% 100%;
 }
 
-/* 通知（图标需要替换） */
-/* .notice-icon {
-    background: url(http://qno.ttscw.top/record/a-lujing2.png) no-repeat center;
-    background-size: 100% 100%;
-} */
-
-/* 聊天 */
-.chat-icon {
-    background: url(http://qno.ttscw.top/record-other/twitch.png) no-repeat center;
+.office-icon-yellow {
+    background: url(http://qno.ttscw.top/record-class/yellow/Briefcase-3-Fill--Streamline-Remix-Fill.png) no-repeat center;
     background-size: 100% 100%;
 }
 
-/* 下降 */
-.decline-icon {
-    background: url(http://qno.ttscw.top/record-other/line-down.png) no-repeat center;
+/* 彩票 */
+.lottery-icon {
+    background: url(http://qno.ttscw.top/record-class/normal/caipiao.png) no-repeat center;
     background-size: 100% 100%;
 }
 
-/* 结余 */
-.surplus-icon {
-    background: url(http://qno.ttscw.top/record-other/surplus.png) no-repeat center;
+.lottery-icon-yellow {
+    background: url(http://qno.ttscw.top/record-class/yellow/caipiao.png) no-repeat center;
     background-size: 100% 100%;
 }
 
-/* 首页 */
-.home-icon {
-    background: url(http://qno.ttscw.top/record-other/home.png) no-repeat center;
+/* 快递 */
+.express-icon {
+    background: url(http://qno.ttscw.top/record-class/normal/Delivery-Truck-Clock--Streamline-Ultimate1.png) no-repeat center;
     background-size: 100% 100%;
 }
 
-.home-icon-actived {
-    background: url(http://qno.ttscw.top/record-other/home-light.png) no-repeat center;
+.express-icon-yellow {
+    background: url(http://qno.ttscw.top/record-class/yellow/Delivery-Truck-Clock--Streamline-Ultimate1.png) no-repeat center;
     background-size: 100% 100%;
 }
 
-/* 统计 */
-.statistics-icon {
-    background: url(http://qno.ttscw.top/record-other/chart.png) no-repeat center;
+/* 数码 */
+.digital-icon {
+    background: url(http://qno.ttscw.top/record-class/normal/Mac-Fill--Streamline-Remix-Fill.png) no-repeat center;
     background-size: 100% 100%;
 }
 
-.statistics-icon-actived {
-    background: url(http://qno.ttscw.top/record-other/chart-light.png) no-repeat center;
+.digital-icon-yellow {
+    background: url(http://qno.ttscw.top/record-class/yellow/Mac-Fill--Streamline-Remix-Fill.png) no-repeat center;
     background-size: 100% 100%;
 }
 
-/* 我的 */
-.mine-icon {
-    background: url(http://qno.ttscw.top/record-other/user.png) no-repeat center;
+/* 书籍 */
+.books-icon {
+    background: url(http://qno.ttscw.top/record-class/normal/Book-2-Fill--Streamline-Remix-Fill.png) no-repeat center;
     background-size: 100% 100%;
 }
 
-.mine-icon-actived {
-    background: url(http://qno.ttscw.top/record-other/user-light.png) no-repeat center;
+.books-icon-yellow {
+    background: url(http://qno.ttscw.top/record-class/yellow/Book-2-Fill--Streamline-Remix-Fill.png) no-repeat center;
     background-size: 100% 100%;
 }
 
-/* 账本 */
-.book-icon {
-    background: url(http://qno.ttscw.top/record-other/Booklet-Fill--Streamline-Remix-Fill.png) no-repeat center;
+/* 家庭 */
+.family-icon {
+    background: url(http://qno.ttscw.top/record-class/normal/Family-Restroom-Fill--Streamline-Rounded-Fill-Mate1.png) no-repeat center;
     background-size: 100% 100%;
 }
 
-/* 添加 */
-.add-icon {
-    background: url(http://qno.ttscw.top/record-other/Add-Fill--Streamline-Remix-Fill.png) no-repeat center;
+.family-icon-yellow {
+    background: url(http://qno.ttscw.top/record-class/yellow/Family-Restroom-Fill--Streamline-Rounded-Fill-Mate1.png) no-repeat center;
     background-size: 100% 100%;
 }
 
-/* 左箭头 */
-.left-arrow-icon {
-    background: url(http://qno.ttscw.top/record-other/Arrow-Left-S-Line--Streamline-Remix.png) no-repeat center;
+/* 水果 */
+.fruit-icon {
+    background: url(http://qno.ttscw.top/record-class/normal/Cherry--Streamline-Tabler-Filled.png) no-repeat center;
     background-size: 100% 100%;
 }
 
-.left-arrow-icon-2 {
-    width: 26rpx;
-    height: 26rpx;
-    border-left: 2px solid rgba(0, 0, 0, 0.6);
-    border-bottom: 2px solid rgba(0, 0, 0, 0.6);
-    transform: rotate(45deg);
-}
-
-.left-arrow-icon-3 {
-    width: 20rpx;
-    height: 20rpx;
-    border-left: 3px solid #000000;
-    border-bottom: 3px solid #000000;
-    transform: rotate(45deg);
-}
-
-/* 右箭头 */
-.right-arrow-icon {
-    background: url(http://qno.ttscw.top/record-other/Arrow-Right-S-Line--Streamline-Remix.png) no-repeat center;
+.fruit-icon-yellow {
+    background: url(http://qno.ttscw.top/record-class/yellow/Cherry--Streamline-Tabler-Filled.png) no-repeat center;
     background-size: 100% 100%;
 }
 
-.right-arrow-icon-2 {
-    width: 26rpx;
-    height: 26rpx;
-    border-right: 2px solid rgba(0, 0, 0, 0.6);
-    border-bottom: 2px solid rgba(0, 0, 0, 0.6);
-    transform: rotate(-45deg);
-}
-
-.right-arrow-icon-3 {
-    width: 20rpx;
-    height: 20rpx;
-    border-right: 3px solid #000000;
-    border-bottom: 3px solid #000000;
-    transform: rotate(-45deg);
-}
-
-/* 下箭头 */
-.down-arrow-icon {
-    background: url(http://qno.ttscw.top/record-other/Arrow-Down-S-Line--Streamline-Remix.png) no-repeat center;
+/* 租金 */
+.rent-icon {
+    background: url(http://qno.ttscw.top/record-class/normal/zhufangzujin.png) no-repeat center;
     background-size: 100% 100%;
 }
 
-/* 删除 */
-.delete-icon {
-    background: url(http://qno.ttscw.top/record-other/Delete-Bin-5-Fill--Streamline-Remix-Fill.png) no-repeat center;
+.rent-icon-yellow {
+    background: url(http://qno.ttscw.top/record-class/yellow/zhufangzujin.png) no-repeat center;
     background-size: 100% 100%;
-}
-
-/* 清除 */
-.clear-icon {
-    background: url(http://qno.ttscw.top/record-other/Close-Fill--Streamline-Remix-Fill.png) no-repeat center;
-    background-size: 100% 100%;
-}
-
-.icon-size-30 {
-    width: 30rpx;
-    height: 30rpx;
-}
-
-.icon-size-36 {
-    width: 36rpx;
-    height: 36rpx;
-}
-
-.icon-size-40 {
-    width: 40rpx;
-    height: 40rpx;
-}
-
-.icon-size-50 {
-    width: 50rpx;
-    height: 50rpx;
-}
-
-.icon-size-60 {
-    width: 60rpx;
-    height: 60rpx;
-}
-
-.icon-size-70 {
-    width: 70rpx;
-    height: 70rpx;
-}
-
-.icon-size-80 {
-    width: 80rpx;
-    height: 80rpx;
 }

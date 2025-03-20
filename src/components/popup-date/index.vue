@@ -1,61 +1,66 @@
 <template>
     <div class="popup-date">
         <UIPopup :visible="visible" :set-visible="setVisible" :z-index="2000">
-            <div class="popup-header">
-                <div class="header-option-tab" :class="{ actived: item.id === selectTab }" v-for="item in tabs"
-                    :key="item.id" @click="changeOptionTab(item.id)">
-                    {{ item.title }}
+            <div class="date-container">
+                <div class="popup-header">
+                    <div class="header-option-tab" :class="{ actived: item.id === selectTab }" v-for="item in tabs"
+                        :key="item.id" @click="changeOptionTab(item.id)">
+                        {{ item.title }}
+                    </div>
                 </div>
-            </div>
-            <!-- 自定义选择日期 -->
-            <div class="popup-content-custom" v-if="selectTab === 4">
-                <div class="start-date" @click="handleCustomDate('start')">
-                    <div class="title">开始时间</div>
-                    <div class="sub-title">{{ customStartDate.format('YYYY年MM月DD日') }}</div>
-                    <div class="right-arrow-icon icon-size-40"></div>
+                <!-- 自定义选择日期 -->
+                <div class="popup-content-custom" v-if="selectTab === 4">
+                    <div class="start-date" @click="handleCustomDate('start')">
+                        <div class="title">开始时间</div>
+                        <div class="sub-title">{{ customStartDate.format('YYYY年MM月DD日') }}</div>
+                        <div class="right-arrow-icon icon-size-40"></div>
+                    </div>
+                    <div class="end-date" @click="handleCustomDate('end')">
+                        <div class="title">结束时间</div>
+                        <div class="sub-title">{{ customEndDate.format('YYYY年MM月DD日') }}</div>
+                        <div class="right-arrow-icon icon-size-40"></div>
+                    </div>
                 </div>
-                <div class="end-date" @click="handleCustomDate('end')">
-                    <div class="title">结束时间</div>
-                    <div class="sub-title">{{ customEndDate.format('YYYY年MM月DD日') }}</div>
-                    <div class="right-arrow-icon icon-size-40"></div>
+                <!-- 自定义选择日期 -->
+                <!-- 周、月、年日期选择 -->
+                <div class="popup-content" v-else>
+                    <!-- 注意：v-if判断不能放在picker-view-column上，这在安卓和ios上存在bug -->
+                    <picker-view v-if="selectTab === 1" :indicator-style="indicatorStyle" :immediate-change="true"
+                        :value="defaultDate" @touchstart="handlePickStart" @touchend="handlePickend"
+                        @change="bindChange($event, selectTab)" class="picker-view">
+                        <picker-view-column>
+                            <view class="item" v-for="(item, index) in years" :key="index">{{ item }}年</view>
+                        </picker-view-column>
+                        <picker-view-column>
+                            <view class="item" v-for="(item, index) in months" :key="index">{{ item }}月</view>
+                        </picker-view-column>
+                        <picker-view-column>
+                            <view class="item" v-for="(item, index) in days" :key="index">{{ item }}日</view>
+                        </picker-view-column>
+                    </picker-view>
+                    <picker-view v-if="selectTab === 2" :indicator-style="indicatorStyle" :immediate-change="true"
+                        :value="defaultDate" @touchstart="handlePickStart" @touchend="handlePickend"
+                        @change="bindChange($event, selectTab)" class="picker-view">
+                        <picker-view-column>
+                            <view class="item" v-for="(item, index) in years" :key="index">{{ item }}年</view>
+                        </picker-view-column>
+                        <picker-view-column>
+                            <view class="item" v-for="(item, index) in months" :key="index">{{ item }}月</view>
+                        </picker-view-column>
+                    </picker-view>
+                    <picker-view v-if="selectTab === 3" :indicator-style="indicatorStyle" :immediate-change="true"
+                        :value="defaultDate" @touchstart="handlePickStart" @touchend="handlePickend"
+                        @change="bindChange($event, selectTab)" class="picker-view">
+                        <picker-view-column>
+                            <view class="item" v-for="(item, index) in years" :key="index">{{ item }}年</view>
+                        </picker-view-column>
+                    </picker-view>
                 </div>
-            </div>
-            <!-- 自定义选择日期 -->
-            <!-- 周、月、年日期选择 -->
-            <div class="popup-content" v-else>
-                <!-- 注意：v-if判断不能放在picker-view-column上，这在安卓和ios上存在bug -->
-                <picker-view v-if="selectTab === 1" :indicator-style="indicatorStyle" :immediate-change="true" :value="defaultDate" @touchstart="handlePickStart" @touchend="handlePickend"
-                    @change="bindChange($event, selectTab)" class="picker-view">
-                    <picker-view-column>
-                        <view class="item" v-for="(item, index) in years" :key="index">{{ item }}年</view>
-                    </picker-view-column>
-                    <picker-view-column>
-                        <view class="item" v-for="(item, index) in months" :key="index">{{ item }}月</view>
-                    </picker-view-column>
-                    <picker-view-column>
-                        <view class="item" v-for="(item, index) in days" :key="index">{{ item }}日</view>
-                    </picker-view-column>
-                </picker-view>
-                <picker-view v-if="selectTab === 2" :indicator-style="indicatorStyle" :immediate-change="true" :value="defaultDate" @touchstart="handlePickStart" @touchend="handlePickend"
-                    @change="bindChange($event, selectTab)" class="picker-view">
-                    <picker-view-column>
-                        <view class="item" v-for="(item, index) in years" :key="index">{{ item }}年</view>
-                    </picker-view-column>
-                    <picker-view-column>
-                        <view class="item" v-for="(item, index) in months" :key="index">{{ item }}月</view>
-                    </picker-view-column>
-                </picker-view>
-                <picker-view v-if="selectTab === 3" :indicator-style="indicatorStyle" :immediate-change="true" :value="defaultDate" @touchstart="handlePickStart" @touchend="handlePickend"
-                    @change="bindChange($event, selectTab)" class="picker-view">
-                    <picker-view-column>
-                        <view class="item" v-for="(item, index) in years" :key="index">{{ item }}年</view>
-                    </picker-view-column>
-                </picker-view>
-            </div>
-            <!-- 周、月、年日期选择 -->
-            <div class="popup-options">
-                <div class="popup-close" @click="cancel">取消</div>
-                <div class="popup-submit" @click="submit">确定</div>
+                <!-- 周、月、年日期选择 -->
+                <div class="popup-options">
+                    <div class="popup-close" @click="cancel">取消</div>
+                    <div class="popup-submit" @click="submit">确定</div>
+                </div>
             </div>
         </UIPopup>
         <!-- 自定义选择日期 开始时间 -->
@@ -104,7 +109,7 @@ const { startCalendarShow, setStartCalendarShow, endCalendarShow, setEndCalendar
 
 const toastRef = ref();
 const showToastMessage = (message: string, duration = 1000) => {
-  toastRef.value.showToast(message, duration);
+    toastRef.value.showToast(message, duration);
 };
 
 /** tab切换 */
@@ -146,12 +151,12 @@ const changeOptionTab = (id: number) => {
 /** 对外方法 */
 const submit = throttle(async () => {
     // 只在滚动后才触发，等待PICK_END_WAIT_TIME，如果在PICK_END_WAIT_TIME时间内点击了确定按钮，则执行该判断，延迟关闭时间选择器弹窗。
-    if(!pickerEndFlag.value) {
+    if (!pickerEndFlag.value) {
         // 防止滑动过快，picker-view动画未结束, 无法获取到最终值
         await sleep(PICK_END_WAIT_TIME)
     }
     if (selectTab.value === 1) {
-        if(!isValidDate(w_data.value.year, w_data.value.month, w_data.value.day)) {
+        if (!isValidDate(w_data.value.year, w_data.value.month, w_data.value.day)) {
             showToastMessage('请选择正确的日期')
             return
         }
@@ -163,7 +168,7 @@ const submit = throttle(async () => {
         })
     }
     else if (selectTab.value === 2) {
-        if(!m_data.value.year || !m_data.value.month) {
+        if (!m_data.value.year || !m_data.value.month) {
             showToastMessage('网络异常，请稍后再试')
             return
         }
@@ -174,7 +179,7 @@ const submit = throttle(async () => {
         })
     }
     else if (selectTab.value === 3) {
-        if(!y_data.value.year) {
+        if (!y_data.value.year) {
             showToastMessage('网络异常，请稍后再试')
             return
         }
@@ -184,7 +189,7 @@ const submit = throttle(async () => {
         })
     }
     else if (selectTab.value === 4) {
-        if(!customStartDate.value || !customEndDate.value) {
+        if (!customStartDate.value || !customEndDate.value) {
             showToastMessage('网络异常，请稍后再试')
             return
         }
@@ -212,6 +217,10 @@ const emit = defineEmits(['submit', 'cancel']);
     display: flex;
     align-items: center;
     justify-content: space-between;
+}
+
+.date-container {
+    padding: 16px;
 }
 
 .popup-content {

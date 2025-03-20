@@ -1,0 +1,205 @@
+/* !其他 通用图标 */
+/* 搜索 */
+.search-icon {
+    background: url(http://qno.ttscw.top/record-other/Search-Line--Streamline-Remix.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+.search-icon-2 {
+    background: url(http://qno.ttscw.top/record-other/Search-2-Line--Streamline-Remix.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+/* 过滤 */
+.filter-icon {
+    background: url(http://qno.ttscw.top/record-other/Filter-Fill--Streamline-Remix-Fill.png?time=123) no-repeat center;
+    background-size: 100% 100%;
+}
+
+/* 日历 */
+.calendar-icon {
+    background: url(http://qno.ttscw.top/record-other/Calendar-2-Line--Streamline-Remix.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+.calendar-icon-2 {
+    background: url(http://qno.ttscw.top/record-other/Calendar-Fill--Streamline-Remix-Fill.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+/* 提升 */
+.upgrade-icon {
+    background: url(http://qno.ttscw.top/record-other/line-up.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+/* 通知（图标需要替换） */
+/* .notice-icon {
+    background: url(http://qno.ttscw.top/record/a-lujing2.png) no-repeat center;
+    background-size: 100% 100%;
+} */
+
+/* 聊天 */
+.chat-icon {
+    background: url(http://qno.ttscw.top/record-other/twitch.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+/* 下降 */
+.decline-icon {
+    background: url(http://qno.ttscw.top/record-other/line-down.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+/* 结余 */
+.surplus-icon {
+    background: url(http://qno.ttscw.top/record-other/surplus.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+/* 首页 */
+.home-icon {
+    background: url(http://qno.ttscw.top/record-other/home.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+.home-icon-actived {
+    background: url(http://qno.ttscw.top/record-other/home-light.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+/* 统计 */
+.statistics-icon {
+    background: url(http://qno.ttscw.top/record-other/chart.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+.statistics-icon-actived {
+    background: url(http://qno.ttscw.top/record-other/chart-light.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+/* 我的 */
+.mine-icon {
+    background: url(http://qno.ttscw.top/record-other/user.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+.mine-icon-actived {
+    background: url(http://qno.ttscw.top/record-other/user-light.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+/* 账本 */
+.book-icon {
+    background: url(http://qno.ttscw.top/record-other/Booklet-Fill--Streamline-Remix-Fill.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+.book-icon-2 {
+    background: url(http://qno.ttscw.top/record-other/Booklet-Fill--Streamline-Remix-Fill-2.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+/* 添加 */
+.add-icon {
+    background: url(http://qno.ttscw.top/record-other/Add-Fill--Streamline-Remix-Fill.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+/* 左箭头 */
+.left-arrow-icon {
+    background: url(http://qno.ttscw.top/record-other/Arrow-Left-S-Line--Streamline-Remix.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+.left-arrow-icon-2 {
+    width: 26rpx;
+    height: 26rpx;
+    border-left: 2px solid rgba(0, 0, 0, 0.6);
+    border-bottom: 2px solid rgba(0, 0, 0, 0.6);
+    transform: rotate(45deg);
+}
+
+.left-arrow-icon-3 {
+    width: 20rpx;
+    height: 20rpx;
+    border-left: 3px solid #000000;
+    border-bottom: 3px solid #000000;
+    transform: rotate(45deg);
+}
+
+/* 右箭头 */
+.right-arrow-icon {
+    background: url(http://qno.ttscw.top/record-other/Arrow-Right-S-Line--Streamline-Remix.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+.right-arrow-icon-2 {
+    width: 26rpx;
+    height: 26rpx;
+    border-right: 2px solid rgba(0, 0, 0, 0.6);
+    border-bottom: 2px solid rgba(0, 0, 0, 0.6);
+    transform: rotate(-45deg);
+}
+
+.right-arrow-icon-3 {
+    width: 20rpx;
+    height: 20rpx;
+    border-right: 3px solid #000000;
+    border-bottom: 3px solid #000000;
+    transform: rotate(-45deg);
+}
+
+/* 下箭头 */
+.down-arrow-icon {
+    background: url(http://qno.ttscw.top/record-other/Arrow-Down-S-Line--Streamline-Remix.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+/* 删除 */
+.delete-icon {
+    background: url(http://qno.ttscw.top/record-other/Delete-Bin-5-Fill--Streamline-Remix-Fill.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+/* 清除 */
+.clear-icon {
+    background: url(http://qno.ttscw.top/record-other/Close-Fill--Streamline-Remix-Fill.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+/* 笔记 */
+.note-icon {
+    background: url(http://qno.ttscw.top/record-other/Edit-2-Fill--Streamline-Remix-Fill.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+/* 标签 */
+.tag-icon {
+    background: url(http://qno.ttscw.top/record-other/Price-Tag-3-Fill--Streamline-Remix-Fill.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+/* 账户 */
+.account-icon {
+    background: url(http://qno.ttscw.top/record-other/Bank-Card-Fill--Streamline-Remix-Fill.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+/* 更多 */
+.more-icon {
+    background: url(http://qno.ttscw.top/record-other/More-Fill--Streamline-Remix-Fill.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+/* 图钉 */
+.pin-icon {
+    background: url(http://qno.ttscw.top/record-other/Pushpin-2-Line--Streamline-Remix.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+.pin-icon-2 {
+    background: url(http://qno.ttscw.top/record-other/Pushpin-Line--Streamline-Remix.png) no-repeat center;
+    background-size: 100% 100%;
+}

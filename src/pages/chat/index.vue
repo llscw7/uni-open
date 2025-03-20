@@ -31,8 +31,8 @@
         <van-icon name="upgrade" class="ask-confirm" @click="handleAsk" />
       </div>
     </div>
-    <van-dialog id="van-dialog" />
-    <van-toast id="van-toast" />
+    <!-- <van-dialog id="van-dialog" />
+    <van-toast id="van-toast" /> -->
   </view>
 </template>
 
@@ -42,8 +42,8 @@ import http from '../../api/http'
 import { client_id, client_secret } from '../../user'
 import { TextEncoder, TextDecoder } from 'text-encoding-shim';
 import { autoRun } from '../../utils/tool'
-import Dialog from '../../wxcomponents/vant/dialog/dialog';
-import Toast from '../../wxcomponents/vant/toast/toast';
+// import Dialog from '../../wxcomponents/vant/dialog/dialog';
+// import Toast from '../../wxcomponents/vant/toast/toast';
 import Marked from '../../components/marked/index.vue'
 
 const test = ref(`
@@ -103,17 +103,17 @@ const handleCopy = (text: string) => {
 }
 
 const handleClear = () => {
-  Dialog.confirm({
-    title: '确认清空聊天记录吗？',
-  })
-    .then(() => {
-      // on confirm
-      console.log('测试数据----')
-      message.length = 0
-    })
-    .catch(() => {
-      // on cancel
-    });
+  // Dialog.confirm({
+  //   title: '确认清空聊天记录吗？',
+  // })
+  //   .then(() => {
+  //     // on confirm
+  //     console.log('测试数据----')
+  //     message.length = 0
+  //   })
+  //   .catch(() => {
+  //     // on cancel
+  //   });
 }
 
 
@@ -173,7 +173,7 @@ const getAccessToken = async () => {
 const handleAsk = async () => {
   if(!ask_text.value) return
   if(message.length && !message[message.length - 1]?.end) {
-    Toast('暂时不可提问');
+    // Toast('暂时不可提问');
     return 
   }
   message.push({

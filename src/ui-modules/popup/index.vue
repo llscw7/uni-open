@@ -1,8 +1,7 @@
 <template>
     <!-- 弹窗组件 -->
     <div class="popup-main">
-        <div class="popup-mask" :style="popupMaskStyle" @click.stop="closePopup"
-            @touchmove.stop.prevent="moveHandle">
+        <div class="popup-mask" :style="popupMaskStyle" @click.stop="closePopup">
         </div>
         <div class="popup-content" :style="popupContentStyle" @click.stop @transitionend="onAnimationEnd">
             <slot></slot>
@@ -53,7 +52,7 @@ const popupMaskStyle = computed(() => {
 const popupContentStyle = computed(() => {
     return {
         zIndex: props.zIndex + 100,
-        transform: props.visible ? 'translateY(0)' : 'translateY(100%)'
+        transform: props.visible ? 'translateY(0)' : 'translateY(100%)',
     }
 });
 
@@ -91,8 +90,8 @@ const moveHandle = () => { }
     background-color: #fff;
     border-radius: 16px 16px 0 0px;
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-    padding: 16px;
     transition: transform 0.2s;
+    max-height: 80vh;
 }
 
 /* 弹窗头部样式 */

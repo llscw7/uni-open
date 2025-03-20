@@ -25,6 +25,15 @@
 			}
 		},
 		{
+			"path": "pages/add/index",
+			"style": {
+				"navigationBarTitleText": "添加账单",
+				"navigationBarBackgroundColor": "#6366F1",
+        		"navigationBarTextStyle": "black",
+				"navigationStyle": "custom"
+			}
+		},
+		{
 			"path": "pages/search/index",
 			"style": {
 				"navigationBarTitleText": "搜索",
@@ -57,7 +66,8 @@
 			"van-popup": "/wxcomponents/vant/popup/index"
 		},
 		"app-plus": {
-			"bounce": "none"
+			"bounce": "none",
+			"scrollIndicator": "none"
 		}
 	}
 }

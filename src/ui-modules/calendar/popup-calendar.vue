@@ -172,8 +172,8 @@ defineExpose({ open, close });
 <style lang="less" scoped>
 .calendar-container {
   width: 100%;
-  height: 760rpx;
-  padding: 20rpx;
+  height: 840rpx;
+  padding: 32rpx;
   background-color: #fff;
   border-radius: 10rpx;
   box-sizing: border-box;
@@ -183,7 +183,7 @@ defineExpose({ open, close });
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10rpx 0;
+  padding: 10rpx;
   margin-bottom: 32rpx;
 }
 
@@ -213,7 +213,7 @@ defineExpose({ open, close });
 }
 
 .month {
-  font-size: 32rpx;
+  font-size: 36rpx;
   font-weight: bold;
 }
 

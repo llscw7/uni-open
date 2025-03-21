@@ -4,7 +4,7 @@
             <div class="category-container">
                 <div class="category-header" @touchmove.stop.prevent>
                     <div class="category-title">选择类别</div>
-                    <div class="submit">确定</div>
+                    <div class="submit" @click="submit">确定</div>
                 </div>
                 <div class="category-grid">
                     <div 
@@ -73,6 +73,15 @@ const isActived = (id: number) => {
     }
 }
 
+const submit = () => {
+    if(props.selectTab === 1) {
+        emit('submit', selectCategoriesOut.value);
+    }else {
+        emit('submit', selectCategoriesIn.value);
+    }
+}
+
+const emit = defineEmits(['submit'])
 </script>
 
 <style lang="less" scoped>

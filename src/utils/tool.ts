@@ -126,11 +126,26 @@ function debounce(func: Function, delay: number) {
     };
 }
 
+/**
+ * 将数组中的元素移动到数组的开头
+ * @param arr 数组
+ * @param index 索引
+ * @returns 
+ */
+function moveToFirst(arr: any[], index: number) {
+    let newArr = arr.slice(); // 创建原数组的副本
+    let item = newArr.splice(index, 1)[0]; // 移除指定索引的元素
+    newArr.unshift(item); // 将移除的元素插入到数组开头
+    return newArr;
+}
+
+
 export {
     autoRun,
     getCapsulePosition,
     sleep,
     throttle,
-    debounce
+    debounce,
+    moveToFirst
 }
 

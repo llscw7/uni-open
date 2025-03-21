@@ -1,6 +1,12 @@
 import { ref, computed } from 'vue'
 import dayjs from 'dayjs';
 
+const customDateFlag = ref('start')
+const customStartDate = ref(dayjs().startOf('day').subtract(7, 'day'))
+const customEndDate = ref(dayjs().endOf('day'))
+const startCalendarShow = ref(false)
+const endCalendarShow = ref(false)
+
 /**
  * 
  * @returns {Object} 返回日历相关数据
@@ -16,20 +22,16 @@ import dayjs from 'dayjs';
  * @property {Function} handleConfirmCalendar - 处理点击确认日期
  */
 export function useCalendar() {
-    const customDateFlag = ref('start')
-    const customStartDate = ref(dayjs().startOf('day').subtract(7, 'day'))
-    const customEndDate = ref(dayjs().endOf('day'))
+    
 
     const maxDate = computed(() => customDateFlag.value === 'start' ? customEndDate.value.toDate() : dayjs().endOf('day').toDate())
     const minDate = computed(() => customDateFlag.value === 'end' ? customStartDate.value.toDate() : dayjs().startOf('day').subtract(1, 'year').toDate())
 
     console.log(minDate.value, 'minDate')
 
-    const startCalendarShow = ref(false)
     const setStartCalendarShow = (flag: boolean) => {
         startCalendarShow.value = flag
     }
-    const endCalendarShow = ref(false)
     const setEndCalendarShow = (flag: boolean) => {
         endCalendarShow.value = flag
         

@@ -37,7 +37,7 @@
             </div>
 
             <div class="detail-card">
-                <div class="detail-item" @click="setCalendarShow(true)">
+                <div class="detail-item">
                     <div class="left">
                         <div class="calendar-icon-2 icon-size-40"></div>
                         <text class="detail-text">今天</text>
@@ -107,52 +107,96 @@
     </Layout>
     <PopupCategory :visible="visible" :set-visible="setVisible" :select-tab="selectTab"
         @submit="handlePopupCategorySubmit" />
-    <UIDialogCalendar :show="calendarShow" :set-show="setCalendarShow" :default-value="customDate.toDate()" :z-index="2000" @confirm="handleConfirmCalendar" :min-date="minDate" />
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
+import { categories_in, categories_out } from './modules/popup-category/categories'
+import { moveToFirst } from '@/utils/tool';
 import Layout from '@/components/layout/normal.vue';
 import PopupCategory from './modules/popup-category/index.vue';
-import { useCategories } from './hooks/useCategories';
-import { usePopupCategory } from './hooks/usePopupCategory';
-import UIDialogCalendar from '@/ui-modules/calendar/dialog-calendar.vue';
 
-import dayjs from 'dayjs';
-
-const customDate = ref(dayjs());
-const minDate = ref(dayjs().subtract(1, 'year').toDate());
-const calendarShow = ref(false);
-const setCalendarShow = (val: boolean) => {
-    calendarShow.value = val;
+/** 支出、收入tab模块 */
+const selectTab = ref(1)
+const tabs = ref([
+    { title: '支出', id: 1 },
+    { title: '收入', id: 2 }
+]);
+const handleSelectTab = (id: number) => {
+    selectTab.value = id;
+    if (id === 1) {
+        const value = uni.getStorageSync('categories_out');
+        if (value) {
+            categories.value = JSON.parse(value);
+        } else {
+            categories.value = categories_out;
+        }
+    } else {
+        const value = uni.getStorageSync('categories_in');
+        if (value) {
+            categories.value = JSON.parse(value);
+        } else {
+            categories.value = categories_in;
+        }
+    }
 }
-const handleConfirmCalendar = (date: Date) => {
-    customDate.value = dayjs(date);
-    setCalendarShow(false);
+/** 支出、收入tab模块 */
+
+/** 细分类别选择模块 */
+const categories = ref(categories_out);
+const selectCategoriesIn = ref(1)
+const selectCategoriesOut = ref(1)
+
+onMounted(() => {
+    initCategories();
+})
+
+// 初始化分类 获取本地存储的分类数据
+const initCategories = () => {
+    try {
+        const outData = uni.getStorageSync('categories_out');
+        if (outData) {
+            selectCategoriesOut.value = JSON.parse(outData)[0].id;
+            // 默认选中tab为支出，所以只初始化支出的分类
+            categories.value = JSON.parse(outData);
+        }
+
+        const inData = uni.getStorageSync('categories_in');
+        if (inData) {
+            selectCategoriesIn.value = JSON.parse(inData)[0].id;
+        }
+
+    } catch (e) {
+        // error
+        console.error(e);
+    }
 }
 
+// 选择细分类别
+const handleSelectCategory = (id: number) => {
+    if (selectTab.value === 1) {
+        selectCategoriesOut.value = id;
+    } else {
+        selectCategoriesIn.value = id;
+    }
+}
 
+// 判断是否选中
+const isActived = (id: number) => {
+    if (selectTab.value === 1) {
+        return selectCategoriesOut.value === id;
+    } else {
+        return selectCategoriesIn.value === id;
+    }
+}
 
-/** 类别选择模块 */
-const {
-    selectTab,
-    tabs,
-    categories,
-    handleSelectTab,
-    handleSelectCategory,
-    isActived,
-    categoryIconClass
-} = useCategories();
-/** 类别选择模块 */
+// 初始化图标样式
+const categoryIconClass = (icon: string, id: number) => {
+    return `${icon}-icon` + (isActived(id) ? '-yellow' : '');
+}
 
-/** 类别选择弹窗模块 */
-const {
-    visible,
-    setVisible,
-    selectMore,
-    handlePopupCategorySubmit
-} = usePopupCategory();
-/** 类别选择弹窗模块 */
+/** 细分类别选择模块 */
+
 
 /** 高级功能模块 */
 const showOptionsFlag = ref(false)
@@ -166,6 +210,54 @@ const handlePin = () => {
     pinFlag.value = !pinFlag.value;
 }
 /** 高级功能模块 */
+
+
+
+/** 类别选择弹窗模块 */
+const visible = ref(false);
+const setVisible = (val: boolean) => {
+    visible.value = val;
+}
+
+const selectMore = () => {
+    setVisible(true);
+}
+
+const handlePopupCategorySubmit = (id: number) => {
+    if (selectTab.value === 1) {
+        const index = categories.value.findIndex(item => item.id === id);
+        if (index) {
+            categories.value = moveToFirst(categories.value, index);
+            selectCategoriesOut.value = id;
+            uni.setStorage({
+                key: 'categories_out',
+                data: JSON.stringify(categories.value),
+                success: function () {
+                    console.log('success');
+                }
+            });
+        } else {
+            console.error('categories id not found');
+        }
+    } else {
+        const index = categories.value.findIndex(item => item.id === id);
+        if (index) {
+            categories.value = moveToFirst(categories.value, index);
+            selectCategoriesIn.value = id;
+            uni.setStorage({
+                key: 'categories_in',
+                data: JSON.stringify(categories.value),
+                success: function () {
+                    console.log('success');
+                }
+            });
+        } else {
+            console.error('categories id not found');
+        }
+    }
+    setVisible(false);
+}
+/** 类别选择弹窗模块 */
 
 </script>
 

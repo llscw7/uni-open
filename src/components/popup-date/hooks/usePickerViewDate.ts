@@ -1,6 +1,38 @@
 import { ref, computed } from 'vue';
 import dayjs from 'dayjs';
 
+const date = dayjs();
+
+const pickerEndFlag = ref(true); 
+const years = ref<number[]>([]);
+const months = ref<number[]>([]);
+
+// 初始化年份列表
+for (let i = 1990; i <= date.year(); i++) {
+    years.value.push(i);
+}
+
+// 初始化月份列表
+for (let i = 1; i <= 12; i++) {
+    months.value.push(i);
+}
+
+const indicatorStyle = `height: 50px;`;
+
+const w_data = ref({ year: date.year(), month: date.month()+ 1, day: date.date() });
+const m_data = ref({ year: date.year(), month: date.month() + 1 });
+const y_data = ref({ year: date.year() });
+
+const days = computed<number[]>(() => {
+    const totalDays = dayjs(`${w_data.value.year}-${w_data.value.month}`).daysInMonth(); // 当前月的总天数
+    const daysArray = [];
+    for (let i = 1; i <= totalDays; i++) {
+        daysArray.push(i);
+    }
+    return daysArray;
+});
+
+const defaultDate = ref([years.value.indexOf(w_data.value.year), months.value.indexOf(w_data.value.month), days.value.indexOf(w_data.value.day)])
 /**
  * 
  * @returns {Object} 返回日期选择器相关数据
@@ -16,39 +48,6 @@ import dayjs from 'dayjs';
  * @property {Function} bindChange - 日期选择器选中日期改变时触发
  */
 export function usePickerViewDate(pick_end_wait_time: number) {
-    const pickerEndFlag = ref(true); 
-
-    const date = dayjs();
-    const years = ref<number[]>([]);
-    const months = ref<number[]>([]);
-
-    // 初始化年份列表
-    for (let i = 1990; i <= date.year(); i++) {
-        years.value.push(i);
-    }
-
-    // 初始化月份列表
-    for (let i = 1; i <= 12; i++) {
-        months.value.push(i);
-    }
-
-    const indicatorStyle = `height: 50px;`;
-
-    const w_data = ref({ year: date.year(), month: date.month()+ 1, day: date.date() });
-    const m_data = ref({ year: date.year(), month: date.month() + 1 });
-    const y_data = ref({ year: date.year() });
-
-    const days = computed<number[]>(() => {
-        const totalDays = dayjs(`${w_data.value.year}-${w_data.value.month}`).daysInMonth(); // 当前月的总天数
-        const daysArray = [];
-        for (let i = 1; i <= totalDays; i++) {
-            daysArray.push(i);
-        }
-        return daysArray;
-    });
-
-    const defaultDate = ref([years.value.indexOf(w_data.value.year), months.value.indexOf(w_data.value.month), days.value.indexOf(w_data.value.day)])
-
 
     const bindChange = (e: any, selectTab: number) => {
         const val = e.detail.value;

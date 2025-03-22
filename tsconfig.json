@@ -6,8 +6,10 @@
     "paths": {
       "@/*": ["./src/*"],
     },
+    "allowJs": true,
+    "resolveJsonModule": true,
     "lib": ["esnext", "dom"],
     "types": ["@dcloudio/types"]
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"]
+  "include": ["src/**/*.js","src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"]
 }

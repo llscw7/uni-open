@@ -1,0 +1,58 @@
+::-webkit-scrollbar {
+    width: 0;
+    /* 隐藏整个滚动条 */
+    background: transparent;
+    /* 设置透明背景 */
+}
+
+/* 隐藏滚动轨道 */
+::-webkit-scrollbar-track {
+    background: none;
+}
+
+/* 隐藏滚动指示器 */
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0);
+    /* 设置透明度低的颜色 */
+}
+
+
+.icon-size-30 {
+    width: 30rpx;
+    height: 30rpx;
+}
+
+.icon-size-36 {
+    width: 36rpx;
+    height: 36rpx;
+}
+
+.icon-size-40 {
+    width: 40rpx;
+    height: 40rpx;
+}
+
+.icon-size-46 {
+    width: 46rpx;
+    height: 46rpx;
+}
+
+.icon-size-50 {
+    width: 50rpx;
+    height: 50rpx;
+}
+
+.icon-size-60 {
+    width: 60rpx;
+    height: 60rpx;
+}
+
+.icon-size-70 {
+    width: 70rpx;
+    height: 70rpx;
+}
+
+.icon-size-80 {
+    width: 80rpx;
+    height: 80rpx;
+}

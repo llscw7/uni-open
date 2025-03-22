@@ -12,3 +12,27 @@ interface MessageParam {
     content: string;
     end?: boolean;
 }
+
+interface DetailDataItem {
+    userId: string;
+    title: string;
+    desc: string;
+    in: string;
+    out: string;
+    time: number;
+    year: number;
+    month: number;
+    day: number;
+    date: string;
+    weekdayCN: string;
+}
+
+interface DetailData {
+    date: string;
+    year: number;
+    month: number;
+    day: number;
+    time: number;
+    weekdayCN: string;
+    children: DetailDataItem[];
+}

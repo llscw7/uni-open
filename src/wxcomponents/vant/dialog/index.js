@@ -89,13 +89,15 @@ VantComponent({
         },
         close(action) {
             this.setData({ show: false });
-            wx.nextTick(() => {
-                this.$emit('close', action);
-                const { callback } = this.data;
-                if (callback) {
-                    callback(action, this);
-                }
-            });
+            this.closeAction = action;
+        },
+        onAfterLeave() {
+            const { closeAction: action } = this;
+            this.$emit('close', action);
+            const { callback } = this.data;
+            if (callback) {
+                callback(action, this);
+            }
         },
         stopLoading() {
             this.setData({
@@ -107,6 +109,9 @@ VantComponent({
         },
         handleAction(action) {
             this.$emit(action, { dialog: this });
+            /** Fixed：修复函数调用Promise回调函数不生效问题 */
+            this.data.callback(action, { dialog: this });
+            /** Fixed：修复函数调用Promise回调函数不生效问题 */
             const { asyncClose, beforeClose } = this.data;
             if (!asyncClose && !beforeClose) {
                 this.close(action);

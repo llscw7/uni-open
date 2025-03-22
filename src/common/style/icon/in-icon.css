@@ -1,0 +1,97 @@
+/* 
+DONE: 
+收入：其他、理财、工资、礼金、租金、奖金补贴、借入、收款
+*/
+/* 
+TODO: 
+收入：设置
+*/
+
+/* !收入 */
+/* 理财 */
+.financial-icon {
+    background: url(http://qno.ttscw.top/record-class/normal/Funds-Box-Fill--Streamline-Remix-Fill.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+.financial-icon-yellow {
+    background: url(http://qno.ttscw.top/record-class/yellow/Funds-Box-Fill--Streamline-Remix-Fill.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+/* 工资 */
+.salary-icon {
+    background: url(http://qno.ttscw.top/record-class/normal/Cash-Briefcase--Streamline-Ultimate.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+.salary-icon-yellow {
+    background: url(http://qno.ttscw.top/record-class/yellow/Cash-Briefcase--Streamline-Ultimate.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+/* 租金 */
+.rent-icon {
+    background: url(http://qno.ttscw.top/record-class/normal/zhufangzujin.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+.rent-icon-yellow {
+    background: url(http://qno.ttscw.top/record-class/yellow/zhufangzujin.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+/* 礼金 */
+.gift-money-icon {
+    background: url(http://qno.ttscw.top/record-class/normal/Red-Packet-Fill--Streamline-Remix-Fill.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+.gift-money-icon-yellow {
+    background: url(http://qno.ttscw.top/record-class/yellow/Red-Packet-Fill--Streamline-Remix-Fill.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+/* 奖金补贴 */
+.bonus-icon {
+    background: url(http://qno.ttscw.top/record-class/normal/jiangjin.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+.bonus-icon-yellow {
+    background: url(http://qno.ttscw.top/record-class/yellow/jiangjin.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+/* 借入 */
+.borrow-icon {
+    background: url(http://qno.ttscw.top/record-class/normal/Money-Bag-Yen-Fill--Streamline-Outlined-Fill-Mater.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+.borrow-icon-yellow {
+    background: url(http://qno.ttscw.top/record-class/yellow/Money-Bag-Yen-Fill--Streamline-Outlined-Fill-Mater.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+/* 收款 */
+.receive-icon {
+    background: url(http://qno.ttscw.top/record-class/normal/Hand-Coin-Fill--Streamline-Remix-Fill.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+.receive-icon-yellow {
+    background: url(http://qno.ttscw.top/record-class/yellow/Hand-Coin-Fill--Streamline-Remix-Fill.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+/* 其他 */
+.other-icon {
+    background: url(http://qno.ttscw.top/record-class/normal/Money-Cny-Circle-Fill--Streamline-Remix-Fill.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+.other-icon-yellow {
+    background: url(http://qno.ttscw.top/record-class/yellow/Money-Cny-Circle-Fill--Streamline-Remix-Fill.png) no-repeat center;
+    background-size: 100% 100%;
+}

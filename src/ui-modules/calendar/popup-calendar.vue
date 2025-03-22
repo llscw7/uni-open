@@ -21,17 +21,21 @@
         <text v-for="(w, i) in ['日', '一', '二', '三', '四', '五', '六']" :key="i">{{ w }}</text>
       </view>
 
-      <!-- 日期网格 -->
-      <view class="days-grid">
-        <view v-for="(day, index) in days" :key="index" class="day-item" :class="{
-          'empty': day.empty,
-          'actived': isSelected(day),
-          'today': isToday(day),
-          'disabled': day.date && (day.date.isBefore(props.minDate) || day.date.isAfter(props.maxDate))
-        }" @click="handleDayClick(day)">
-          <text class="day-number">{{ day.day }}</text>
-        </view>
-      </view>
+      <!-- 使用 swiper 实现日期网格的左右滑动 -->
+      <swiper class="swiper-container" :current="currentMonthIndex" @change="onSwiperChange">
+        <swiper-item v-for="(month, index) in months" :key="index">
+          <view class="days-grid">
+            <view v-for="(day, dayIndex) in getDaysForMonth(month)" :key="dayIndex" class="day-item" :class="{
+              'empty': day.empty,
+              'actived': isSelected(day),
+              'today': isToday(day),
+              'disabled': day.date && (day.date.isBefore(props.minDate) || day.date.isAfter(props.maxDate))
+            }" @click="handleDayClick(day)">
+              <text class="day-number">{{ day.day }}</text>
+            </view>
+          </view>
+        </swiper-item>
+      </swiper>
     </view>
   </UIPopup>
 </template>
@@ -48,97 +52,127 @@ interface DayParam {
 }
 
 const props = defineProps({
-  defaultValue: {
-    type: Date,
-  },
-  zIndex: {
-    type: Number,
-    default: 999
-  },
-  maxDate: {
-    type: Date,
-    default: () => new Date()
-  },
-  minDate: {
-    type: Date,
-    default: () => dayjs().subtract(1, 'year').toDate()
-  },
-  show: {
-    type: Boolean,
-    required: true
-  },
-  setShow: {
-    type: Function,
-    required: true
-  }
+    defaultValue: {
+        type: Date,
+    },
+    zIndex: {
+        type: Number,
+        default: 999
+    },
+    maxDate: {
+        type: Date,
+        default: () => dayjs().toDate()
+    },
+    minDate: {
+        type: Date,
+        default: () => dayjs().subtract(1, 'year').toDate()
+    },
+    show: {
+        type: Boolean,
+        required: true
+    },
+    setShow: {
+        type: Function,
+        required: true
+    }
 });
 
 // 当前日期
 const currentDate = ref(dayjs());
-
 const selectDay = ref<dayjs.Dayjs | undefined>(props.defaultValue ? dayjs(props.defaultValue) : undefined);
+const currentMonthIndex = ref(0); // 当前月份索引
 
-const popupRef = ref();
-
-/** 生成日历数据 */
-const days = computed<DayParam[]>(() => {
-  const firstDayOfMonth = currentDate.value.startOf('month');
-  const startDay = firstDayOfMonth.day(); // 当前月第一天是星期几
-  const totalDays = currentDate.value.daysInMonth(); // 当前月的总天数
-
-  // 生成日期数组
-  const daysArray = [];
-  for (let i = 1; i <= totalDays; i++) {
-    const date = firstDayOfMonth.date(i);
-    daysArray.push({
-      day: i,
-      date,
-    });
-  }
-  // if (startDay === 0) return daysArray; // 无需填充空白
-
-  // 填充空白
-  return [
-    ...Array.from({ length: startDay }, () => ({ empty: true })),
-    ...daysArray,
-  ];
+// 生成月份数组
+const months = computed(() => {
+    const startMonth = dayjs(props.minDate).startOf('month');
+    const endMonth = dayjs(props.maxDate).startOf('month');
+    const monthsArray = [];
+    let currentMonth = startMonth;
+    while (currentMonth.isBefore(endMonth) || currentMonth.isSame(endMonth, 'month')) {
+        monthsArray.push(currentMonth);
+        currentMonth = currentMonth.add(1, 'month');
+    }
+    return monthsArray;
 });
-/** 生成日历数据 */
+
+// 获取某个月份的日期数据
+const getDaysForMonth = (month: dayjs.Dayjs): DayParam[] => {
+    const firstDayOfMonth = month.startOf('month');
+    const startDay = firstDayOfMonth.day(); // 当前月第一天是星期几
+    const totalDays = month.daysInMonth(); // 当前月的总天数
+
+    // 生成日期数组
+    const daysArray = [];
+    for (let i = 1; i <= totalDays; i++) {
+        const date = firstDayOfMonth.date(i);
+        daysArray.push({
+            day: i,
+            date,
+        });
+    }
+
+    // 填充空白
+    return [
+        ...Array.from({ length: startDay }, () => ({ empty: true })),
+        ...daysArray,
+    ];
+};
 
 // 监听show变化，初始化当前日期，确保每次打开日历都是选中日期的月份
 watch(() => props.show, (val) => {
-  if (val) {
-    currentDate.value = selectDay.value || dayjs();
-  }
+    if (val) {
+        currentDate.value = selectDay.value || dayjs();
+        currentMonthIndex.value = months.value.findIndex(month => month.isSame(currentDate.value, 'month'));
+    }
 });
 
 // 月份切换
 const switchMonth = (step: number) => {
-  if(step === 1 && currentDate.value.isSame(props.maxDate, 'month')) return;
-  if(step === -1 && currentDate.value.isSame(props.minDate, 'month')) return;
-  currentDate.value = currentDate.value.add(step, 'month');
+    const newIndex = currentMonthIndex.value + step;
+    if (newIndex >= 0 && newIndex < months.value.length) {
+        currentMonthIndex.value = newIndex;
+        currentDate.value = months.value[newIndex];
+    }
+};
+
+// swiper切换事件
+const onSwiperChange = (e: any) => {
+    currentMonthIndex.value = e.detail.current;
+    currentDate.value = months.value[currentMonthIndex.value];
 };
 
 // 日期点击事件
 const handleDayClick = (day: DayParam) => {
-  if(props.minDate && day.date?.isBefore(dayjs(props.minDate))) return;
-  if(props.maxDate && day.date?.isAfter(dayjs(props.maxDate))) return;
-  if (!day.empty) {
-    selectDay.value = day.date;
-    emit('confirm', day.date);
-  }
+    if (props.minDate && day.date?.isBefore(dayjs(props.minDate))) return;
+    if (props.maxDate && day.date?.isAfter(dayjs(props.maxDate))) return;
+    if (!day.empty) {
+        selectDay.value = day.date;
+        emit('confirm', day.date);
+    }
 };
 
 // 判断日期是否选中
 const isSelected = (day: DayParam) => {
-  return selectDay.value && day.date?.isSame(selectDay.value, 'day');
+    return selectDay.value && day.date?.isSame(selectDay.value, 'day');
 };
 
 // 判断是否为当天
 const isToday = (day: DayParam) => {
-  return day.date?.isSame(dayjs(), 'day');
+    return day.date?.isSame(dayjs(), 'day');
 };
 
+
+const notSelectMonth = (direction: 'left' | 'right') => {
+    if (direction === 'left') {
+        return currentMonthIndex.value === 0;
+    } else {
+        return currentMonthIndex.value === months.value.length - 1;
+    }
+};
+
+const emit = defineEmits(['confirm', 'cancel']);
+
+const popupRef = ref();
 const open = async () => {
   if (popupRef.value) {
     popupRef.value.open();
@@ -155,16 +189,6 @@ const close = () => {
   }
 };
 
-const notSelectMonth = (direction: 'left' | 'right') => {
-  if (direction === 'left') {
-    return currentDate.value.isSame(props.minDate, 'month');
-  } else {
-    return currentDate.value.isSame(props.maxDate, 'month');
-  }
-};
-
-const emit = defineEmits(['confirm', 'cancel']);
-
 defineExpose({ open, close });
 </script>
 
@@ -177,6 +201,10 @@ defineExpose({ open, close });
   background-color: #fff;
   border-radius: 10rpx;
   box-sizing: border-box;
+}
+
+.swiper-container {
+  height: 640rpx; /* 固定高度 */
 }
 
 .header {

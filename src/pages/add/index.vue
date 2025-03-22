@@ -46,9 +46,12 @@
                 </div>
 
                 <div class="detail-item">
-                    <div class="left">
+                    <div class="left" @click="setDialogNotesVisible(true)">
                         <div class="note-icon icon-size-40"></div>
-                        <input type="text" placeholder="添加备注" class="detail-input" />
+                        <text class="detail-text">{{ notes || '添加备注' }}</text>
+
+                        <!-- <textarea v-model="notes" type="text" placeholder="添加备注" class="detail-input" id="notes-input" :auto-height="true" :maxlength="500" confirm-type="done" :adjust-position="false"  :show-confirm-bar="false" :cursor="20" :cursor-spacing="10" :fixed="true" @focus="handleNotesFocus" /> -->
+                        <!-- <input type="text" v-model="notes" placeholder="添加备注" class="detail-input" id="notes-input" :cursor-spacing="10" confirm-type="done" :adjust-position="false" @focus="handleNotesFocus" /> -->
                     </div>
                 </div>
             </div>
@@ -108,17 +111,31 @@
     <PopupCategory :visible="visible" :set-visible="setVisible" :select-tab="selectTab"
         @submit="handlePopupCategorySubmit" />
     <UIDialogCalendar :show="calendarShow" :set-show="setCalendarShow" :default-value="customDate.toDate()" :z-index="2000" @confirm="handleConfirmCalendar" :min-date="minDate" />
+    <DialogNotes :visible="dialogNotesVisible" :set-visible="setDialogNotesVisible" :defaultValue="notes" @confirm="handleDialogNotesConfirm" />
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue';
 import Layout from '@/components/layout/normal.vue';
+import DialogNotes from '@/components/dialog-notes/index.vue';
 import PopupCategory from './modules/popup-category/index.vue';
 import { useCategories } from './hooks/useCategories';
 import { usePopupCategory } from './hooks/usePopupCategory';
 import UIDialogCalendar from '@/ui-modules/calendar/dialog-calendar.vue';
-
 import dayjs from 'dayjs';
+
+const notes = ref('');
+
+const dialogNotesVisible = ref(false);
+const setDialogNotesVisible = (val: boolean) => {
+    dialogNotesVisible.value = val;
+}
+const handleDialogNotesConfirm = (val: any) => {
+    console.log(val, '===00=0=0=0=0')
+    dialogNotesVisible.value = false;
+    notes.value = val;
+}
+
 
 const customDate = ref(dayjs());
 const minDate = ref(dayjs().subtract(1, 'year').toDate());
@@ -130,8 +147,6 @@ const handleConfirmCalendar = (date: Date) => {
     customDate.value = dayjs(date);
     setCalendarShow(false);
 }
-
-
 
 /** 类别选择模块 */
 const {
@@ -159,63 +174,33 @@ const showOptionsFlag = ref(false)
 // 判断是否固定展开显示高级功能
 const pinFlag = ref(false)
 
+uni.getStorage({
+    key: 'pinFlag',
+    success: (res) => {
+        console.log(res, 'res', typeof res.data);
+        pinFlag.value = res.data;
+        if(res.data) {
+            showOptionsFlag.value = true;
+        }
+    }
+});
+
 const showOptions = () => {
+    if(pinFlag.value) return;
     showOptionsFlag.value = !showOptionsFlag.value;
 }
 const handlePin = () => {
     pinFlag.value = !pinFlag.value;
+    uni.setStorage({
+        key: 'pinFlag',
+        data: pinFlag.value
+    });
 }
 /** 高级功能模块 */
 
 </script>
 
 <style lang="less" scoped>
-.page-container {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    height: 100%;
-    box-sizing: border-box;
-    background-color: #F9FAFB;
-}
-
-.nav-header {
-    background-color: var(--primary-color);
-    padding: 0 20rpx;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 100;
-    height: 200rpx;
-    display: flex;
-    align-items: flex-start;
-    box-sizing: border-box;
-}
-
-.nav-box {
-    display: flex;
-    align-items: center;
-    flex-grow: 1;
-    height: 74rpx;
-    color: #FFFFFF;
-    font-weight: bold;
-    font-size: 40rpx;
-}
-
-.left-arrow-icon-wrap {
-    width: 60rpx;
-    height: 70rpx;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-
-    .left-arrow-icon-2 {
-        border-color: #FFFFFF;
-    }
-}
 
 .main-content {
     flex: 1;
@@ -392,10 +377,14 @@ const handlePin = () => {
     display: flex;
     align-items: center;
     gap: 16rpx;
+    width: 100%;
+    overflow: hidden;
 }
 
 .detail-input {
     font-size: 28rpx;
+    width: 600rpx;
+    white-space: pre-wrap;
 }
 
 .detail-text {

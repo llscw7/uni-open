@@ -203,3 +203,15 @@
     background: url(http://qno.ttscw.top/record-other/Pushpin-Line--Streamline-Remix.png) no-repeat center;
     background-size: 100% 100%;
 }
+
+/* 打勾 */
+.check-icon {
+    background: url(http://qno.ttscw.top/record-other/Check-Line--Streamline-Remix.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+/* 橡皮擦 */
+.eraser-icon {
+    background: url(http://qno.ttscw.top/record-other/Eraser--Streamline-Tabler.png) no-repeat center;
+    background-size: 100% 100%;
+}

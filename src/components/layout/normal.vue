@@ -71,7 +71,9 @@ const goToBack = () => {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    height: 100%;
+    // 解决安卓APP中uni.pageScrollTo不生效
+    height: auto!important;
+    
     box-sizing: border-box;
     background-color: #F9FAFB;
 }

@@ -1,6 +1,6 @@
 <template>
   <UIPopup :visible="show" :setVisible="setShow" :z-index="props.zIndex">
-    <view class="calendar-container" v-if="show">
+    <view class="calendar-container">
       <!-- 头部：显示当前年月和切换按钮 -->
       <view class="header">
         <div class="header-date">
@@ -40,6 +40,12 @@
 import { ref, computed, watch } from 'vue';
 import dayjs from 'dayjs';
 import UIPopup from '@/ui-modules/popup/index.vue';
+
+interface DayParam {
+    day?: number;
+    date?: dayjs.Dayjs;
+    empty?: boolean;
+}
 
 const props = defineProps({
   defaultValue: {
@@ -89,7 +95,7 @@ const days = computed<DayParam[]>(() => {
       date,
     });
   }
-  if (startDay === 0) return daysArray; // 无需填充空白
+  // if (startDay === 0) return daysArray; // 无需填充空白
 
   // 填充空白
   return [
@@ -166,8 +172,8 @@ defineExpose({ open, close });
 <style lang="less" scoped>
 .calendar-container {
   width: 100%;
-  height: 760rpx;
-  padding: 20rpx;
+  height: 840rpx;
+  padding: 32rpx;
   background-color: #fff;
   border-radius: 10rpx;
   box-sizing: border-box;
@@ -177,7 +183,7 @@ defineExpose({ open, close });
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10rpx 0;
+  padding: 10rpx;
   margin-bottom: 32rpx;
 }
 
@@ -207,7 +213,7 @@ defineExpose({ open, close });
 }
 
 .month {
-  font-size: 32rpx;
+  font-size: 36rpx;
   font-weight: bold;
 }
 

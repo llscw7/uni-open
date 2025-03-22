@@ -3,7 +3,7 @@
     "configurations" : [
         {
             "openVueDevtools" : false,
-            "playground" : "custom",
+            "playground" : "standard",
             "type" : "uni-app:app-ios"
         },
         {

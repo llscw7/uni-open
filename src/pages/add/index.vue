@@ -116,22 +116,13 @@ import Layout from '@/components/layout/normal.vue';
 import PopupCategory from './modules/popup-category/index.vue';
 import { useCategories } from './hooks/useCategories';
 import { usePopupCategory } from './hooks/usePopupCategory';
+import { useDialogCalendar } from './hooks/useDialogCalendar';
 import UIDialogCalendar from '@/ui-modules/calendar/dialog-calendar.vue';
 import dayjs from 'dayjs';
 
+const { customDate, minDate, calendarShow, setCalendarShow, handleConfirmCalendar } = useDialogCalendar();
 
 const notes = ref('');
-
-const customDate = ref(dayjs());
-const minDate = ref(dayjs().subtract(1, 'year').toDate());
-const calendarShow = ref(false);
-const setCalendarShow = (val: boolean) => {
-    calendarShow.value = val;
-}
-const handleConfirmCalendar = (date: Date) => {
-    customDate.value = dayjs(date);
-    setCalendarShow(false);
-}
 
 /** 类别选择模块 */
 const {

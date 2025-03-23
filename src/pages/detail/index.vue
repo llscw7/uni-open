@@ -20,8 +20,8 @@
             <div class="detail-card">
                 <div class="detail-item">
                     <div class="detail-label">时间</div>
-                    <div class="detail-value-wrapper">
-                        <div class="detail-value">2023年12月15日 19:30</div>
+                    <div class="detail-value-wrapper" @click="setCalendarShow(true)">
+                        <div class="detail-value">{{ customDate.format('YYYY-MM-DD HH:mm') }}</div>
                         <div class="right-arrow-icon-wrap" @click="goToBack">
                             <div class="right-arrow-icon-2"></div>
                         </div>
@@ -116,11 +116,17 @@
             <div class="action-btn edit" @click="onEdit">编辑</div>
         </div>
     </Layout>
+    <UIDialogCalendar :show="calendarShow" :set-show="setCalendarShow" :default-value="customDate.toDate()" :z-index="2000" @confirm="handleConfirmCalendar" :min-date="minDate" />
 </template>
 
 <script lang="ts" setup>
 import { onMounted, ref, computed } from 'vue';
 import Layout from '@/components/layout/normal.vue';
+import UIDialogCalendar from '@/ui-modules/calendar/dialog-calendar.vue';
+import { useDialogCalendar } from './hooks/useDialogCalendar';
+import dayjs from 'dayjs';
+
+const { customDate, minDate, calendarShow, setCalendarShow, handleConfirmCalendar } = useDialogCalendar();
 
 
 const isSingleLine = ref(true);

@@ -95,7 +95,6 @@ export function usePickerViewDate(pick_end_wait_time: number) {
     }  
 
     const handlePickend = () => {
-        console.log('handlePickend====');
         setTimeout(() => {
             pickerEndFlag.value = true;
         }, pick_end_wait_time);

@@ -1,5 +1,5 @@
 <template>
-    <div class="dialog-calendar" v-if="show" :style="{ zIndex: zIndex }" @click="setShow(false)"
+    <div class="dialog-calendar" v-if="show" :style="{ zIndex: zIndex }" @click="cancel"
     @touchmove.stop.prevent>
         <view class="calendar-container" @click.stop>
             <!-- 头部：显示当前年月和切换按钮 -->
@@ -39,6 +39,29 @@
                     </view>
                 </swiper-item>
             </swiper>
+
+            <div class="time-wrap">
+                <div class="time-label">时间</div>
+                <div class="time-select-wrap">
+                    <div class="time-text" @click="timeVisible = true">{{ currentTime }}</div>
+                    <div class="time-select" :style="{ zIndex: timeVisible ? 1000 : -1, opacity: timeVisible ? 1 : 0 }" @click.stop>
+                        <picker-view v-if="timeVisible" :indicator-style="indicatorStyle" :value="defaultTime" @change="bindChange"  class="picker-view">
+                            <picker-view-column>
+                                <view class="item" v-for="(item,index) in hours" :key="index">{{item}}</view>
+                            </picker-view-column>
+                            <picker-view-column>
+                                <view class="item" v-for="(item,index) in minutes" :key="index">{{item}}</view>
+                            </picker-view-column>
+                        </picker-view>
+                    </div>
+                    <div class="time-select-mask" v-if="timeVisible" @click.stop="timeVisible = false"></div>
+                </div>
+            </div>
+
+            <div class="dialog-footer">
+                <div class="footer-btn cancel" @click="cancel">取消</div>
+                <div class="footer-btn" @click="handleSubmit">确定</div>
+            </div>
         </view>
     </div>
 </template>
@@ -46,6 +69,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
 import dayjs from 'dayjs';
+import { usePickerViewTimeSelect } from './hooks/usePickerViewTimeSelect';
 
 interface DayParam {
     day?: number;
@@ -56,6 +80,7 @@ interface DayParam {
 const props = defineProps({
     defaultValue: {
         type: Date,
+        default: new Date()
     },
     zIndex: {
         type: Number,
@@ -79,9 +104,14 @@ const props = defineProps({
     }
 });
 
+/** 小时分钟选择弹窗 */
+const { currentTime, defaultTime, hours, minutes, timeVisible, indicatorStyle, bindChange} = usePickerViewTimeSelect();
+/** 小时分钟选择弹窗 */
+
+
 // 当前日期
 const currentDate = ref(dayjs());
-const selectDay = ref<dayjs.Dayjs | undefined>(props.defaultValue ? dayjs(props.defaultValue) : undefined);
+const selectDay = ref<dayjs.Dayjs>(dayjs(props.defaultValue));
 const currentMonthIndex = ref(0); // 当前月份索引
 
 // 生成月份数组
@@ -123,8 +153,13 @@ const getDaysForMonth = (month: dayjs.Dayjs): DayParam[] => {
 // 监听show变化，初始化当前日期，确保每次打开日历都是选中日期的月份
 watch(() => props.show, (val) => {
     if (val) {
-        currentDate.value = selectDay.value || dayjs();
+        selectDay.value = dayjs(props.defaultValue);
+        currentDate.value = selectDay.value;
         currentMonthIndex.value = months.value.findIndex(month => month.isSame(currentDate.value, 'month'));
+        currentTime.value = selectDay.value.format('HH:mm');
+        const hour = currentTime.value.split(':')[0];
+        const minute = currentTime.value.split(':')[1];
+        defaultTime.value = [hours.value.indexOf(hour), minutes.value.indexOf(minute)];
     }
 });
 
@@ -147,9 +182,9 @@ const onSwiperChange = (e: any) => {
 const handleDayClick = (day: DayParam) => {
     if (props.minDate && day.date?.isBefore(dayjs(props.minDate))) return;
     if (props.maxDate && day.date?.isAfter(dayjs(props.maxDate))) return;
-    if (!day.empty) {
+    if (!day.empty && day.date) {
         selectDay.value = day.date;
-        emit('confirm', day.date);
+        // emit('confirm', day.date);
     }
 };
 
@@ -172,6 +207,24 @@ const notSelectMonth = (direction: 'left' | 'right') => {
     }
 };
 
+const cancel = () => {
+    emit('cancel');
+    selectDay.value = dayjs(props.defaultValue);
+    props.setShow(false);
+};
+
+const handleSubmit = () => {
+
+    const [hour, minute] = currentTime.value.split(':');
+    if(selectDay.value && hour && minute) {
+        const fullDate = selectDay.value.set('hour', +hour).set('minute', +minute);
+        emit('confirm', fullDate);
+    }else {
+        console.error('selectDay or currentTime is undefined');
+    }
+    props.setShow(false);
+};
+
 const emit = defineEmits(['confirm', 'cancel']);
 
 </script>
@@ -192,11 +245,12 @@ const emit = defineEmits(['confirm', 'cancel']);
 
 .calendar-container {
     width: 90vw;
-    height: 840rpx;
+    height: 950rpx;
     padding: 32rpx;
     background-color: #fff;
     border-radius: 10rpx;
     box-sizing: border-box;
+    position: relative;
 }
 
 .header {
@@ -289,5 +343,102 @@ const emit = defineEmits(['confirm', 'cancel']);
 
 .day-item.disabled {
     color: #ccc;
+}
+
+.time-wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: absolute;
+    left: 0;
+    right: 0;
+    padding: 0 32rpx;
+    bottom: 150rpx;
+    z-index: 99999;
+}
+.time-label {
+    font-size: 34rpx;
+    font-weight: 500;
+    color: #000000;
+}
+.time-text {
+    letter-spacing: 8rpx;
+    font-size: 28rpx;
+    font-weight: 500;
+    color: #000000;
+    background-color: #F0F2F5;
+    padding: 20rpx;
+    box-sizing: border-box;
+    border-radius: 20rpx;
+}
+.time-select {
+    position: absolute;
+    bottom: 100rpx;
+    right: 32rpx;
+    height: 300rpx;
+    background-color: #fff;
+    /* #ifndef APP-NVUE */
+    display: flex;
+    /* #endif */
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 20rpx 40rpx;
+    box-sizing: border-box;
+    overflow: hidden;
+    background-color: #fff;
+    box-shadow: 0rpx 0rpx 10rpx 10rpx rgba(0, 0, 0, 0.1);
+    border-radius: 20rpx;
+}
+
+.time-select-mask {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0);
+    z-index: 1;
+}
+
+.picker-view {
+    position: relative;
+    z-index: 10;
+    width: 200rpx;
+    height: 300rpx;
+    margin-top: 20rpx;
+}
+
+.item {
+    line-height: 40px;
+    text-align: center;
+}
+
+.dialog-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20rpx;
+    padding: 0 32rpx;
+    position: absolute;
+    bottom: 32rpx;
+    left: 0;
+    right: 0;
+}
+
+.footer-btn {
+    width: 260rpx;
+    height: 80rpx;
+    font-weight: 500;
+    line-height: 80rpx;
+    text-align: center;
+    font-size: 30rpx;
+    color: #fff;
+    background-color: var(--primary-color);
+    border-radius: 10rpx;
+}
+
+.footer-btn.cancel {
+    color: #000000;
+    background-color: #E4E7ED;
 }
 </style>

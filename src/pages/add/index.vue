@@ -10,6 +10,23 @@
                 </div>
             </div>
 
+            <div class="detail-card">
+                <div class="detail-item" @click="setCalendarShow(true)">
+                    <div class="left">
+                        <div class="calendar-icon-2 icon-size-40"></div>
+                        <text class="detail-text">{{ customDate.format('YYYY-MM-DD HH:mm') }}</text>
+                    </div>
+                    <uni-icons type="right" size="14" color="#ddd" />
+                </div>
+
+                <div class="detail-item">
+                    <div class="left">
+                        <div class="note-icon icon-size-40"></div>
+                        <textarea v-model="notes" type="text" placeholder="添加备注" class="notes-input" id="notes-input" :auto-height="true" :maxlength="200" confirm-type="done"  :show-confirm-bar="false" :cursor-spacing="30" />
+                    </div>
+                </div>
+            </div>
+
             <div class="type-card">
                 <div class="tab-wrapper">
                     <div class="tab" :class="{ 'active': selectTab === tab.id }" v-for="(tab, index) in tabs"
@@ -32,26 +49,6 @@
                             <div class="more-icon icon-size-46"></div>
                         </div>
                         <text class="category-name">更多</text>
-                    </div>
-                </div>
-            </div>
-
-            <div class="detail-card">
-                <div class="detail-item" @click="setCalendarShow(true)">
-                    <div class="left">
-                        <div class="calendar-icon-2 icon-size-40"></div>
-                        <text class="detail-text">今天</text>
-                    </div>
-                    <uni-icons type="right" size="14" color="#ddd" />
-                </div>
-
-                <div class="detail-item">
-                    <div class="left" @click="setDialogNotesVisible(true)">
-                        <div class="note-icon icon-size-40"></div>
-                        <text class="detail-text">{{ notes || '添加备注' }}</text>
-
-                        <!-- <textarea v-model="notes" type="text" placeholder="添加备注" class="detail-input" id="notes-input" :auto-height="true" :maxlength="500" confirm-type="done" :adjust-position="false"  :show-confirm-bar="false" :cursor="20" :cursor-spacing="10" :fixed="true" @focus="handleNotesFocus" /> -->
-                        <!-- <input type="text" v-model="notes" placeholder="添加备注" class="detail-input" id="notes-input" :cursor-spacing="10" confirm-type="done" :adjust-position="false" @focus="handleNotesFocus" /> -->
                     </div>
                 </div>
             </div>
@@ -111,31 +108,19 @@
     <PopupCategory :visible="visible" :set-visible="setVisible" :select-tab="selectTab"
         @submit="handlePopupCategorySubmit" />
     <UIDialogCalendar :show="calendarShow" :set-show="setCalendarShow" :default-value="customDate.toDate()" :z-index="2000" @confirm="handleConfirmCalendar" :min-date="minDate" />
-    <DialogNotes :visible="dialogNotesVisible" :set-visible="setDialogNotesVisible" :defaultValue="notes" @confirm="handleDialogNotesConfirm" />
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue';
 import Layout from '@/components/layout/normal.vue';
-import DialogNotes from '@/components/dialog-notes/index.vue';
 import PopupCategory from './modules/popup-category/index.vue';
 import { useCategories } from './hooks/useCategories';
 import { usePopupCategory } from './hooks/usePopupCategory';
 import UIDialogCalendar from '@/ui-modules/calendar/dialog-calendar.vue';
 import dayjs from 'dayjs';
 
+
 const notes = ref('');
-
-const dialogNotesVisible = ref(false);
-const setDialogNotesVisible = (val: boolean) => {
-    dialogNotesVisible.value = val;
-}
-const handleDialogNotesConfirm = (val: any) => {
-    console.log(val, '===00=0=0=0=0')
-    dialogNotesVisible.value = false;
-    notes.value = val;
-}
-
 
 const customDate = ref(dayjs());
 const minDate = ref(dayjs().subtract(1, 'year').toDate());
@@ -385,6 +370,13 @@ const handlePin = () => {
     font-size: 28rpx;
     width: 600rpx;
     white-space: pre-wrap;
+}
+
+.notes-input {
+    font-size: 28rpx;
+    width: 100%;
+    white-space: pre-wrap;
+    word-wrap: break-word;
 }
 
 .detail-text {

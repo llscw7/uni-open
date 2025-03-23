@@ -31,13 +31,15 @@
                 <div class="detail-item">
                     <div class="detail-label">备注</div>
                     <div class="detail-note-wrapper">
-                        <div class="note-item">和朋友聚餐，4人分摊和朋友聚餐，4人分摊和朋友聚餐</div>
-                        <div class="right-arrow-icon-wrap" @click="goToBack">
-                            <div class="right-arrow-icon-2"></div>
+                        <textarea v-model="notes" type="text" class="notes-input" id="notes-input" :auto-height="true"
+                            :maxlength="200" confirm-type="done" :show-confirm-bar="false"
+                            :cursor-spacing="30" @input="handleInput" :style="{textAlign: isSingleLine ? 'right' : 'left'}" />
+                        <div class="note-icon-2-wrap" @click="goToBack">
+                            <div class="note-icon-2 icon-size-40"></div>
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="detail-item">
                     <div class="detail-label">标签</div>
                     <div class="tags-wrapper">
@@ -92,12 +94,14 @@
 
                 <div class="detail-item">
                     <div class="detail-label">不计入收支</div>
-                    <switch :checked="excludeIncome" @change="onExcludeIncomeChange" color="#F5AF19" class="switch-btn" />
+                    <switch :checked="excludeIncome" @change="onExcludeIncomeChange" color="#F5AF19"
+                        class="switch-btn" />
                 </div>
 
                 <div class="detail-item">
                     <div class="detail-label">不计入预算</div>
-                    <switch :checked="excludeBudget" @change="onExcludeBudgetChange" color="#F5AF19" class="switch-btn" />
+                    <switch :checked="excludeBudget" @change="onExcludeBudgetChange" color="#F5AF19"
+                        class="switch-btn" />
                 </div>
 
                 <!-- <div class="detail-item">
@@ -115,23 +119,44 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 import Layout from '@/components/layout/normal.vue';
+
+
+const isSingleLine = ref(true);
+const query = uni.createSelectorQuery();
+
+const handleInput = (event: Event) => {
+    query
+        .select("#notes-input")
+        .boundingClientRect((data: any) => {
+            if (data.height > 40) {
+                isSingleLine.value = false;
+            } else {
+                isSingleLine.value = true;
+            }
+            console.log(data.height,'------====')
+        })
+        .exec();
+};
+
+
+const notes = ref('');
 
 const excludeIncome = ref(false);
 const excludeBudget = ref(false);
 const excludeAssets = ref(false);
 
 const goToBack = () => {
-  const pages = getCurrentPages(); // 获取当前页面栈  
-  if (pages.length > 1) {  
-    uni.navigateBack(); // 存在上一页，返回上一页  
-  } else {  
-    // 如果没有上一页可以返回，可以选择跳转到首页或其他页面  
-    uni.redirectTo({  
-      url: '/pages/detail/index'
-    });  
-  } 
+    const pages = getCurrentPages(); // 获取当前页面栈  
+    if (pages.length > 1) {
+        uni.navigateBack(); // 存在上一页，返回上一页  
+    } else {
+        // 如果没有上一页可以返回，可以选择跳转到首页或其他页面  
+        uni.redirectTo({
+            url: '/pages/detail/index'
+        });
+    }
 }
 
 const onExcludeIncomeChange = (event: any) => {
@@ -161,7 +186,6 @@ const onEdit = () => {
 </script>
 
 <style lang="less" scoped>
-
 .page-container {
     position: relative;
     display: flex;
@@ -173,17 +197,17 @@ const onEdit = () => {
 }
 
 .nav-header {
-  background-color: var(--primary-color);
-  padding: 0 20rpx;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 100;
-  height: 200rpx;
-  display: flex;
-  align-items: flex-start;
-  box-sizing: border-box;
+    background-color: var(--primary-color);
+    padding: 0 20rpx;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    height: 200rpx;
+    display: flex;
+    align-items: flex-start;
+    box-sizing: border-box;
 }
 
 .nav-box {
@@ -197,15 +221,16 @@ const onEdit = () => {
 }
 
 .left-arrow-icon-wrap {
-  width: 60rpx;
-  height: 70rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  .left-arrow-icon-2 {
-    border-color: #FFFFFF;
-  }
+    width: 60rpx;
+    height: 70rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+
+    .left-arrow-icon-2 {
+        border-color: #FFFFFF;
+    }
 }
 
 .main-content {
@@ -256,7 +281,7 @@ const onEdit = () => {
 }
 
 .bill-subtitle {
-    font-size:28rpx;
+    font-size: 28rpx;
     color: #999999;
     margin-top: 4rpx;
 }
@@ -291,6 +316,7 @@ const onEdit = () => {
 .detail-label {
     font-size: 30rpx;
     color: #666666;
+    min-width: 80rpx;
 }
 
 .detail-value-wrapper {
@@ -324,12 +350,17 @@ const onEdit = () => {
     display: flex;
     align-items: center;
     gap: 8rpx;
+    width: 100%;
 }
 
-.note-item {
+.notes-input {
     font-size: 30rpx;
     color: #333333;
-    max-width: 500rpx;
+    width: 100%;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    line-height: 25px;
+    // text-align: right;
 }
 
 .bottom-actions {
@@ -371,6 +402,15 @@ const onEdit = () => {
     transform: scale(0.8);
 }
 
+.note-icon-2-wrap {
+    width: 60rpx;
+    height: 40rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
 .right-arrow-icon-wrap {
     width: 60rpx;
     height: 40rpx;
@@ -378,10 +418,10 @@ const onEdit = () => {
     align-items: center;
     justify-content: center;
     overflow: hidden;
+
     .right-arrow-icon-2 {
         width: 16rpx;
         height: 16rpx;
     }
 }
-
 </style>

@@ -25,3 +25,10 @@ Better Comments插件通过在注释前添加特定的前缀来高亮显示不�
         - 缺点：多了次交互逻辑
 
 - textarea中，当中文输入了一行多一些，剩下的输入数字，数字会自动切换到下一行展示
+- textarea弹起键盘时，点击页面其他位置，键盘收起，会触发页面其他位置的点击事件，如点击记一笔页面的今天，在键盘收起后，会弹出日历选择弹窗
+
+
+##
+input 
+https://uniapp.dcloud.net.cn/component/input#%E5%85%B3%E4%BA%8E%E8%BD%AF%E9%94%AE%E7%9B%98%E5%BC%B9%E5%87%BA%E7%9A%84%E9%80%BB%E8%BE%91%E8%AF%B4%E6%98%8E
+如需禁止点击其他位置收起键盘的默认行为，可以监听touch事件并使用prevent修饰符（仅支持App、H5，其他平台可以通过设置focus来使输入框重新获取焦点），例如在确认按钮上使用：@touchend.prevent="onTap"

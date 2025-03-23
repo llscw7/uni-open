@@ -25,16 +25,38 @@
             </view>
 
             <!-- 日期网格 -->
-            <view class="days-grid">
-                <view v-for="(day, index) in days" :key="index" class="day-item" :class="{
-                    'empty': day.empty,
-                    'actived': isSelected(day),
-                    'today': isToday(day),
-                    'disabled': day.date && (day.date.isBefore(props.minDate) || day.date.isAfter(props.maxDate))
-                }" @click="handleDayClick(day)">
-                    <text class="day-number">{{ day.day }}</text>
-                </view>
-            </view>
+            <swiper class="swiper-container" :current="currentMonthIndex" @change="onSwiperChange">
+                <swiper-item v-for="(month, index) in months" :key="index">
+                    <view class="days-grid">
+                        <view v-for="(day, dayIndex) in getDaysForMonth(month)" :key="dayIndex" class="day-item" :class="{
+                            'empty': day.empty,
+                            'actived': isSelected(day),
+                            'today': isToday(day),
+                            'disabled': day.date && (day.date.isBefore(props.minDate) || day.date.isAfter(props.maxDate))
+                        }" @click="handleDayClick(day)">
+                            <text class="day-number">{{ day.day }}</text>
+                        </view>
+                    </view>
+                </swiper-item>
+            </swiper>
+
+            <div class="time-wrap">
+                <div class="time-label">时间</div>
+                <div class="time-select-wrap">
+                    <div class="time-text" @click="timeVisible = true">{{ currentTime }}</div>
+                    <div class="time-select" :style="{ zIndex: timeVisible ? 1000 : -1, opacity: timeVisible ? 1 : 0 }">
+                        <picker-view v-if="timeVisible" :indicator-style="indicatorStyle" :value="defaultTime" @change="bindChange" class="picker-view">
+                            <picker-view-column>
+                                <view class="item" v-for="(item,index) in hours" :key="index">{{item}}</view>
+                            </picker-view-column>
+                            <picker-view-column>
+                                <view class="item" v-for="(item,index) in minutes" :key="index">{{item}}</view>
+                            </picker-view-column>
+                        </picker-view>
+                    </div>
+                    <div class="time-select-mask" v-if="timeVisible" @click.stop="timeVisible = false"></div>
+                </div>
+            </div>
         </view>
     </div>
 </template>
@@ -42,6 +64,35 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
 import dayjs from 'dayjs';
+
+const indicatorStyle = `height: 40px;`;
+const timeVisible = ref(false);
+
+const hours = ref<string[]>([]);
+const minutes = ref<string[]>([]);
+
+for (let i = 0; i <= 59; i++) {
+    if (i < 10) {
+        hours.value.push('0' + i);
+        minutes.value.push('0' + i);
+    } else if (i < 24) {
+        hours.value.push('' + i);
+        minutes.value.push('' + i);
+    } else {
+        minutes.value.push('' + i);
+    }
+}
+const currentTime = ref(dayjs().format('HH:mm'));
+const hour = currentTime.value.split(':')[0];
+const minute = currentTime.value.split(':')[1];
+const defaultTime = ref([hours.value.indexOf(hour), minutes.value.indexOf(minute)]);
+const bindChange = (e: any) => {
+    const val = e.detail.value;
+    currentTime.value = dayjs().hour(val[0]).minute(val[1]).format('HH:mm');
+    const hour = currentTime.value.split(':')[0];
+    const minute = currentTime.value.split(':')[1];
+    defaultTime.value = [hours.value.indexOf(hour), minutes.value.indexOf(minute)];
+};
 
 interface DayParam {
     day?: number;
@@ -60,7 +111,6 @@ const props = defineProps({
     maxDate: {
         type: Date,
         default: () => dayjs().toDate()
-        // default: () => dayjs().add(1, 'year').toDate()
     },
     minDate: {
         type: Date,
@@ -78,15 +128,27 @@ const props = defineProps({
 
 // 当前日期
 const currentDate = ref(dayjs());
-
 const selectDay = ref<dayjs.Dayjs | undefined>(props.defaultValue ? dayjs(props.defaultValue) : undefined);
+const currentMonthIndex = ref(0); // 当前月份索引
 
+// 生成月份数组
+const months = computed(() => {
+    const startMonth = dayjs(props.minDate).startOf('month');
+    const endMonth = dayjs(props.maxDate).startOf('month');
+    const monthsArray = [];
+    let currentMonth = startMonth;
+    while (currentMonth.isBefore(endMonth) || currentMonth.isSame(endMonth, 'month')) {
+        monthsArray.push(currentMonth);
+        currentMonth = currentMonth.add(1, 'month');
+    }
+    return monthsArray;
+});
 
-/** 生成日历数据 */
-const days = computed<DayParam[]>(() => {
-    const firstDayOfMonth = currentDate.value.startOf('month');
+// 获取某个月份的日期数据
+const getDaysForMonth = (month: dayjs.Dayjs): DayParam[] => {
+    const firstDayOfMonth = month.startOf('month');
     const startDay = firstDayOfMonth.day(); // 当前月第一天是星期几
-    const totalDays = currentDate.value.daysInMonth(); // 当前月的总天数
+    const totalDays = month.daysInMonth(); // 当前月的总天数
 
     // 生成日期数组
     const daysArray = [];
@@ -97,28 +159,35 @@ const days = computed<DayParam[]>(() => {
             date,
         });
     }
-    // if (startDay === 0) return daysArray; // 无需填充空白
 
     // 填充空白
     return [
         ...Array.from({ length: startDay }, () => ({ empty: true })),
         ...daysArray,
     ];
-});
-/** 生成日历数据 */
+};
 
 // 监听show变化，初始化当前日期，确保每次打开日历都是选中日期的月份
 watch(() => props.show, (val) => {
     if (val) {
         currentDate.value = selectDay.value || dayjs();
+        currentMonthIndex.value = months.value.findIndex(month => month.isSame(currentDate.value, 'month'));
     }
 });
 
 // 月份切换
 const switchMonth = (step: number) => {
-    if (step === 1 && currentDate.value.isSame(props.maxDate, 'month')) return;
-    if (step === -1 && currentDate.value.isSame(props.minDate, 'month')) return;
-    currentDate.value = currentDate.value.add(step, 'month');
+    const newIndex = currentMonthIndex.value + step;
+    if (newIndex >= 0 && newIndex < months.value.length) {
+        currentMonthIndex.value = newIndex;
+        currentDate.value = months.value[newIndex];
+    }
+};
+
+// swiper切换事件
+const onSwiperChange = (e: any) => {
+    currentMonthIndex.value = e.detail.current;
+    currentDate.value = months.value[currentMonthIndex.value];
 };
 
 // 日期点击事件
@@ -141,19 +210,18 @@ const isToday = (day: DayParam) => {
     return day.date?.isSame(dayjs(), 'day');
 };
 
+
 const notSelectMonth = (direction: 'left' | 'right') => {
     if (direction === 'left') {
-        return currentDate.value.isSame(props.minDate, 'month');
+        return currentMonthIndex.value === 0;
     } else {
-        return currentDate.value.isSame(props.maxDate, 'month');
+        return currentMonthIndex.value === months.value.length - 1;
     }
 };
 
 const emit = defineEmits(['confirm', 'cancel']);
 
-defineExpose({ open, close });
 </script>
-
 
 <style lang="less" scoped>
 .dialog-calendar {
@@ -176,6 +244,7 @@ defineExpose({ open, close });
     background-color: #fff;
     border-radius: 10rpx;
     box-sizing: border-box;
+    position: relative;
 }
 
 .header {
@@ -206,11 +275,6 @@ defineExpose({ open, close });
     opacity: 0.4;
 }
 
-.arrow {
-    font-size: 32rpx;
-    cursor: pointer;
-}
-
 .month {
     font-size: 36rpx;
     font-weight: bold;
@@ -229,12 +293,14 @@ defineExpose({ open, close });
     color: #666;
 }
 
+.swiper-container {
+    height: 640rpx; /* 固定高度 */
+}
+
 .days-grid {
-    // height: 640rpx; /* 固定高度 */
     display: grid;
     grid-gap: 20rpx;
     grid-template-columns: repeat(7, 1fr);
-    // grid-auto-rows: calc((640rpx - 5 * 20rpx) / 6); // ios存在bug，第一行不展示
 }
 
 .day-item {
@@ -271,5 +337,75 @@ defineExpose({ open, close });
 
 .day-item.disabled {
     color: #ccc;
+}
+
+.time-wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20rpx;
+    position: absolute;
+    left: 0;
+    right: 0;
+    padding: 0 32rpx;
+    bottom: 32rpx;
+    z-index: 99999;
+}
+.time-label {
+    font-size: 34rpx;
+    font-weight: 500;
+    color: #000000;
+}
+.time-text {
+    letter-spacing: 8rpx;
+    font-size: 28rpx;
+    font-weight: 500;
+    color: #000000;
+    background-color: #F0F2F5;
+    padding: 20rpx;
+    box-sizing: border-box;
+    border-radius: 20rpx;
+}
+.time-select {
+    position: absolute;
+    bottom: 100rpx;
+    right: 32rpx;
+    height: 300rpx;
+    background-color: #fff;
+    /* #ifndef APP-NVUE */
+    display: flex;
+    /* #endif */
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 20rpx 40rpx;
+    box-sizing: border-box;
+    overflow: hidden;
+    background-color: #fff;
+    box-shadow: 0rpx 0rpx 10rpx 10rpx rgba(0, 0, 0, 0.1);
+    border-radius: 20rpx;
+}
+
+.time-select-mask {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0);
+    z-index: 1;
+}
+
+.picker-view {
+    position: relative;
+    z-index: 10;
+    width: 200rpx;
+    height: 300rpx;
+    margin-top: 20rpx;
+}
+
+.item {
+    line-height: 40px;
+    text-align: center;
 }
 </style>

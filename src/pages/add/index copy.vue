@@ -10,6 +10,34 @@
                 </div>
             </div>
 
+            <div class="detail-card">
+                <div class="detail-item" @click="setCalendarShow(true)">
+                    <div class="left">
+                        <div class="calendar-icon-2 icon-size-40"></div>
+                        <text class="detail-text">今天</text>
+                    </div>
+                    <uni-icons type="right" size="14" color="#ddd" />
+                </div>
+
+                <!-- 键盘弹起bug，展示方案，页面内编辑 -->
+                <div class="detail-item">
+                    <div class="left">
+                        <div class="note-icon icon-size-40"></div>
+                        <textarea v-model="notes" type="text" placeholder="添加备注" class="notes-input" id="notes-input" :auto-height="true" :maxlength="500" confirm-type="done"  :show-confirm-bar="false" :cursor="20" :cursor-spacing="30" />
+                        <!-- <input type="text" v-model="notes" placeholder="添加备注" class="detail-input" id="notes-input" :cursor-spacing="10" confirm-type="done" :adjust-position="false" @focus="handleNotesFocus" /> -->
+                    </div>
+                </div>
+                <!-- 键盘弹起bug，展示方案，页面内编辑 -->
+                <!-- 键盘弹起bug，备选方案，dialog弹窗 -->
+                <div class="detail-item" v-if="false">
+                    <div class="left" @click="setDialogNotesVisible(true)">
+                        <div class="note-icon icon-size-40"></div>
+                        <text class="detail-text">{{ notes || '添加备注' }}</text>
+                    </div>
+                </div>
+                <!-- 键盘弹起bug，备选方案，dialog弹窗 -->
+            </div>
+
             <div class="type-card">
                 <div class="tab-wrapper">
                     <div class="tab" :class="{ 'active': selectTab === tab.id }" v-for="(tab, index) in tabs"
@@ -36,22 +64,7 @@
                 </div>
             </div>
 
-            <div class="detail-card">
-                <div class="detail-item">
-                    <div class="left">
-                        <div class="calendar-icon-2 icon-size-40"></div>
-                        <text class="detail-text">今天</text>
-                    </div>
-                    <uni-icons type="right" size="14" color="#ddd" />
-                </div>
-
-                <div class="detail-item">
-                    <div class="left">
-                        <div class="note-icon icon-size-40"></div>
-                        <input type="text" placeholder="添加备注" class="detail-input" />
-                    </div>
-                </div>
-            </div>
+            
 
             <div class="detail-option" @click="showOptions">
                 <div class="option-item">高级功能</div>
@@ -107,207 +120,110 @@
     </Layout>
     <PopupCategory :visible="visible" :set-visible="setVisible" :select-tab="selectTab"
         @submit="handlePopupCategorySubmit" />
+    <UIDialogCalendar :show="calendarShow" :set-show="setCalendarShow" :default-value="customDate.toDate()" :z-index="2000" @confirm="handleConfirmCalendar" :min-date="minDate" />
+    <DialogNotes :visible="dialogNotesVisible" :set-visible="setDialogNotesVisible" :defaultValue="notes" @confirm="handleDialogNotesConfirm" />
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue';
-import { categories_in, categories_out } from './modules/popup-category/categories'
-import { moveToFirst } from '@/utils/tool';
+import { ref } from 'vue';
 import Layout from '@/components/layout/normal.vue';
+import DialogNotes from '@/components/dialog-notes/index.vue';
 import PopupCategory from './modules/popup-category/index.vue';
+import { useCategories } from './hooks/useCategories';
+import { usePopupCategory } from './hooks/usePopupCategory';
+import UIDialogCalendar from '@/ui-modules/calendar/dialog-calendar.vue';
+import dayjs from 'dayjs';
 
-/** 支出、收入tab模块 */
-const selectTab = ref(1)
-const tabs = ref([
-    { title: '支出', id: 1 },
-    { title: '收入', id: 2 }
-]);
-const handleSelectTab = (id: number) => {
-    selectTab.value = id;
-    if (id === 1) {
-        const value = uni.getStorageSync('categories_out');
-        if (value) {
-            categories.value = JSON.parse(value);
-        } else {
-            categories.value = categories_out;
+const notes = ref('');
+
+const dialogNotesVisible = ref(false);
+const setDialogNotesVisible = (val: boolean) => {
+    dialogNotesVisible.value = val;
+}
+const handleDialogNotesConfirm = (val: any) => {
+    console.log(val, '===00=0=0=0=0')
+    dialogNotesVisible.value = false;
+    notes.value = val;
+}
+
+const handleNotesFocus = () => {
+    uni.pageScrollTo({
+        selector: '#notes-input',
+        duration: 10,
+        success: () => {
+        console.log('scroll success');
+        },
+        fail: () => {
+        console.log('scroll fail');
         }
-    } else {
-        const value = uni.getStorageSync('categories_in');
-        if (value) {
-            categories.value = JSON.parse(value);
-        } else {
-            categories.value = categories_in;
-        }
-    }
-}
-/** 支出、收入tab模块 */
-
-/** 细分类别选择模块 */
-const categories = ref(categories_out);
-const selectCategoriesIn = ref(1)
-const selectCategoriesOut = ref(1)
-
-onMounted(() => {
-    initCategories();
-})
-
-// 初始化分类 获取本地存储的分类数据
-const initCategories = () => {
-    try {
-        const outData = uni.getStorageSync('categories_out');
-        if (outData) {
-            selectCategoriesOut.value = JSON.parse(outData)[0].id;
-            // 默认选中tab为支出，所以只初始化支出的分类
-            categories.value = JSON.parse(outData);
-        }
-
-        const inData = uni.getStorageSync('categories_in');
-        if (inData) {
-            selectCategoriesIn.value = JSON.parse(inData)[0].id;
-        }
-
-    } catch (e) {
-        // error
-        console.error(e);
-    }
+    });
 }
 
-// 选择细分类别
-const handleSelectCategory = (id: number) => {
-    if (selectTab.value === 1) {
-        selectCategoriesOut.value = id;
-    } else {
-        selectCategoriesIn.value = id;
-    }
+
+const customDate = ref(dayjs());
+const minDate = ref(dayjs().subtract(1, 'year').toDate());
+const calendarShow = ref(false);
+const setCalendarShow = (val: boolean) => {
+    calendarShow.value = val;
+}
+const handleConfirmCalendar = (date: Date) => {
+    customDate.value = dayjs(date);
+    setCalendarShow(false);
 }
 
-// 判断是否选中
-const isActived = (id: number) => {
-    if (selectTab.value === 1) {
-        return selectCategoriesOut.value === id;
-    } else {
-        return selectCategoriesIn.value === id;
-    }
-}
+/** 类别选择模块 */
+const {
+    selectTab,
+    tabs,
+    categories,
+    handleSelectTab,
+    handleSelectCategory,
+    isActived,
+    categoryIconClass
+} = useCategories();
+/** 类别选择模块 */
 
-// 初始化图标样式
-const categoryIconClass = (icon: string, id: number) => {
-    return `${icon}-icon` + (isActived(id) ? '-yellow' : '');
-}
-
-/** 细分类别选择模块 */
-
+/** 类别选择弹窗模块 */
+const {
+    visible,
+    setVisible,
+    selectMore,
+    handlePopupCategorySubmit
+} = usePopupCategory();
+/** 类别选择弹窗模块 */
 
 /** 高级功能模块 */
 const showOptionsFlag = ref(false)
 // 判断是否固定展开显示高级功能
 const pinFlag = ref(false)
 
+uni.getStorage({
+    key: 'pinFlag',
+    success: (res) => {
+        console.log(res, 'res', typeof res.data);
+        pinFlag.value = res.data;
+        if(res.data) {
+            showOptionsFlag.value = true;
+        }
+    }
+});
+
 const showOptions = () => {
+    if(pinFlag.value) return;
     showOptionsFlag.value = !showOptionsFlag.value;
 }
 const handlePin = () => {
     pinFlag.value = !pinFlag.value;
+    uni.setStorage({
+        key: 'pinFlag',
+        data: pinFlag.value
+    });
 }
 /** 高级功能模块 */
-
-
-
-/** 类别选择弹窗模块 */
-const visible = ref(false);
-const setVisible = (val: boolean) => {
-    visible.value = val;
-}
-
-const selectMore = () => {
-    setVisible(true);
-}
-
-const handlePopupCategorySubmit = (id: number) => {
-    if (selectTab.value === 1) {
-        const index = categories.value.findIndex(item => item.id === id);
-        if (index) {
-            categories.value = moveToFirst(categories.value, index);
-            selectCategoriesOut.value = id;
-            uni.setStorage({
-                key: 'categories_out',
-                data: JSON.stringify(categories.value),
-                success: function () {
-                    console.log('success');
-                }
-            });
-        } else {
-            console.error('categories id not found');
-        }
-    } else {
-        const index = categories.value.findIndex(item => item.id === id);
-        if (index) {
-            categories.value = moveToFirst(categories.value, index);
-            selectCategoriesIn.value = id;
-            uni.setStorage({
-                key: 'categories_in',
-                data: JSON.stringify(categories.value),
-                success: function () {
-                    console.log('success');
-                }
-            });
-        } else {
-            console.error('categories id not found');
-        }
-    }
-    setVisible(false);
-}
-/** 类别选择弹窗模块 */
 
 </script>
 
 <style lang="less" scoped>
-.page-container {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    height: 100%;
-    box-sizing: border-box;
-    background-color: #F9FAFB;
-}
-
-.nav-header {
-    background-color: var(--primary-color);
-    padding: 0 20rpx;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 100;
-    height: 200rpx;
-    display: flex;
-    align-items: flex-start;
-    box-sizing: border-box;
-}
-
-.nav-box {
-    display: flex;
-    align-items: center;
-    flex-grow: 1;
-    height: 74rpx;
-    color: #FFFFFF;
-    font-weight: bold;
-    font-size: 40rpx;
-}
-
-.left-arrow-icon-wrap {
-    width: 60rpx;
-    height: 70rpx;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-
-    .left-arrow-icon-2 {
-        border-color: #FFFFFF;
-    }
-}
 
 .main-content {
     flex: 1;
@@ -484,10 +400,21 @@ const handlePopupCategorySubmit = (id: number) => {
     display: flex;
     align-items: center;
     gap: 16rpx;
+    width: 100%;
+    overflow: hidden;
 }
 
 .detail-input {
     font-size: 28rpx;
+    width: 600rpx;
+    white-space: pre-wrap;
+}
+
+.notes-input {
+    font-size: 28rpx;
+    width: 100%;
+    white-space: pre-wrap;
+    word-wrap: break-word;
 }
 
 .detail-text {

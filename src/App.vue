@@ -2,6 +2,14 @@
 import { onLaunch, onShow, onHide } from "@dcloudio/uni-app";
 
 onLaunch(() => {
+  uni.hideTabBar({
+    success: () => {
+      console.log("隐藏 tabBar 成功");
+    },
+    fail: (err) => {
+      console.log("隐藏 tabBar 失败", err);
+    }
+  });
   console.log("App Launch");
 });
 onShow(() => {
@@ -11,6 +19,9 @@ onHide(() => {
   console.log("App Hide");
 });
 </script>
+<template>
+
+</template>
 <style lang="less">
 @import './common/style/common.css';
 @import './common/style/icon/in-icon.css';

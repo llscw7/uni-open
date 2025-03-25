@@ -63,6 +63,7 @@
                 </div>
             </div>
 
+            <!-- 高级功能列表 -->
             <div class="detail-card" v-if="showOptionsFlag">
                 <div class="detail-item">
                     <div class="left">
@@ -99,6 +100,7 @@
                     <switch color="#F5AF19" class="switch-btn" />
                 </div>
             </div>
+            <!-- 高级功能列表 -->
         </div>
 
         <div class="bottom-actions">

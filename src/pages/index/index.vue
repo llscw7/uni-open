@@ -108,21 +108,9 @@
       <div class="add-button">
         <div class="add-icon icon-size-60"></div>
       </div>
-  
-      <div class="tab-bar">
-        <div class="tab-item active">
-          <div class="icon-size-40" :class="[true ? 'home-icon-actived' : 'home-icon']"></div>
-          <text class="tab-text">首页</text>
-        </div>
-        <div class="tab-item">
-          <div class="icon-size-40" :class="[false ? 'statistics-icon-actived' : 'statistics-icon']"></div>
-          <text class="tab-text">统计</text>
-        </div>
-        <div class="tab-item">
-          <div class="icon-size-40" :class="[false ? 'mine-icon-actived' : 'mine-icon']"></div>
-          <text class="tab-text">我的</text>
-        </div>
-      </div>
+      
+      <FooterNav />
+      
       <PopupDate :visible="popupDateShow" :setVisible="setPopupDateShow" @submit="handlePopupDateSubmit" />
     </div>
   </template>
@@ -133,6 +121,7 @@ import TransactionList from '@/components/transaction-list/index.vue';
 import { getCapsulePosition } from '@/utils/tool';
 import PopupDate from '@/components/popup-date/index.vue'
 import dayjs from 'dayjs';
+import FooterNav from '@/components/footer-nav/index.vue';
 
 interface PopupDateSubmitParam {
   type: number;  
@@ -582,37 +571,6 @@ const openPopupDate = () => {
     z-index: 100;
   }
   
-  .tab-bar {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 130rpx;
-    background: #FFFFFF;
-    border-top: 2rpx solid #E5E7EB;
-    display: flex;
-    padding: 0 48rpx;
-    padding-bottom: 10rpx;
-    z-index: 100;
-  }
-  
-  .tab-item {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .tab-text {
-    font-size: 24rpx;
-    color: #999999;
-    margin-top: 8rpx;
-  }
-  
-  .tab-item.active .tab-text {
-    color: var(--primary-color);
-  }
 
   .class-icon {
     width: 80rpx;

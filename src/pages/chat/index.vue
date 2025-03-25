@@ -1,336 +1,291 @@
+
 <template>
-  <view class="content">
-    <div class="dialogue" v-for="(item, index) in message" :key="index">
-      <div class="dialogue-user" v-if="item.role === 'user'">
-        <div class="dialogue-user-content">
-          <text user-select>{{ item.content }}</text>
-        </div>
-        <img src="/static/logo.png" alt="" class="avatar">
-      </div>
-      <div class="dialogue-assistant" v-if="item.role === 'assistant'">
-        <img src="/static/gpt.jpeg" alt="" class="avatar">
-        <div class="dialogue-assistant-wrap">
-          <div class="assistant-content">
-            <Marked :value="item.content" />
-          </div>
-          <div class="assistant-option" v-if="item.end">
-            <i class="iconfont copy" @click="handleCopy(item.content)">&#xe607;</i>
-            <i class="iconfont other">&#xe756;</i>
-          </div>
-          <div class="assistant-stop">
-            <van-button plain round type="info" size="small" @click="handleStop" v-if="!item.end">停止生成</van-button>
-          </div>
-        </div>
-      </div>
-      
-    </div>
-    <div class="footer">
-      <div class="clear" v-if="message.length" @click="handleClear"><van-icon size="20" name="delete-o" /></div>
-      <div class="input-wrap">
-        <textarea class="ask-input" type="text" v-model="ask_text" placeholder="有问题尽管问我…" adjust-keyboard-to="bottom" :maxlength="-1" fixed auto-height @confirm="handleAsk"></textarea>
-        <van-icon name="upgrade" class="ask-confirm" @click="handleAsk" />
-      </div>
-    </div>
-    <!-- <van-dialog id="van-dialog" />
-    <van-toast id="van-toast" /> -->
+  <view class="chat-container">
+    <view class="nav-bar">
+      <view class="nav-content">
+        <view class="nav-left">
+          <uni-icons type="back" size="18" color="#666"/>
+          <view class="user-info">
+            <text class="username">玩玩玩</text>
+            <uni-icons type="bottom" size="12" color="#999"/>
+          </view>
+        </view>
+        <view class="nav-right">
+          <text class="wx-btn">微信记账</text>
+          <uni-icons type="more" size="18" color="#666"/>
+        </view>
+      </view>
+    </view>
+
+    <scroll-view class="chat-main" scroll-y>
+      <view class="chat-list">
+        <view class="chat-item">
+          <image class="avatar" src="https://ai-public.mastergo.com/ai/img_res/a40c62d76c3f951be415296d433d5047.jpg" mode="aspectFill"/>
+          <view class="message-box">
+            <text class="message-text">我是小乖，你的 AI 记账管家，可以语音或者文字说开销我来帮你记账，试试这样跟我说：</text>
+            <view class="example-tags">
+              <text class="tag">吃饭 32</text>
+              <text class="tag">买菜 3+2.4</text>
+              <text class="tag">昨天工资到账 7000</text>
+            </view>
+          </view>
+        </view>
+
+        <view class="chat-item">
+          <image class="avatar" src="https://ai-public.mastergo.com/ai/img_res/fa72a8d263221f0647823964e1ef2a91.jpg" mode="aspectFill"/>
+          <view class="message-box">
+            <text class="message-text">晚上好，有什么要我记录的吗？</text>
+          </view>
+        </view>
+
+        <view class="chat-item user">
+          <view class="user-message">
+            <text class="message-text">打车 20 元</text>
+          </view>
+        </view>
+
+        <view class="chat-item">
+          <image class="avatar" src="https://ai-public.mastergo.com/ai/img_res/fab197ce71c37526f8267417a5d3074c.jpg" mode="aspectFill"/>
+          <view class="message-box record-box">
+            <view class="record-header">
+              <text class="record-title">已记账：</text>
+              <text class="record-date">2025年03月07日</text>
+            </view>
+            <view class="record-content">
+              <view class="record-type">
+                <view class="type-icon">
+                  <uni-icons type="car" size="20" color="#4CD964"/>
+                </view>
+                <text class="type-text">交通</text>
+              </view>
+              <text class="record-amount">¥-20.0</text>
+            </view>
+            <view class="record-actions">
+              <text class="action-btn">修改分类</text>
+              <text class="action-btn">删除账单</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+
+    <view class="input-bar">
+      <view class="input-wrapper">
+        <uni-icons type="camera" size="20" color="#666"/>
+        <input class="chat-input" type="text" placeholder="点击输入文字" placeholder-class="input-placeholder"/>
+        <uni-icons type="mic" size="20" color="#666"/>
+      </view>
+    </view>
   </view>
 </template>
 
-<script setup lang="ts">
-import { ref, onMounted, reactive, watch } from 'vue'
-import http from '../../api/http'
-import { client_id, client_secret } from '../../user'
-import { TextEncoder, TextDecoder } from 'text-encoding-shim';
-import { autoRun } from '../../utils/tool'
-// import Dialog from '../../wxcomponents/vant/dialog/dialog';
-// import Toast from '../../wxcomponents/vant/toast/toast';
-import Marked from '../../components/marked/index.vue'
-
-const test = ref(`
-\`\`\`javascript
-const highlight = "code";
-const highlight = "code sfdgsdfgs";
-const highlight = "codea dafdas fdsg";
-\`\`\`
-`)
-
-const test2 = ref(`
-\`\`\`const highlight = "code";\`\`\`
-`)
-
-const streamData = ref('')
-
-const ask_text = ref('')
-
-const message = reactive<Array<MessageParam>>([])
-
-let requestTask: any;
-
-/**监听AI回答是否结束 */
-let timeoutId: any = null;
-const waitTime = 500;
-
-watch(message, (newValue, oldValue) => {
-  clearTimeout(timeoutId);
-  timeoutId = setTimeout(() => {
-    /**AI回答结束，展示操作项 */
-    if(newValue.length === 0) return
-    message[message.length-1].end = true
-    console.log('message在500ms内未发生变化')
-    /**AI回答结束，展示操作项 */
-  }, waitTime);
-}, { deep: true });
-/**监听AI回答是否结束 */
-
-const handleCopy = (text: string) => {
-  uni.setClipboardData({
-    data: text, // 您想要复制的文本
-    success: () => {
-      uni.showToast({
-        title: '复制成功',
-        icon: 'success',
-        duration: 1500
-      });
-    },
-    fail: () => {
-      uni.showToast({
-        title: '复制失败',
-        icon: 'none',
-        duration: 1500
-      });
-    }
-  });
-}
-
-const handleClear = () => {
-  // Dialog.confirm({
-  //   title: '确认清空聊天记录吗？',
-  // })
-  //   .then(() => {
-  //     // on confirm
-  //     console.log('测试数据----')
-  //     message.length = 0
-  //   })
-  //   .catch(() => {
-  //     // on cancel
-  //   });
-}
-
-
-let content = ''
-
-const formatData = (text: string) => {
-  let arr = text.split('data: ')
-  for(let v of arr) {
-    if(v) { 
-      const data = JSON.parse(v)
-
-      let len = message.length
-
-      if(message[len - 1].role === 'user') {
-        message.push({
-          role: "assistant",
-          content: ""
-        })
-        len = len + 1
-      }
-
-      autoRun(
-        data.result.split(''), 
-        (val: string)=>{
-          if(message[len-1].end) return
-          message[len - 1].content += val
-        },
-        50)
-      .then(res=>console.log(message,'====end===='))
-      if(data.is_end) {
-        console.log('结束标识---')
-        break
-      }
-    }
-  }
-}
-
-const handleStop = () => {
-  if(requestTask) {
-    requestTask.abort()
-    message[message.length-1].end = true
-  }
-}
-
-const getAccessToken = async () => {
-  const res: TokenData = await http('https://aip.baidubce.com/oauth/2.0/token', {
-    grant_type: 'client_credentials',
-    client_id,
-    client_secret
-  })
-  if(res.access_token) {
-    return res.access_token
-  }
-  return ''
-}
-
-const handleAsk = async () => {
-  if(!ask_text.value) return
-  if(message.length && !message[message.length - 1]?.end) {
-    // Toast('暂时不可提问');
-    return 
-  }
-  message.push({
-    role: "user",
-    content: ask_text.value
-  })
-  ask_text.value = ''
-  const access_token = await getAccessToken()
-  if(access_token) {
-
-    requestTask = wx.request({
-      url: `https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/ernie_speed?access_token=${access_token}`,
-      responseType: 'arraybuffer', // 确保返回的数据格式是arraybuffer
-      enableChunked: true,
-      method: "POST",
-      data: {
-        messages: message,
-        stream: true
-      },
-      success (res: any) {
-        console.log(res.data, '1111')
-      }
-    })
-
-    content = ''
-
-    requestTask.onChunkReceived((res: any) => {
-      let uint8Array = new Uint8Array(res.data);
-
-      let decoder = new TextDecoder('utf-8');
-      let text = decoder.decode(uint8Array).trim();
-      console.log('原始数据：',text);
-
-      if(text.slice(0,5) !== 'data:') {
-        streamData.value += text
-        formatData(streamData.value)
-      }
-      else if(text.slice(-2) !== '}}') {
-        streamData.value = text
-      }
-      else {
-        formatData(text)
-      }
-    })
-  }
-
-}
+<script lang="ts" setup>
 </script>
 
-<style lang="less">
-.content {
-  background-color: #fff;
-  width: 100vw;
-  padding-bottom: 150rpx;
+<style>
+page {
+  height: 100%;
 }
 
-.logo {
-  height: 200rpx;
-  width: 200rpx;
-  margin-top: 200rpx;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 50rpx;
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: linear-gradient(180deg, #FFF8E7 0%, #FFF 100%);
 }
 
-
-.dialogue {
-  width: 100vw;
-  padding: 40rpx 20rpx;
-  box-sizing: border-box;
-  .dialogue-user {
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
-    align-items: start;
-    .dialogue-user-content {
-      padding: 20rpx 30rpx;
-      background-color: #f4f4f4;
-      border-radius: 20rpx;
-      margin-right: 20rpx;
-    }
-  }
-  .dialogue-assistant {
-    width: 100%;
-    display: flex;
-    align-items: start;
-    justify-content: flex-start;
-    .dialogue-assistant-wrap {
-      padding: 20rpx 30rpx;
-      background-color: #f4f4f4;
-      border-radius: 20rpx;
-      margin-left: 20rpx;
-      position: relative;
-    }
-    .assistant-option {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      border-top: 1rpx solid rgba(0,0,0,0.2);
-      padding-top: 15rpx;
-      margin-top: 20rpx;
-      .copy {
-        margin-right: 30rpx;
-      }
-    }
-    .assistant-stop {
-      position: absolute;
-      bottom: -20rpx;
-      left: 0;
-      transform: translateY(100%);
-    }
-  }
-  .avatar {
-    width: 40rpx;
-    height: 40rpx;
-    flex-shrink: 0;
-    margin-top: 20rpx;
-  }
+.nav-bar {
+  flex-shrink: 0;
+  height: 88rpx;
+  background-color: #FFFFFF;
+  border-bottom: 1px solid #f1f1f1;
 }
 
-.footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
+.nav-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 32rpx;
+  height: 88rpx;
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  margin-left: 32rpx;
+}
+
+.username {
+  font-size: 16px;
+  font-weight: 500;
+  margin-right: 8rpx;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 32rpx;
+}
+
+.wx-btn {
+  padding: 8rpx 24rpx;
+  background-color: #4CD964;
+  color: #FFFFFF;
+  font-size: 14px;
+  border-radius: 999rpx;
+}
+
+.chat-main {
+  flex: 1;
+  overflow: auto;
+}
+
+.chat-list {
+  padding: 32rpx;
+}
+
+.chat-item {
+  display: flex;
+  margin-bottom: 32rpx;
+}
+
+.chat-item.user {
+  justify-content: flex-end;
+}
+
+.avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 40rpx;
+  flex-shrink: 0;
+}
+
+.message-box {
+  margin-left: 24rpx;
+  background-color: #FFFFFF;
+  padding: 32rpx;
+  border-radius: 24rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+  max-width: 560rpx;
+}
+
+.message-text {
+  font-size: 14px;
+  color: #333333;
+}
+
+.example-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+  margin-top: 24rpx;
+}
+
+.tag {
+  padding: 8rpx 24rpx;
+  background-color: #f5f5f5;
+  color: #666666;
+  font-size: 14px;
+  border-radius: 999rpx;
+}
+
+.user-message {
+  background-color: #f5af19;
+  padding: 24rpx;
+  border-radius: 24rpx;
+}
+
+.user-message .message-text {
+  color: #FFFFFF;
+}
+
+.record-box {
+  width: 560rpx;
+}
+
+.record-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: #999999;
+}
+
+.record-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24rpx;
+}
+
+.record-type {
+  display: flex;
+  align-items: center;
+}
+
+.type-icon {
+  width: 80rpx;
+  height: 80rpx;
+  background-color: rgba(76, 217, 100, 0.1);
+  border-radius: 40rpx;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-bottom: 40rpx;
-  box-sizing: border-box;
-  .clear {
-    position: absolute;
-    top: -20rpx;
-    left: 30rpx;
-    padding: 8rpx;
-    border: 1rpx solid #000;
-    border-radius: 50%;
-    transform: translateY(-100%);
-  }
-  .input-wrap {
-    background-color: #f4f4f4;
-    width: 80vw;
-    min-height: 50rpx;
-    border-radius: 50rpx;
-    padding: 30rpx 40rpx;
-    display: flex;
-    align-items: center;
-    position: relative;
-  }
-  .ask-confirm {
-    position: absolute;
-    right: 40rpx;
-    bottom: 30rpx;
-    font-size: 50rpx;
-  }
-  .ask-input {
-    width: 550rpx;
-  }
+}
+
+.type-text {
+  margin-left: 24rpx;
+  color: #666666;
+}
+
+.record-amount {
+  font-size: 20px;
+  font-weight: 500;
+  color: #333333;
+}
+
+.record-actions {
+  display: flex;
+  gap: 24rpx;
+  margin-top: 24rpx;
+}
+
+.action-btn {
+  padding: 16rpx 32rpx;
+  background-color: #f5f5f5;
+  color: #666666;
+  font-size: 14px;
+  border-radius: 999rpx;
+}
+
+.input-bar {
+  flex-shrink: 0;
+  padding: 16rpx 32rpx;
+  background-color: #FFFFFF;
+  border-top: 1px solid #f1f1f1;
+}
+
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+}
+
+.chat-input {
+  flex: 1;
+  height: 72rpx;
+  background-color: #f5f5f5;
+  border-radius: 999rpx;
+  padding: 0 32rpx;
+  font-size: 14px;
+}
+
+.input-placeholder {
+  color: #999999;
 }
 </style>
+

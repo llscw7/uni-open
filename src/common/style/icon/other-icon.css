@@ -39,12 +39,6 @@
     background-size: 100% 100%;
 } */
 
-/* 聊天 */
-.chat-icon {
-    background: url(http://qno.ttscw.top/record-other/twitch.png) no-repeat center;
-    background-size: 100% 100%;
-}
-
 /* 下降 */
 .decline-icon {
     background: url(http://qno.ttscw.top/record-other/line-down.png) no-repeat center;
@@ -59,34 +53,66 @@
 
 /* 首页 */
 .home-icon {
-    background: url(http://qno.ttscw.top/record-other/home.png) no-repeat center;
+    background: url(http://qno.ttscw.top/record-main/normal/lujing1-copy.png) no-repeat center;
     background-size: 100% 100%;
 }
 
 .home-icon-actived {
-    background: url(http://qno.ttscw.top/record-other/home-light.png) no-repeat center;
+    background: url(http://qno.ttscw.top/record-main/yellow/lujing1-copy.png) no-repeat center;
     background-size: 100% 100%;
 }
 
 /* 统计 */
 .statistics-icon {
-    background: url(http://qno.ttscw.top/record-other/chart.png) no-repeat center;
+    background: url(http://qno.ttscw.top/record-main/normal/a-lujing11.png) no-repeat center;
     background-size: 100% 100%;
 }
 
 .statistics-icon-actived {
-    background: url(http://qno.ttscw.top/record-other/chart-light.png) no-repeat center;
+    background: url(http://qno.ttscw.top/record-main/yellow/a-lujing11.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+/* 对话 */
+.chat-icon {
+    background: url(http://qno.ttscw.top/record-main/normal/Message-3-Fill--Streamline-Remix-Fill.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+.chat-icon-actived {
+    background: url(http://qno.ttscw.top/record-main/yellow/Message-3-Fill--Streamline-Remix-Fill.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+.chat-icon-2 {
+    background: url(http://qno.ttscw.top/record-main/normal/Outlet-Fill--Streamline-Remix-Fill.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+.chat-icon-2-actived {
+    background: url(http://qno.ttscw.top/record-main/yellow/Outlet-Fill--Streamline-Remix-Fill.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+/* 资产 */
+.asset-icon {
+    background: url(http://qno.ttscw.top/record-main/normal/Bank-Card-Fill--Streamline-Remix-Fill.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+.asset-icon-actived {
+    background: url(http://qno.ttscw.top/record-main/yellow/Bank-Card-Fill--Streamline-Remix-Fill.png) no-repeat center;
     background-size: 100% 100%;
 }
 
 /* 我的 */
 .mine-icon {
-    background: url(http://qno.ttscw.top/record-other/user.png) no-repeat center;
+    background: url(http://qno.ttscw.top/record-main/normal/a-lujing31.png) no-repeat center;
     background-size: 100% 100%;
 }
 
 .mine-icon-actived {
-    background: url(http://qno.ttscw.top/record-other/user-light.png) no-repeat center;
+    background: url(http://qno.ttscw.top/record-main/yellow/a-lujing31.png) no-repeat center;
     background-size: 100% 100%;
 }
 

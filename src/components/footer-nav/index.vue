@@ -11,6 +11,7 @@
 </template>
 
 <script setup lang="ts">
+import { onShow } from '@dcloudio/uni-app';
 import { ref, onMounted } from 'vue';
 const activeFlag = ref(1);
 
@@ -60,14 +61,16 @@ const tabList = ref([
     },
 ]);
 
-// onMounted(() => {
-//     updateCurrentIndex();
-// });
+
+onShow(() => {
+    updateCurrentIndex();
+});
 
 const updateCurrentIndex = () => {
     const pages = getCurrentPages();
     const currentPage = pages[pages.length - 1];
     const currentPath = currentPage.route;
+    console.log('currentPath', currentPath);
     for (let i = 0; i < tabList.value.length; i++) {
         if (tabList.value[i].pagePath === `/${currentPath}`) {
             activeFlag.value = tabList.value[i].id;

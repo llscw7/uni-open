@@ -65,7 +65,7 @@
 
             <!-- 高级功能列表 -->
             <div class="detail-card" v-if="showOptionsFlag">
-                <div class="detail-item">
+                <div class="detail-item" @click="setPopupTagsVisible(true)">
                     <div class="left">
                         <div class="tag-icon icon-size-40"></div>
                         <text class="detail-text gray">选择标签</text>
@@ -73,7 +73,7 @@
                     <uni-icons type="right" size="14" color="#ddd" />
                 </div>
 
-                <div class="detail-item">
+                <div class="detail-item" @click="setPopupBookVisible(true)">
                     <div class="left">
                         <div class="book-icon-2 icon-size-40"></div>
                         <text class="detail-text gray">选择账本</text>
@@ -81,7 +81,7 @@
                     <uni-icons type="right" size="14" color="#ddd" />
                 </div>
 
-                <div class="detail-item">
+                <div class="detail-item" @click="setPopupLedgerVisible(true)">
                     <div class="left">
                         <div class="account-icon icon-size-40"></div>
                         <text class="detail-text gray">不选择账户</text>
@@ -110,6 +110,9 @@
     <PopupCategory :visible="visible" :set-visible="setVisible" :select-tab="selectTab"
         @submit="handlePopupCategorySubmit" />
     <UIDialogCalendar :show="calendarShow" :set-show="setCalendarShow" :default-value="customDate.toDate()" :z-index="2000" @confirm="handleConfirmCalendar" :min-date="minDate" />
+    <PopupLedger :visible="popupLedgerVisible" :set-visible="setPopupLedgerVisible" />
+    <PopupBook :visible="popupBookVisible" :set-visible="setPopupBookVisible" />
+    <PopupTags :visible="popupTagsVisible" :set-visible="setPopupTagsVisible" />
 </template>
 
 <script lang="ts" setup>
@@ -120,7 +123,26 @@ import { useCategories } from './hooks/useCategories';
 import { usePopupCategory } from './hooks/usePopupCategory';
 import { useDialogCalendar } from './hooks/useDialogCalendar';
 import UIDialogCalendar from '@/ui-modules/calendar/dialog-calendar.vue';
+import PopupLedger from '@/components/popup-ledger/index.vue';
+import PopupBook from '@/components/popup-book/index.vue';
+import PopupTags from '@/components/popup-tags/index.vue';
 import dayjs from 'dayjs';
+
+const popupTagsVisible = ref(false);
+const setPopupTagsVisible = (visible: boolean) => {
+    popupTagsVisible.value = visible;
+};
+
+const popupBookVisible = ref(false);
+const setPopupBookVisible = (visible: boolean) => {
+    popupBookVisible.value = visible;
+};
+
+const popupLedgerVisible = ref(false);
+const setPopupLedgerVisible = (visible: boolean) => {
+    popupLedgerVisible.value = visible;
+};
+
 
 const { customDate, minDate, calendarShow, setCalendarShow, handleConfirmCalendar } = useDialogCalendar();
 
